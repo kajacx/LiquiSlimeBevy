@@ -1,5 +1,5 @@
-use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
-use components::{Building, TilePosition};
+use bevy::{ecs::system::Command, prelude::*, sprite::MaterialMesh2dBundle};
+use components::{Building, SlimeAmount, TilePosition};
 
 mod components;
 
@@ -9,6 +9,7 @@ fn main() {
         .add_system(|| println!("Hello system"))
         .add_startup_system(spawn_buildings)
         .add_startup_system(setup)
+        .add_startup_system(spawn_tiles(10, 10))
         .add_system(list_buildings)
         .add_system(move_shapes)
         .run();
@@ -30,35 +31,34 @@ fn setup(
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
     commands.spawn(Camera2dBundle::default());
+}
 
-    // Rectangle
-    commands.spawn((
-        Building {},
-        SpriteBundle {
-            sprite: Sprite {
-                color: Color::rgb(0.25, 0.25, 0.75),
-                custom_size: Some(Vec2::new(50.0, 100.0)),
-                ..default()
-            },
-            ..default()
-        },
-    ));
+fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
+    move |mut commands| {
+        for x in 0..width {
+            for y in 0..height {
+                let position = TilePosition {
+                    x: x as i32,
+                    y: y as i32,
+                };
+                let amount = SlimeAmount((x + y * 10) as u64);
+                let sprite = SpriteBundle {
+                    sprite: Sprite {
+                        custom_size: Some(Vec2 { x: 10f32, y: 10f32 }),
+                        ..Default::default()
+                    },
+                    transform: Transform::from_translation(Vec3::new(
+                        (x * 10) as f32,
+                        (y * 10) as f32,
+                        0f32,
+                    )),
+                    ..Default::default()
+                };
 
-    // Circle
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: meshes.add(shape::Circle::new(50.).into()).into(),
-        material: materials.add(ColorMaterial::from(Color::PURPLE)),
-        transform: Transform::from_translation(Vec3::new(-100., 0., 0.)),
-        ..default()
-    });
-
-    // Hexagon
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: meshes.add(shape::RegularPolygon::new(50., 6).into()).into(),
-        material: materials.add(ColorMaterial::from(Color::TURQUOISE)),
-        transform: Transform::from_translation(Vec3::new(100., 0., 0.)),
-        ..default()
-    });
+                commands.spawn((position, amount, sprite));
+            }
+        }
+    }
 }
 
 //fn move_shapes(query: Query<&MaterialMesh2dBundle<ColorMaterial>>) {
