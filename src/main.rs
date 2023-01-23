@@ -1,3 +1,7 @@
+use bevy::prelude::*;
+
+mod components;
+
 fn main() {
-    println!("Hello Bevy!");
+    App::new().add_system(|| println!("Hello system")).run();
 }
