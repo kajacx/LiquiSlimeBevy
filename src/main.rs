@@ -6,25 +6,13 @@ mod components;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_system(|| println!("Hello system"))
-        .add_startup_system(spawn_buildings)
         .add_startup_system(setup)
         .add_startup_system(spawn_tiles(10, 10))
-        .add_system(list_buildings)
-        .add_system(move_shapes)
+        .add_system(increase_slime)
+        .add_system(render_slime_color)
         .run();
 }
 
-fn spawn_buildings(mut commands: Commands) {
-    commands.spawn((Building {}, TilePosition { x: 32, y: -6 }));
-    commands.spawn((Building {}, TilePosition { x: 15, y: 14 }));
-}
-
-fn list_buildings(query: Query<&TilePosition, With<Building>>) {
-    for building in query.iter() {
-        println!("Hello? {:?}", building);
-    }
-}
 fn setup(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
@@ -61,10 +49,15 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
     }
 }
 
-//fn move_shapes(query: Query<&MaterialMesh2dBundle<ColorMaterial>>) {
-fn move_shapes(mut query: Query<(&Building, &mut Transform)>) {
-    for (_, mut transform) in &mut query {
-        println!("{:?}", transform);
-        transform.translation.x += 1f32;
+fn increase_slime(mut query: Query<&mut SlimeAmount>) {
+    for mut amount in &mut query {
+        amount.0 += 1;
+    }
+}
+
+fn render_slime_color(mut query: Query<(&mut Sprite, &SlimeAmount)>) {
+    for (mut color, amount) in &mut query {
+        let rgb = amount.0 as u8;
+        color.color = Color::rgb_u8(rgb, rgb, rgb);
     }
 }
