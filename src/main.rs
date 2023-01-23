@@ -13,12 +13,12 @@ fn main() {
         .run();
 }
 
-fn setup(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-) {
-    commands.spawn(Camera2dBundle::default());
+fn setup(mut commands: Commands) {
+    let mut camera = Camera2dBundle::default();
+    let scale = 0.02f32;
+    camera.transform = Transform::from_scale(Vec3::new(scale, scale, scale));
+    camera.transform.translation = Vec3::new(5f32, 5f32, 0f32);
+    commands.spawn(camera);
 }
 
 fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
@@ -29,17 +29,13 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
                     x: x as i32,
                     y: y as i32,
                 };
-                let amount = SlimeAmount((x + y * 10) as u64);
+                let amount = SlimeAmount((x + y * 20) as u64);
                 let sprite = SpriteBundle {
                     sprite: Sprite {
-                        custom_size: Some(Vec2 { x: 10f32, y: 10f32 }),
+                        custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
                         ..Default::default()
                     },
-                    transform: Transform::from_translation(Vec3::new(
-                        (x * 10) as f32,
-                        (y * 10) as f32,
-                        0f32,
-                    )),
+                    transform: Transform::from_translation(Vec3::new((x) as f32, (y) as f32, 0f32)),
                     ..Default::default()
                 };
 
