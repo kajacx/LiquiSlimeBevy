@@ -1,5 +1,5 @@
 use bevy::{ecs::system::Command, prelude::*, sprite::MaterialMesh2dBundle};
-use components::{Building, SlimeAmount, SlimeGrid, TilePosition};
+use components::{SlimeAmount, SlimeGrid, TilePosition};
 
 mod components;
 
@@ -60,12 +60,12 @@ fn render_slime_color(
     for (mut sprite, position) in &mut tile_query {
         let amount = slime_grid.get_amount(position.x as usize, position.y as usize);
         let rgb = amount.0 as u8;
-        sprite_tile.color = Color::rgb_u8(rgb, rgb, rgb);
+        sprite.color = Color::rgb_u8(rgb, rgb, rgb);
     }
 }
 
 fn spread_slime(mut query: Query<&mut SlimeGrid>) {
-    let slime_grid = query.single_mut();
+    let mut slime_grid = query.single_mut();
     slime_grid.prepare_slime_spread();
     slime_grid.spread_slime();
 }
