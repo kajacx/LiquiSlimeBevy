@@ -10,6 +10,8 @@ fn main() {
         .add_startup_system(spawn_tiles(10, 10))
         .add_system(increase_slime)
         .add_system(render_slime_color)
+        .add_system(prepare_slime_spread)
+        .add_system(spread_slime)
         .run();
 }
 
@@ -55,5 +57,29 @@ fn render_slime_color(mut query: Query<(&mut Sprite, &SlimeAmount)>) {
     for (mut color, amount) in &mut query {
         let rgb = amount.0 as u8;
         color.color = Color::rgb_u8(rgb, rgb, rgb);
+    }
+}
+
+fn prepare_slime_spread(query: Query<(&Tile, &WithNeighbor)>) {
+    for (tile, with_neighbor) in &query {
+        let neighbor = with_neighbor.neighbor;
+
+        let current_slime = tile.slime_amount.0;
+        let neighbor_slime = neighbor.slime_amount.0;
+
+        // Moved slime from current to neighbor
+        let moved_slime = current_slime - neighbor_slime / 12; // TODO: spread speed factor
+
+        tile.incoming_slime
+            .set(tile.incoming_slime.get() - moved_slime);
+        neighbor_slime
+            .incoming_slime
+            .set(neighbor_slime.incoming_slime.get() + moved_slime);
+    }
+}
+
+fn spread_slime(mut query: Query<&mut Tile>) {
+    for mut tile in &mut query {
+        tile.slime_amount += tile.incoming_slime.replace(0);
     }
 }
