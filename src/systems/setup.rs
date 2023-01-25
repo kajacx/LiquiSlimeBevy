@@ -1,11 +1,13 @@
 use bevy::prelude::*;
 
+use crate::components::{SlimeAmount, SlimeGrid, SlimeSource, TilePosition};
+
 pub struct GameSetupPlugin;
 
 impl Plugin for GameSetupPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(setup);
-        app.add_startup_system(spawn_tiles);
+        app.add_startup_system(spawn_tiles(10, 10));
     }
 }
 

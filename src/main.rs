@@ -1,10 +1,7 @@
 use bevy::{
     diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
-    ecs::system::Command,
     prelude::*,
-    sprite::MaterialMesh2dBundle,
 };
-use components::{SlimeAmount, SlimeGrid, SlimeSource, Tile, TilePosition};
 use systems::AllGamePlugins;
 
 mod components;
