@@ -17,8 +17,8 @@ impl SlimeGrid {
             width,
             height,
 
-            slime_amounts: vec![SlimeAmount(0); width * height],
-            slime_additions: vec![SlimeAmount(0); width * height],
+            slime_amounts: vec![SlimeAmount::new(); width * height],
+            slime_additions: vec![SlimeAmount::new(); width * height],
         }
     }
 
@@ -105,7 +105,7 @@ impl SlimeGrid {
     pub fn spread_slime(&mut self) {
         for index in 0..self.slime_additions.len() {
             self.slime_amounts[index] += self.slime_additions[index];
-            self.slime_additions[index] = SlimeAmount(0);
+            self.slime_additions[index] = SlimeAmount::from_integer(0);
         }
     }
 }

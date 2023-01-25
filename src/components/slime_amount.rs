@@ -1,7 +1,9 @@
-use derive_more::{Add, AddAssign, From, Neg, Sub, SubAssign};
+use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
 use std::ops::{Div, Mul};
 
 use bevy::prelude::*;
+
+const ONE_SLIME_AMOUNT: i64 = 1_000_000_000;
 
 #[derive(
     Component,
@@ -13,21 +15,37 @@ use bevy::prelude::*;
     Neg,
     AddAssign,
     SubAssign,
-    From,
     PartialEq,
     Eq,
     PartialOrd,
     Ord,
+    Default,
 )]
-pub struct SlimeAmount(pub i64);
+pub struct SlimeAmount(i64);
 
 impl SlimeAmount {
-    pub fn new(amount: i64) -> Self {
-        Self(amount)
+    pub fn new() -> Self {
+        Self(0)
+    }
+
+    pub fn from_integer(amount: i64) -> Self {
+        Self(amount * ONE_SLIME_AMOUNT)
+    }
+
+    pub fn from_float(amount: f64) -> Self {
+        Self((amount * (ONE_SLIME_AMOUNT as f64)) as i64)
     }
 
     pub fn non_negative(self) -> Self {
         Self(self.0.max(0))
+    }
+
+    pub fn as_integer(self) -> i64 {
+        self.0 / ONE_SLIME_AMOUNT
+    }
+
+    pub fn as_float(self) -> f64 {
+        (self.0 as f64) / (ONE_SLIME_AMOUNT as f64)
     }
 }
 
