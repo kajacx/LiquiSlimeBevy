@@ -6,12 +6,13 @@ pub struct GameSetupPlugin;
 
 impl Plugin for GameSetupPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(setup);
+        app.add_startup_system(setup_camera);
         app.add_startup_system(spawn_tiles(10, 10));
+        app.add_startup_system(spawn_sources);
     }
 }
 
-fn setup(mut commands: Commands) {
+fn setup_camera(mut commands: Commands) {
     let mut camera = Camera2dBundle::default();
 
     let scale = 0.02f32;
@@ -50,17 +51,19 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
         }
 
         commands.spawn(slime_grid);
-
-        let spawner = SlimeSource {
-            amount: SlimeAmount::from_integer(10),
-        };
-        let position = TilePosition::new(2, 5);
-        commands.spawn((spawner, position));
-
-        let spawner = SlimeSource {
-            amount: SlimeAmount::from_integer(-10),
-        };
-        let position = TilePosition::new(6, 8);
-        commands.spawn((spawner, position));
     }
+}
+
+fn spawn_sources(mut commands: Commands) {
+    let spawner = SlimeSource {
+        amount: SlimeAmount::from_integer(10),
+    };
+    let position = TilePosition::new(2, 5);
+    commands.spawn((spawner, position));
+
+    let spawner = SlimeSource {
+        amount: SlimeAmount::from_integer(-10),
+    };
+    let position = TilePosition::new(6, 8);
+    commands.spawn((spawner, position));
 }
