@@ -51,6 +51,22 @@ impl SlimeGrid {
     }
 
     #[inline]
+    pub fn add_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) {
+        let index = self.get_index(x, y);
+        let amount = self.slime_amounts[index] + amount;
+        self.slime_amounts[index] = amount.non_negative();
+    }
+
+    pub fn try_add_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) -> Result<(), ()> {
+        if self.in_range(x, y) {
+            self.add_amount(x, y, amount);
+            Ok(())
+        } else {
+            Err(())
+        }
+    }
+
+    #[inline]
     pub fn in_range(&self, x: usize, y: usize) -> bool {
         x < self.width && y < self.height
     }
@@ -81,11 +97,6 @@ impl SlimeGrid {
 
         // from current to neighbor
         let moved_amount = (current_amount - neighbor_amount) / 12;
-
-        println!(
-            "Cur: {:?}, neigh: {:?}, move: {:?}",
-            current_amount, neighbor_amount, moved_amount
-        );
 
         self.slime_additions[i1] -= moved_amount;
         self.slime_additions[i2] += moved_amount;

@@ -1,13 +1,21 @@
-use bevy::{ecs::system::Command, prelude::*, sprite::MaterialMesh2dBundle};
-use components::{SlimeAmount, SlimeGrid, TilePosition};
+use bevy::{
+    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
+    ecs::system::Command,
+    prelude::*,
+    sprite::MaterialMesh2dBundle,
+};
+use components::{SlimeAmount, SlimeGrid, SlimeSource, Tile, TilePosition};
 
 mod components;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugin(LogDiagnosticsPlugin::default())
+        .add_plugin(FrameTimeDiagnosticsPlugin::default())
         .add_startup_system(setup)
         .add_startup_system(spawn_tiles(10, 10))
+        .add_system_to_stage(CoreStage::PreUpdate, spawn_slime)
         .add_system_to_stage(CoreStage::Update, spread_slime)
         .add_system_to_stage(CoreStage::Last, render_slime_color)
         .run();
@@ -52,12 +60,24 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
         }
 
         commands.spawn(slime_grid);
+
+        let spawner = SlimeSource {
+            amount: SlimeAmount(10_000_000_000),
+        };
+        let position = TilePosition::new(2, 5);
+        commands.spawn((spawner, position));
+
+        let spawner = SlimeSource {
+            amount: SlimeAmount(-10_000_000_000),
+        };
+        let position = TilePosition::new(6, 8);
+        commands.spawn((spawner, position));
     }
 }
 
 fn render_slime_color(
-    mut tile_query: Query<(&mut Sprite, &TilePosition)>,
     grid_query: Query<&SlimeGrid>,
+    mut tile_query: Query<(&mut Sprite, &TilePosition)>,
 ) {
     let slime_grid = grid_query.single();
     for (mut sprite, position) in &mut tile_query {
@@ -71,4 +91,14 @@ fn spread_slime(mut query: Query<&mut SlimeGrid>) {
     let mut slime_grid = query.single_mut();
     slime_grid.prepare_slime_spread();
     slime_grid.spread_slime();
+}
+
+fn spawn_slime(
+    mut grid_query: Query<&mut SlimeGrid>,
+    spawner_query: Query<(&SlimeSource, &TilePosition)>,
+) {
+    let mut slime_grid = grid_query.single_mut();
+    for (spawner, position) in &spawner_query {
+        slime_grid.add_amount(position.x as usize, position.y as usize, spawner.amount);
+    }
 }
