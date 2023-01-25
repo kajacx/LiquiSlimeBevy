@@ -82,8 +82,13 @@ impl SlimeGrid {
         // from current to neighbor
         let moved_amount = (current_amount - neighbor_amount) / 12;
 
-        self.slime_amounts[i1] += moved_amount;
-        self.slime_amounts[i2] -= moved_amount;
+        println!(
+            "Cur: {:?}, neigh: {:?}, move: {:?}",
+            current_amount, neighbor_amount, moved_amount
+        );
+
+        self.slime_additions[i1] -= moved_amount;
+        self.slime_additions[i2] += moved_amount;
     }
 
     pub fn spread_slime(&mut self) {

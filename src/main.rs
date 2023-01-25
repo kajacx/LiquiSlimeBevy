@@ -46,7 +46,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
 
                 commands.spawn((position, sprite));
 
-                let amount = SlimeAmount((x + y * 20) as i64);
+                let amount = SlimeAmount(((x + y * 20) as i64) * 1_000_000_000);
                 slime_grid.set_amount(x, y, amount);
             }
         }
@@ -62,7 +62,7 @@ fn render_slime_color(
     let slime_grid = grid_query.single();
     for (mut sprite, position) in &mut tile_query {
         let amount = slime_grid.get_amount(position.x as usize, position.y as usize);
-        let rgb = amount.0 as u8;
+        let rgb = (amount.0 / 1_000_000_000) as u8;
         sprite.color = Color::rgb_u8(rgb, rgb, rgb);
     }
 }
