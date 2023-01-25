@@ -38,7 +38,7 @@ impl SlimeGrid {
     #[inline]
     pub fn set_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) {
         let index = self.get_index(x, y);
-        self.slime_amounts[index] = amount;
+        self.slime_amounts[index] = amount.non_negative();
     }
 
     pub fn try_set_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) -> Result<(), ()> {
@@ -52,7 +52,7 @@ impl SlimeGrid {
 
     #[inline]
     pub fn in_range(&self, x: usize, y: usize) -> bool {
-        x >= 0 && x < self.width && y >= 0 && y < self.height
+        x < self.width && y < self.height
     }
 
     #[inline]

@@ -27,13 +27,14 @@ fn setup(mut commands: Commands) {
 
 fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
     move |mut commands| {
+        let mut slime_grid = SlimeGrid::new(width, height);
+
         for x in 0..width {
             for y in 0..height {
                 let position = TilePosition {
                     x: x as i32,
                     y: y as i32,
                 };
-                let amount = SlimeAmount((x + y * 20) as i64);
                 let sprite = SpriteBundle {
                     sprite: Sprite {
                         custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
@@ -43,11 +44,13 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
                     ..Default::default()
                 };
 
-                commands.spawn((position, amount, sprite));
+                commands.spawn((position, sprite));
+
+                let amount = SlimeAmount((x + y * 20) as i64);
+                slime_grid.set_amount(x, y, amount);
             }
         }
 
-        let slime_grid = SlimeGrid::new(width, height);
         commands.spawn(slime_grid);
     }
 }
