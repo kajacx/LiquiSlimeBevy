@@ -33,7 +33,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
                     x: x as i32,
                     y: y as i32,
                 };
-                let amount = SlimeAmount((x + y * 20) as u64);
+                let amount = SlimeAmount((x + y * 20) as i64);
                 let sprite = SpriteBundle {
                     sprite: Sprite {
                         custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
@@ -53,13 +53,12 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands) {
 }
 
 fn render_slime_color(
-    mut tile_query: Query<&mut Sprite, With<Tile>>,
-    grid_query: Query<SlimeGrid>,
+    mut tile_query: Query<(&mut Sprite, &TilePosition)>,
+    grid_query: Query<&SlimeGrid>,
 ) {
     let slime_grid = grid_query.single();
-    for mut sprite_tile in &mut tile_query {
-        let pos = sprite_tile.transform.position;
-        let amount = slime_grid.get_amount(pos.get_x(), pos.get_y());
+    for (mut sprite, position) in &mut tile_query {
+        let amount = slime_grid.get_amount(position.x as usize, position.y as usize);
         let rgb = amount.0 as u8;
         sprite_tile.color = Color::rgb_u8(rgb, rgb, rgb);
     }

@@ -1,24 +1,24 @@
-use std::ops::{Add, Div, Mul, Sub};
+use std::ops::{Add, AddAssign, Div, Mul, Neg, Sub, SubAssign};
 
 use bevy::prelude::*;
 
-#[derive(Component, Debug, Clone, Copy, Add, Sub)]
-pub struct SlimeAmount(pub u64);
+#[derive(Component, Debug, Clone, Copy, Add, Sub, Neg, AddAssign, SubAssign)]
+pub struct SlimeAmount(pub i64);
 
-impl Mul<u64> for SlimeAmount {
+impl Mul<i64> for SlimeAmount {
     type Output = SlimeAmount;
 
     #[inline]
-    fn mul(self, rhs: u64) -> Self::Output {
+    fn mul(self, rhs: i64) -> Self::Output {
         Self(self.0 * rhs)
     }
 }
 
-impl Div<u64> for SlimeAmount {
+impl Div<i64> for SlimeAmount {
     type Output = SlimeAmount;
 
     #[inline]
-    fn div(self, rhs: u64) -> Self::Output {
-        Self(Self.0 / rhs)
+    fn div(self, rhs: i64) -> Self::Output {
+        Self(self.0 / rhs)
     }
 }

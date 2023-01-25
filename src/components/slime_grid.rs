@@ -28,7 +28,7 @@ impl SlimeGrid {
     }
 
     pub fn try_get_amount(x: usize, y: usize) -> Option<SlimeAmount> {
-        if in_range(x, y) {
+        if self.in_range(x, y) {
             Some(self.get_amount(x, y))
         } else {
             None
@@ -41,7 +41,7 @@ impl SlimeGrid {
     }
 
     pub fn try_set_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) -> Result<(), ()> {
-        if in_range(x, y) {
+        if self.in_range(x, y) {
             self.set_amount(x, y, amount);
             Ok(())
         } else {
@@ -87,8 +87,8 @@ impl SlimeGrid {
 
     pub fn spread_slime(&mut self) {
         for index in 0..self.slime_additions.len() {
-            self.slime_amounts.0 += self.slime_additions[index];
-            self.slime_additions[index] = 0;
+            self.slime_amounts[index] += self.slime_additions[index];
+            self.slime_additions[index] = SlimeAmount(0);
         }
     }
 }
