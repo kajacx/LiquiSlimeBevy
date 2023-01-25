@@ -1,4 +1,5 @@
-use std::ops::{Add, AddAssign, Div, Mul, Neg, Sub, SubAssign};
+use std::ops::{ Div, Mul, };
+use derive_more::{Add, AddAssign,Neg, Sub, SubAssign}
 
 use bevy::prelude::*;
 
