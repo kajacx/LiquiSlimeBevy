@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 bevy = "0.9.1"
 derive_more = "0.99.17"
+fp-bindgen = "2.4.0"
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]
