@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::{SlimeGrid, TilePosition};
+use crate::components::{SlimeGrid, Tile, TilePosition};
 
 pub struct GameRenderingPlugin;
 
@@ -12,7 +12,7 @@ impl Plugin for GameRenderingPlugin {
 
 fn render_slime_color(
     grid_query: Query<&SlimeGrid>,
-    mut tile_query: Query<(&mut Sprite, &TilePosition)>,
+    mut tile_query: Query<(&mut Sprite, &TilePosition), With<Tile>>,
 ) {
     let slime_grid = grid_query
         .get_single()

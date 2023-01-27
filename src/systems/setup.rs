@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::{SlimeAmount, SlimeGrid, SlimeSource, TilePosition};
+use crate::components::{SlimeAmount, SlimeGrid, SlimeSource, Tile, TilePosition};
 
 pub struct GameSetupPlugin;
 
@@ -48,7 +48,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
                     ..Default::default()
                 };
 
-                commands.spawn((position, sprite));
+                commands.spawn((position, sprite, Tile));
 
                 let amount = SlimeAmount::from_integer((x + y * 20) as i64);
                 slime_grid.set_amount(x, y, amount);
