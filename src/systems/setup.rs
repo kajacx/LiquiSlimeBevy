@@ -50,21 +50,6 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
 
                 commands.spawn((position, sprite));
 
-                let sprite = SpriteBundle {
-                    texture: asset_server.load("tiles_grayscale/tile_0022.png"),
-                    sprite: Sprite {
-                        custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
-                        ..Default::default()
-                    },
-                    transform: Transform::from_translation(Vec3::new(
-                        (x) as f32,
-                        (y) as f32,
-                        -1f32,
-                    )),
-                    ..Default::default()
-                };
-                //commands.spawn(sprite);
-
                 let amount = SlimeAmount::from_integer((x + y * 20) as i64);
                 slime_grid.set_amount(x, y, amount);
             }
@@ -99,7 +84,7 @@ fn create_spawner(
     let spawner = SlimeSource { amount };
 
     let sprite = SpriteBundle {
-        texture: asset_server.load("tiles_grayscale/tile_0022.png"),
+        texture: asset_server.load("tiles_grayscale/tile_0057.png"),
         sprite: Sprite {
             custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
             ..Default::default()
@@ -108,24 +93,6 @@ fn create_spawner(
             (position.x) as f32,
             (position.y) as f32,
             1f32,
-        )),
-        ..Default::default()
-    };
-
-    commands.spawn((spawner, position, sprite));
-
-    let spawner = SlimeSource { amount };
-
-    let sprite = SpriteBundle {
-        texture: asset_server.load("tiles_grayscale/tile_0022.png"),
-        sprite: Sprite {
-            custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
-            ..Default::default()
-        },
-        transform: Transform::from_translation(Vec3::new(
-            (position.x) as f32,
-            (position.y) as f32,
-            -1f32,
         )),
         ..Default::default()
     };
