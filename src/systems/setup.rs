@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
-use crate::components::{MoveOnClick, SlimeAmount, SlimeGrid, SlimeSource, Tile, TilePosition};
+use crate::components::{
+    Building, MoveOnClick, SlimeAmount, SlimeGrid, SlimeSource, Tile, TilePosition,
+};
 
 pub struct GameSetupPlugin;
 
@@ -101,5 +103,5 @@ fn create_spawner(
         mouse_button: MouseButton::Left,
     };
 
-    commands.spawn((spawner, position, sprite, move_on));
+    commands.spawn((spawner, position, sprite, move_on, Building));
 }

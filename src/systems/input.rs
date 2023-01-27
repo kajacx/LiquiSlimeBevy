@@ -15,7 +15,7 @@ fn move_sources(
     mut mouse_input: Res<Input<MouseButton>>,
 ) {
     for (mut spawner, move_on) in &mut spawners {
-        if mouse_input.pressed(move_on.mouse_button) {
+        if mouse_input.just_pressed(move_on.mouse_button) {
             spawner.x = (spawner.x + 1) % 10; // TODO: hardwired level width
         }
     }
