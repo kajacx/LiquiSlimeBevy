@@ -67,6 +67,8 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         &asset_server,
         SlimeAmount::from_integer(10),
         TilePosition::new(2, 5),
+        MouseButton::Left,
+        "tiles_grayscale/tile_0057.png",
     );
 
     create_spawner(
@@ -74,6 +76,8 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         &asset_server,
         SlimeAmount::from_integer(-10),
         TilePosition::new(7, 1),
+        MouseButton::Right,
+        "tiles_grayscale/tile_0055.png",
     );
 }
 
@@ -82,11 +86,13 @@ fn create_spawner(
     asset_server: &Res<AssetServer>,
     amount: SlimeAmount,
     position: TilePosition,
+    move_button: MouseButton,
+    texture_file: &'static str,
 ) {
     let spawner = SlimeSource { amount };
 
     let sprite = SpriteBundle {
-        texture: asset_server.load("tiles_grayscale/tile_0057.png"),
+        texture: asset_server.load(texture_file),
         sprite: Sprite {
             custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
             ..Default::default()
@@ -100,7 +106,7 @@ fn create_spawner(
     };
 
     let move_on = MoveOnClick {
-        mouse_button: MouseButton::Left,
+        mouse_button: move_button,
     };
 
     commands.spawn((spawner, position, sprite, move_on, Building));
