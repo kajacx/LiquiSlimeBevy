@@ -30,7 +30,7 @@ fn update_building_postion(
     mut building_query: Query<(&mut Transform, &TilePosition), With<Building>>,
 ) {
     for (mut transform, position) in &mut building_query {
-        transform.translation.x = position.x as f32;
-        transform.translation.y = position.y as f32;
+        let z = transform.translation.z;
+        transform.translation = position.to_centered_vec(z);
     }
 }

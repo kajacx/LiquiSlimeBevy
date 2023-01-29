@@ -17,4 +17,8 @@ impl TilePosition {
             y: y.floor() as i32,
         }
     }
+
+    pub fn to_centered_vec(self, z: f32) -> Vec3 {
+        Vec3::new(self.x as f32 + 0.5, self.y as f32 + 0.5, z)
+    }
 }

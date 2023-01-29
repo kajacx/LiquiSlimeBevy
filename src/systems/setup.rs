@@ -46,7 +46,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
                         custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
                         ..Default::default()
                     },
-                    transform: Transform::from_translation(Vec3::new((x) as f32, (y) as f32, 0f32)),
+                    transform: Transform::from_translation(position.to_centered_vec(0.0)),
                     ..Default::default()
                 };
 
@@ -112,11 +112,7 @@ fn create_spawner(
             custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
             ..Default::default()
         },
-        transform: Transform::from_translation(Vec3::new(
-            (position.x) as f32,
-            (position.y) as f32,
-            1f32,
-        )),
+        transform: Transform::from_translation(position.to_centered_vec(1.0)),
         ..Default::default()
     };
 
