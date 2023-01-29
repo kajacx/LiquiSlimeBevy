@@ -58,21 +58,6 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
         }
 
         commands.spawn(slime_grid);
-
-        let sprite = SpriteBundle {
-            sprite: Sprite {
-                custom_size: Some(Vec2 {
-                    x: 0.1f32,
-                    y: 0.1f32,
-                }),
-                color: Color::rgb(1.0, 0.0, 0.0),
-                ..Default::default()
-            },
-            transform: Transform::from_translation(Vec3::new((0) as f32, (0) as f32, 0f32)),
-            ..Default::default()
-        };
-
-        commands.spawn(sprite);
     }
 }
 

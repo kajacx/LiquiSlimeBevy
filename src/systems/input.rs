@@ -6,24 +6,8 @@ pub struct GameInputPlugin;
 
 impl Plugin for GameInputPlugin {
     fn build(&self, app: &mut App) {
-        //app.add_system(pls_entities);
         app.add_system_to_stage(CoreStage::First, move_sources);
     }
-}
-
-fn pls_entities(world: &World) {
-    println!("----");
-    println!("----");
-    println!("----");
-    println!("----");
-    println!("Entities: {:?}", world.entities());
-    println!("----");
-    println!("----");
-    println!("----");
-    println!("----");
-    //for entity in world.entities().iter() {
-    //    println!("Entity: {:?}", entity);
-    //}
 }
 
 fn move_sources(
@@ -31,22 +15,19 @@ fn move_sources(
     mut mouse_input: Res<Input<MouseButton>>,
     windows: Res<Windows>,
     //camera: Query<(&Camera, &GlobalTransform), With<MainCamera>>, // TODO: handle multiple cameras?
-    camera: Query<(&Camera, &GlobalTransform)>,
-    camera1: Query<&Camera>,
-    camera2: Query<&GlobalTransform>,
+    camera_query: Query<(&Camera, &GlobalTransform)>,
 ) {
-    //println!("Camera: {:?}", camera1.get_single());
-    //println!("Global transform: {:?}", camera2.get_single());
-
     // get the camera info and transform
     // assuming there is exactly one main camera entity, so query::single() is OK
-    let camera = camera.get_single();
-    if (camera.is_err()) {
-        println!("Oh no, camera not found: {:?}", camera);
-        return; // TODO: bad spaghetti
+    let camera_pair = match camera_query.get_single() {
+        Ok(camera) => camera,
+        Err(err) => {
+            eprintln!("Oh no, camera not found: {:?}", err);
+            return;
+        }
     };
 
-    let (camera, camera_transform) = camera.expect("Camera should exist");
+    let (camera, camera_transform) = camera_pair;
 
     // get the window that the camera is displaying to (or the primary window)
     let window = if let RenderTarget::Window(id) = camera.target {
@@ -73,8 +54,7 @@ fn move_sources(
         // reduce it to a 2D value
         let world_pos: Vec2 = world_pos.truncate();
 
-        eprintln!("World coords: {}/{}", world_pos.x, world_pos.y);
-
+        // convert to tile position
         let tile_pos = TilePosition::from_floats_floor(world_pos.x, world_pos.y);
 
         // Game logic once we have the world coords
