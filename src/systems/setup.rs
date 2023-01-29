@@ -52,7 +52,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
 
                 commands.spawn((position, sprite, Tile));
 
-                let amount = SlimeAmount::from_integer((x + y * 20) as i64);
+                let amount = SlimeAmount::from_integer(256 * 10 + 128);
                 slime_grid.set_amount(x, y, amount);
             }
         }
@@ -94,7 +94,10 @@ fn create_spawner(
     let sprite = SpriteBundle {
         texture: asset_server.load(texture_file),
         sprite: Sprite {
-            custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
+            custom_size: Some(Vec2 {
+                x: 0.75f32,
+                y: 0.75f32,
+            }),
             ..Default::default()
         },
         transform: Transform::from_translation(position.to_centered_vec(1.0)),
