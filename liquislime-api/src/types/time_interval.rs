@@ -54,3 +54,30 @@ impl Div<i64> for TimeInterval {
     }
 }
 
+#[cfg(test)]
+mod test {
+    use super::TimeInterval;
+
+    fn check_fragments_divide(amount: i64) {
+        let second = TimeInterval::from_seconds(1.0);
+        let divided = second / amount;
+        assert_eq!(divided * amount, second);
+    }
+
+    #[test]
+    fn divides_common_values() {
+        // Common frame rates
+        check_fragments_divide(24);
+        check_fragments_divide(25);
+        check_fragments_divide(30);
+        check_fragments_divide(48);
+        check_fragments_divide(50);
+        check_fragments_divide(60);
+        check_fragments_divide(75);
+        check_fragments_divide(144);
+        check_fragments_divide(240);
+
+        // Make sure it can represent 1 millisecond accurately as well
+        check_fragments_divide(1000);
+    }
+}
