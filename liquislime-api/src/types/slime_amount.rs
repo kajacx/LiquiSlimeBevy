@@ -1,4 +1,5 @@
 use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
+use fp_bindgen::prelude::Serializable;
 use std::ops::{Div, Mul};
 
 const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
@@ -18,6 +19,7 @@ const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
     PartialOrd,
     Ord,
     Default,
+    Serializable,
 )]
 pub struct SlimeAmount(i64);
 

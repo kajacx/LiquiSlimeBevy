@@ -1,4 +1,5 @@
 use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
+use fp_bindgen::prelude::Serializable;
 use std::ops::{Div, Mul};
 
 const FRAGMENTS_IN_SECOND: i64 = 18_000;
@@ -18,21 +19,22 @@ const FRAGMENTS_IN_SECOND: i64 = 18_000;
     PartialOrd,
     Ord,
     Default,
+    Serializable,
 )]
-struct TimeInterval(i64);
+pub struct TimeInterval(i64);
 
 impl TimeInterval {
-    fn new() {
+    fn new() -> Self {
         Self(0)
     }
 
     // TODO: make it work with f64 as well as i64?
-    fn from_seconds(seconds: f64) {
+    fn from_seconds(seconds: f64) -> Self {
         Self((seconds * FRAGMENTS_IN_SECOND as f64) as i64)
     }
 
-    fn from_milliseconds(millis: f64) {
-        Self((seconds * (FRAGMENTS_IN_SECOND / 1000) as f64) as i64)
+    fn from_milliseconds(milliseconds: f64) -> Self {
+        Self((milliseconds * (FRAGMENTS_IN_SECOND / 1000) as f64) as i64)
     }
 }
 
