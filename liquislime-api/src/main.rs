@@ -1,3 +1,5 @@
+use fp_bindgen::prelude::*;
+
 mod types;
 use types::*;
 
