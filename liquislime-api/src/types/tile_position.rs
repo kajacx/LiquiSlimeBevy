@@ -1,5 +1,7 @@
 use fp_bindgen::prelude::Serializable;
 
+use super::Position;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Serializable)]
 pub struct TilePosition {
     pub x: i32,
@@ -11,10 +13,15 @@ impl TilePosition {
         Self { x, y }
     }
 
-    pub fn from_floats_floor(x: f32, y: f32) -> Self {
-        Self {
-            x: x.floor() as i32,
-            y: y.floor() as i32,
-        }
+    pub fn from_position(position: Position) -> Self {
+        Self::new(position.x.floor() as i32, position.y.floor() as i32)
+    }
+
+    pub fn to_position_center(self) -> Position {
+        Position::from_tile_center(self)
+    }
+
+    pub fn to_position_bottom_left(self) -> Position {
+        Position::from_tile_bottom_left(self)
     }
 }
