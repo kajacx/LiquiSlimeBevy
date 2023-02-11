@@ -1,4 +1,5 @@
-use fp_bindgen::prelude::*;
+use fp_bindgen::{prelude::*, types::CargoDependency};
+use std::collections::{BTreeMap, BTreeSet};
 
 mod types;
 use types::*;
@@ -24,5 +25,26 @@ fp_export! {
 }
 
 fn main() {
-    println!("Hello, world!");
+    // For plugin
+    fp_bindgen!(BindingConfig {
+        bindings_type: BindingsType::RustPlugin(RustPluginConfig {
+            name: "fp-protocol",
+            authors: "[\"kajacx\"]",
+            version: "0.1.0",
+            dependencies: BTreeMap::from([(
+                "fp-bindgen-support",
+                CargoDependency::with_version_and_features(
+                    "2.4.0",
+                    BTreeSet::from(["async", "guest"])
+                )
+            )]),
+        }),
+        path: "bindings/rust-plugin",
+    });
+
+    // For runtime
+    fp_bindgen!(BindingConfig {
+        bindings_type: BindingsType::RustWasmerRuntime,
+        path: "bindings/rust-wasmer-runtime",
+    });
 }
