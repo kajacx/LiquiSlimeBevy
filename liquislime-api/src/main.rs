@@ -14,10 +14,10 @@ fp_import! {
     fn set_slime_amount(position: TilePosition, SlimeAmount);
 }
 
-fn_export! {
+fp_export! {
     fn init();
 
-    fn on_mouse_click(event: MouseEvent);
+    //fn on_mouse_click(event: MouseEvent);
 
     fn update(elapsed: TimeInterval);
     fn render();

@@ -4,7 +4,20 @@ use std::ops::{Div, Mul};
 const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
 
 #[derive(
-    Debug, Clone, Copy, Add, Sub, Neg, AddAssign, SubAssign, PartialEq, Eq, PartialOrd, Ord, Default,
+    Debug,
+    Clone,
+    Copy,
+    Add,
+    Sub,
+    Neg,
+    AddAssign,
+    SubAssign,
+    PartialEq,
+    Eq,
+    Hash,
+    PartialOrd,
+    Ord,
+    Default,
 )]
 pub struct SlimeAmount(i64);
 
