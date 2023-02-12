@@ -1,22 +1,11 @@
-use fp_bindgen::prelude::Serializable;
 use serde::{Deserialize, Serialize};
 
 use super::Position;
 
 #[derive(
-    Debug,
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Default,
-    Serializable,
-    Serialize,
-    Deserialize,
+    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Serialize, Deserialize,
 )]
+#[cfg_attr(feature = "api-generation", derive(fp_bindgen::prelude::Serializable))]
 pub struct TilePosition {
     pub x: i32,
     pub y: i32,

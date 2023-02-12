@@ -1,5 +1,4 @@
 use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
-use fp_bindgen::prelude::Serializable;
 use serde::{Deserialize, Serialize};
 use std::ops::{Div, Mul};
 
@@ -20,10 +19,10 @@ const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
     PartialOrd,
     Ord,
     Default,
-    Serializable,
     Serialize,
     Deserialize,
 )]
+#[cfg_attr(feature = "api-generation", derive(fp_bindgen::prelude::Serializable))]
 pub struct SlimeAmount(i64);
 
 impl SlimeAmount {

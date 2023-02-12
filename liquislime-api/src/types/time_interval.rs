@@ -1,5 +1,4 @@
 use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
-use fp_bindgen::prelude::Serializable;
 use serde::{Deserialize, Serialize};
 use std::ops::{Div, Mul};
 
@@ -20,10 +19,10 @@ const FRAGMENTS_IN_SECOND: i64 = 18_000;
     PartialOrd,
     Ord,
     Default,
-    Serializable,
     Serialize,
     Deserialize,
 )]
+#[cfg_attr(feature = "api-generation", derive(fp_bindgen::prelude::Serializable))]
 pub struct TimeInterval(i64);
 
 impl TimeInterval {

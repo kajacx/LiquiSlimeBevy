@@ -1,11 +1,9 @@
-use fp_bindgen::prelude::Serializable;
 use serde::{Deserialize, Serialize};
 
 use super::TilePosition;
 
-#[derive(
-    Debug, Clone, Copy, PartialEq, PartialOrd, Default, Serializable, Serialize, Deserialize,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Default, Serialize, Deserialize)]
+#[cfg_attr(feature = "api-generation", derive(fp_bindgen::prelude::Serializable))]
 pub struct Position {
     pub x: f32,
     pub y: f32,
