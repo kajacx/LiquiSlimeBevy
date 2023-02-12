@@ -1,0 +1,11 @@
+[package]
+name = "liquslime-slime-voider-plugin"
+version = "0.1.0"
+authors = ["kajacx"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+liquislime-api = { path = "../../liquislime-api/bindings/rust-plugin" }
