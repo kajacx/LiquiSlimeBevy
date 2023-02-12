@@ -1,9 +1,14 @@
+#[cfg(feature = "api-generation")]
 use fp_bindgen::{prelude::*, types::CargoDependency};
+#[cfg(feature = "api-generation")]
 use std::collections::{BTreeMap, BTreeSet};
 
+#[allow(dead_code)]
 mod types;
+#[cfg(feature = "api-generation")]
 use types::*;
 
+#[cfg(feature = "api-generation")]
 fp_import! {
     fn level_width() -> i32;
     fn level_height() -> i32;
@@ -21,6 +26,7 @@ fp_import! {
     fn get_mouse_position() -> Position;
 }
 
+#[cfg(feature = "api-generation")]
 fp_export! {
     fn init();
 
@@ -30,6 +36,7 @@ fp_export! {
     fn render();
 }
 
+#[cfg(feature = "api-generation")]
 fn main() {
     // For plugin
     fp_bindgen!(BindingConfig {
@@ -56,4 +63,9 @@ fn main() {
         bindings_type: BindingsType::RustWasmerRuntime,
         path: "bindings/rust-wasmer-runtime",
     });
+}
+
+#[cfg(not(feature = "api-generation"))]
+fn main() {
+    panic!("Run the crate with the \"api-generation\" feature enabled.");
 }
