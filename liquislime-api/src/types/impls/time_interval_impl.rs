@@ -1,27 +1,6 @@
-use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
-use fp_bindgen::prelude::Serializable;
 use std::ops::{Div, Mul};
 
 const FRAGMENTS_IN_SECOND: i64 = 18_000;
-
-#[derive(
-    Debug,
-    Clone,
-    Copy,
-    Add,
-    Sub,
-    Neg,
-    AddAssign,
-    SubAssign,
-    PartialEq,
-    Eq,
-    Hash,
-    PartialOrd,
-    Ord,
-    Default,
-    Serializable,
-)]
-pub struct TimeInterval(i64);
 
 impl TimeInterval {
     fn new() -> Self {
@@ -81,5 +60,9 @@ mod test {
 
         // Make sure it can represent 1 millisecond accurately as well
         check_fragments_divide(1000);
+        assert_eq!(
+            TimeInterval::from_seconds(1.0),
+            TimeInterval::from_milliseconds(1000.0)
+        );
     }
 }

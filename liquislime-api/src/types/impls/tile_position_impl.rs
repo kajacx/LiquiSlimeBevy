@@ -1,12 +1,4 @@
-use fp_bindgen::prelude::Serializable;
-
-use super::Position;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Serializable)]
-pub struct TilePosition {
-    pub x: i32,
-    pub y: i32,
-}
+use super::{Position, TilePosition};
 
 impl TilePosition {
     pub fn new(x: i32, y: i32) -> Self {

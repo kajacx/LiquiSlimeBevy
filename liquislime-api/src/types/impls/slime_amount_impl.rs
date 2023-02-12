@@ -1,27 +1,9 @@
-use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
-use fp_bindgen::prelude::Serializable;
+// TODO: use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
 use std::ops::{Div, Mul};
 
-const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
+use super::super::SlimeAmount;
 
-#[derive(
-    Debug,
-    Clone,
-    Copy,
-    Add,
-    Sub,
-    Neg,
-    AddAssign,
-    SubAssign,
-    PartialEq,
-    Eq,
-    Hash,
-    PartialOrd,
-    Ord,
-    Default,
-    Serializable,
-)]
-pub struct SlimeAmount(i64);
+const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
 
 impl SlimeAmount {
     pub fn new() -> Self {
