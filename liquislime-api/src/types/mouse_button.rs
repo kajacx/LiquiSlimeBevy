@@ -1,9 +1,7 @@
-use fp_bindgen::prelude::Serializable;
 use serde::{Deserialize, Serialize};
 
-#[derive(
-    Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serializable, Serialize, Deserialize,
-)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "api-generation", derive(fp_bindgen::prelude::Serializable))]
 // TODO: this should be homogenous with keyboard / joystick buttons?
 pub enum MouseButton {
     LeftButton,

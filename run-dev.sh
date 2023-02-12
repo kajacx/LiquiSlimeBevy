@@ -2,8 +2,8 @@
 
 echo "Building API protocol" && \
 cd liquislime-api && \
-cargo test && \
-cargo run && \
+cargo test --features api-generation && \
+cargo run --features api-generation && \
 rm bindings/rust-plugin/src/types.rs && \
 cp -r src/types bindings/rust-plugin/src/types && \
 rm bindings/rust-wasmer-runtime/types.rs && \
