@@ -38,6 +38,14 @@ impl TimeInterval {
     fn from_milliseconds(milliseconds: f64) -> Self {
         Self((milliseconds * (FRAGMENTS_IN_SECOND / 1000) as f64) as i64)
     }
+
+    fn to_seconds(self) -> f64 {
+        (self.0 as f64) / (FRAGMENTS_IN_SECOND as f64)
+    }
+
+    fn to_milliseconds(self) -> f64 {
+        (self.0 as f64) / ((FRAGMENTS_IN_SECOND * 1000) as f64)
+    }
 }
 
 impl Mul<i64> for TimeInterval {

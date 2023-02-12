@@ -68,3 +68,21 @@ impl Div<i64> for SlimeAmount {
         Self(self.0 / rhs)
     }
 }
+
+impl Mul<f64> for SlimeAmount {
+    type Output = SlimeAmount;
+
+    #[inline]
+    fn mul(self, rhs: f64) -> Self::Output {
+        Self((self.0 as f64 * rhs).round() as i64)
+    }
+}
+
+impl Div<f64> for SlimeAmount {
+    type Output = SlimeAmount;
+
+    #[inline]
+    fn div(self, rhs: f64) -> Self::Output {
+        Self((self.0 as f64 / rhs).round() as i64)
+    }
+}
