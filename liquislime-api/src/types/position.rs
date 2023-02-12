@@ -1,8 +1,11 @@
 use fp_bindgen::prelude::Serializable;
+use serde::{Deserialize, Serialize};
 
 use super::TilePosition;
 
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Default, Serializable)]
+#[derive(
+    Debug, Clone, Copy, PartialEq, PartialOrd, Default, Serializable, Serialize, Deserialize,
+)]
 pub struct Position {
     pub x: f32,
     pub y: f32,

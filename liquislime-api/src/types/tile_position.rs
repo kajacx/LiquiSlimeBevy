@@ -1,8 +1,22 @@
 use fp_bindgen::prelude::Serializable;
+use serde::{Deserialize, Serialize};
 
 use super::Position;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Serializable)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Default,
+    Serializable,
+    Serialize,
+    Deserialize,
+)]
 pub struct TilePosition {
     pub x: i32,
     pub y: i32,

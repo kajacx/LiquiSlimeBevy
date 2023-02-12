@@ -1,5 +1,6 @@
 use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
 use fp_bindgen::prelude::Serializable;
+use serde::{Deserialize, Serialize};
 use std::ops::{Div, Mul};
 
 const FRAGMENTS_IN_SECOND: i64 = 18_000;
@@ -20,6 +21,8 @@ const FRAGMENTS_IN_SECOND: i64 = 18_000;
     Ord,
     Default,
     Serializable,
+    Serialize,
+    Deserialize,
 )]
 pub struct TimeInterval(i64);
 
