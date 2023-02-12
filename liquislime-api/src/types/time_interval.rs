@@ -26,24 +26,24 @@ const FRAGMENTS_IN_SECOND: i64 = 18_000;
 pub struct TimeInterval(i64);
 
 impl TimeInterval {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self(0)
     }
 
     // TODO: make it work with f64 as well as i64?
-    fn from_seconds(seconds: f64) -> Self {
+    pub fn from_seconds(seconds: f64) -> Self {
         Self((seconds * FRAGMENTS_IN_SECOND as f64) as i64)
     }
 
-    fn from_milliseconds(milliseconds: f64) -> Self {
+    pub fn from_milliseconds(milliseconds: f64) -> Self {
         Self((milliseconds * (FRAGMENTS_IN_SECOND / 1000) as f64) as i64)
     }
 
-    fn to_seconds(self) -> f64 {
+    pub fn to_seconds(self) -> f64 {
         (self.0 as f64) / (FRAGMENTS_IN_SECOND as f64)
     }
 
-    fn to_milliseconds(self) -> f64 {
+    pub fn to_milliseconds(self) -> f64 {
         (self.0 as f64) / ((FRAGMENTS_IN_SECOND * 1000) as f64)
     }
 }
@@ -91,5 +91,9 @@ mod test {
 
         // Make sure it can represent 1 millisecond accurately as well
         check_fragments_divide(1000);
+        assert_eq!(
+            TimeInterval::from_seconds(1.0),
+            TimeInterval::from_milliseconds(1000.0)
+        );
     }
 }

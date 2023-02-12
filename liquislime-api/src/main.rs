@@ -12,7 +12,7 @@ fp_import! {
     fn set_own_position(position: TilePosition);
 
     fn get_slime_amount(position: TilePosition) -> SlimeAmount;
-    fn set_slime_amount(position: TilePosition, SlimeAmount);
+    fn set_slime_amount(position: TilePosition, amount: SlimeAmount);
 
     fn was_mouse_just_pressed(button: MouseButton) -> bool;
     fn is_mouse_pressed(button: MouseButton) -> bool;
@@ -34,7 +34,7 @@ fn main() {
     // For plugin
     fp_bindgen!(BindingConfig {
         bindings_type: BindingsType::RustPlugin(RustPluginConfig {
-            name: "fp-protocol",
+            name: "liquislime-api",
             authors: "[\"kajacx\"]",
             version: "0.1.0",
             dependencies: BTreeMap::from([
