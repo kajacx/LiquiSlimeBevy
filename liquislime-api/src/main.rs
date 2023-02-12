@@ -37,13 +37,16 @@ fn main() {
             name: "fp-protocol",
             authors: "[\"kajacx\"]",
             version: "0.1.0",
-            dependencies: BTreeMap::from([(
-                "fp-bindgen-support",
-                CargoDependency::with_version_and_features(
-                    "2.4.0",
-                    BTreeSet::from(["async", "guest"])
-                )
-            )]),
+            dependencies: BTreeMap::from([
+                (
+                    "fp-bindgen-support",
+                    CargoDependency::with_version_and_features(
+                        "2.4.0",
+                        BTreeSet::from(["async", "guest"])
+                    )
+                ),
+                ("derive_more", CargoDependency::with_version("0.99.17"))
+            ]),
         }),
         path: "bindings/rust-plugin",
     });

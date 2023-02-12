@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 derive_more = "0.99.17"
 fp-bindgen = { version = "2.4.0", features = ["generators"] }
+serde = { version = "1.0.152", features = ["derive"] }
