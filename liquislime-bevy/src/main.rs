@@ -6,6 +6,7 @@ use systems::AllGamePlugins;
 
 mod components;
 mod systems;
+mod units;
 
 fn main() {
     App::new()
