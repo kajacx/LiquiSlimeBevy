@@ -107,7 +107,7 @@ fn create_spawner(
             }),
             ..Default::default()
         },
-        transform: Transform::from_translation(position.to_centered_vec(1.0)),
+        transform: Transform::from_translation(position.to_position_center().to_vec3(1.0)),
         ..Default::default()
     };
 

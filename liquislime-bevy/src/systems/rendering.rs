@@ -34,6 +34,6 @@ fn update_building_postion(
 ) {
     for (mut transform, position) in &mut building_query {
         let z = transform.translation.z;
-        transform.translation = position.to_centered_vec(z);
+        transform.translation = position.to_position_center().to_vec3(z);
     }
 }

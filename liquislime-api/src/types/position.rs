@@ -25,4 +25,9 @@ impl Position {
     pub fn to_tile_position(self) -> TilePosition {
         TilePosition::from_position(self)
     }
+
+    #[cfg(feature = "bevy-host")]
+    pub fn to_vec3(z: f32) -> bevy::prelude::Vec3 {
+        bevy::prelude::Vec3::new(self.x, self.y, z)
+    }
 }
