@@ -1,3 +1,4 @@
+use crate::units::UnitId;
 use bevy::ecs::world::World;
 use std::{
     ops::{Deref, DerefMut},
@@ -5,7 +6,7 @@ use std::{
 };
 
 // TODO: This could be an atomic cell or something?
-pub static CURRENT_UNIT: Mutex<Option<UnitId>> = Mutex::new(None);
+static CURRENT_UNIT: Mutex<Option<UnitId>> = Mutex::new(None);
 
 pub fn set_current_unit(unit: UnitId) {
     (*CURRENT_UNIT.lock().expect("Set current unit mutex lock")) = Some(unit);

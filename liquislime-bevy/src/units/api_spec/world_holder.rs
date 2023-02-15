@@ -4,7 +4,7 @@ use std::{
     sync::Mutex,
 };
 
-pub static GLOBAL_WORLD: Mutex<UnsafeWorldRef> = Mutex::new(UnsafeWorldRef(std::ptr::null_mut()));
+static GLOBAL_WORLD: Mutex<UnsafeWorldRef> = Mutex::new(UnsafeWorldRef(std::ptr::null_mut()));
 
 pub fn set_world(world: &mut World) {
     (*GLOBAL_WORLD.lock().expect("Set world mutex lock")).0 = world as *mut _;
@@ -12,7 +12,10 @@ pub fn set_world(world: &mut World) {
 
 pub fn get_world() -> impl DerefMut<Target = World> {
     // TODO: Horribly unsafe how to ensure safety more properly?
-    unsafe { (*GLOBAL_WORLD.lock().expect("Get world mutex lock")).0 as &mut World }
+    let mut locked = GLOBAL_WORLD.lock().expect("Get world mutex lock");
+    //let dereffed = *&mut locked;
+    let inner = locked.0;
+    unsafe { &mut *inner }
 }
 
 struct UnsafeWorldRef(*mut World);

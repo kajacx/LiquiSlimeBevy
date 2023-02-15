@@ -11,6 +11,7 @@ derive_more = "0.99.17"
 fp-bindgen = "2.4.0"
 fp-bindgen-support = { version = "2.4.0", features = ["host", "async"] }
 serde = { version = "1.0.152", features = ["derive"] }
+wasmer = { version = "2.3", features = ["singlepass"] }
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]
