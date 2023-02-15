@@ -1927,7 +1927,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "liqui-slime-bevy"
+name = "liquislime-bevy"
 version = "0.1.0"
 dependencies = [
  "bevy",
