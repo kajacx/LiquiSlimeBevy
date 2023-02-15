@@ -1,7 +1,7 @@
 use self::types::*;
 
 use super::{
-    global_storage::{get_current_unit, get_world},
+    global_storage::{get_current_unit, get_level_info, get_world},
     UnitId,
 };
 
@@ -9,10 +9,10 @@ pub mod bindings;
 pub mod types;
 
 fn level_width() -> i32 {
-    10 // TODO
+    get_level_info().width as i32 // TODO: why is level width an i32?
 }
 fn level_height() -> i32 {
-    10 // TODO
+    get_level_info().height as i32
 }
 
 fn get_own_position() -> TilePosition {
@@ -26,7 +26,6 @@ fn get_own_position() -> TilePosition {
     // TODO: log as error and return 0,0 position instead?
     panic!("get_own_position did not find current unit")
 }
-
 fn set_own_position(position: TilePosition) {
     let mut world = get_world();
     let mut query = world.query::<(&UnitId, &mut TilePosition)>();
