@@ -1,3 +1,5 @@
+use self::types::*;
+
 pub mod bindings;
 pub mod types;
 pub mod world_holder;

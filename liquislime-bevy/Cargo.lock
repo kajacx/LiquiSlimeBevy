@@ -1933,6 +1933,7 @@ dependencies = [
  "bevy",
  "derive_more",
  "fp-bindgen",
+ "serde",
 ]
 
 [[package]]

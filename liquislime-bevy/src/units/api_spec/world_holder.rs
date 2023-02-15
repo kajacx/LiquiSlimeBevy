@@ -1,9 +1,8 @@
+use bevy::ecs::world::World;
 use std::{
     ops::{Deref, DerefMut},
     sync::Mutex,
 };
-
-use bevy::prelude::DerefMut;
 
 pub static GLOBAL_WORLD: Mutex<*mut World> = Mutex::new(std::ptr::null_mut());
 

@@ -9,6 +9,7 @@ edition = "2021"
 bevy = "0.9.1"
 derive_more = "0.99.17"
 fp-bindgen = "2.4.0"
+serde = { version = "1.0.152", features = ["derive"] }
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]

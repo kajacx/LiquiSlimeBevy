@@ -58,7 +58,7 @@ fn move_sources(
         let tile_pos = TilePosition::from_floats_floor(world_pos.x, world_pos.y);
 
         // Game logic once we have the world coords
-        if (tile_pos.x >= 0 && tile_pos.x < 10 && tile_pos.y >= 0 && tile_pos.y < 10) {
+        if tile_pos.x >= 0 && tile_pos.x < 10 && tile_pos.y >= 0 && tile_pos.y < 10 {
             // TODO: hardwired world side. Also: make a new method "in world" in tile position?
             for (mut spawner_position, move_on) in &mut spawners {
                 if mouse_input.just_pressed(move_on.mouse_button) {
