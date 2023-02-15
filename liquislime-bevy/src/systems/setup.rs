@@ -10,7 +10,7 @@ pub struct GameSetupPlugin;
 impl Plugin for GameSetupPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(setup_camera);
-        app.add_startup_system(spawn_tiles(10, 10));
+        app.add_startup_system(spawn_tiles(10, 10)); // TODO: Fixed world size
         app.add_startup_system(spawn_sources);
     }
 }
@@ -115,7 +115,6 @@ fn create_spawner(
         mouse_button: move_button,
     };
 
-    println!("DIR: {:?} {:?}", std::env::current_dir(), plugin_path);
     register_new_unit(unit_id, Script::from_plugin_path(plugin_path));
 
     commands.spawn((spawner, position, sprite, move_on, Building, unit_id));

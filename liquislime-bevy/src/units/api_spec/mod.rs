@@ -16,19 +16,27 @@ fn level_height() -> i32 {
 }
 
 fn get_own_position() -> TilePosition {
-    let query = get_world().query::<(&UnitId, &TilePosition)>();
-    for (unit_id, tile_position) in &query {
-        if unit_id == get_current_unit() {
+    let mut world = get_world();
+    let mut query = world.query::<(&UnitId, &TilePosition)>();
+    for (unit_id, tile_position) in query.iter(&world) {
+        println!(
+            "existing unit: {:?}, current unit: {:?}",
+            unit_id,
+            get_current_unit()
+        );
+        if *unit_id == get_current_unit() {
             return tile_position.clone(); // TODO: make sure it is copied and not cloned
         }
     }
+    // TODO: log as error and return 0,0 position instead?
     panic!("get_own_position did not find current unit")
 }
 
 fn set_own_position(position: TilePosition) {
-    let mut query = get_world().query::<(&UnitId, &mut TilePosition)>();
-    for (unit_id, tile_position) in &mut query {
-        if unit_id == get_current_unit() {
+    let mut world = get_world();
+    let mut query = world.query::<(&UnitId, &mut TilePosition)>();
+    for (unit_id, mut tile_position) in query.iter_mut(&mut world) {
+        if *unit_id == get_current_unit() {
             *tile_position = position;
             return;
         }
