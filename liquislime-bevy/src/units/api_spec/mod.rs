@@ -4,8 +4,12 @@ pub mod bindings;
 pub mod types;
 pub mod world_holder;
 
-fn level_width() -> i32;
-fn level_height() -> i32;
+fn level_width() -> i32 {
+    10 // TODO
+}
+fn level_height() -> i32 {
+    10 // TODO
+}
 
 fn get_own_position() -> TilePosition;
 fn set_own_position(position: TilePosition);
