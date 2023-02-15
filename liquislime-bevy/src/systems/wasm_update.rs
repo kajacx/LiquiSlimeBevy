@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    components::{SlimeGrid, SlimeSource, TilePosition},
+    components::{SlimeGrid, SlimeSource},
     units::{api_spec::types::TimeInterval, global_storage::set_world, update_all_units},
 };
 

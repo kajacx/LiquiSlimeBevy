@@ -1,6 +1,9 @@
 use bevy::{input::mouse::MouseButtonInput, prelude::*, render::camera::RenderTarget};
 
-use crate::components::{Building, MoveOnClick, SlimeGrid, Tile, TilePosition};
+use crate::{
+    components::{Building, MoveOnClick, SlimeGrid, Tile},
+    units::api_spec::types::TilePosition,
+};
 
 pub struct GameInputPlugin;
 
@@ -54,17 +57,18 @@ fn move_sources(
         // reduce it to a 2D value
         let world_pos: Vec2 = world_pos.truncate();
 
+        // TODO: re-hook this to global mouse event?
         // convert to tile position
-        let tile_pos = TilePosition::from_floats_floor(world_pos.x, world_pos.y);
+        // let tile_pos = TilePosition::from_floats_floor(world_pos.x, world_pos.y);
 
-        // Game logic once we have the world coords
-        if tile_pos.x >= 0 && tile_pos.x < 10 && tile_pos.y >= 0 && tile_pos.y < 10 {
-            // TODO: hardwired world side. Also: make a new method "in world" in tile position?
-            for (mut spawner_position, move_on) in &mut spawners {
-                if mouse_input.just_pressed(move_on.mouse_button) {
-                    *spawner_position = tile_pos;
-                }
-            }
-        }
+        // // Game logic once we have the world coords
+        // if tile_pos.x >= 0 && tile_pos.x < 10 && tile_pos.y >= 0 && tile_pos.y < 10 {
+        //     // TODO: hardwired world side. Also: make a new method "in world" in tile position?
+        //     for (mut spawner_position, move_on) in &mut spawners {
+        //         if mouse_input.just_pressed(move_on.mouse_button) {
+        //             *spawner_position = tile_pos;
+        //         }
+        //     }
+        // }
     }
 }
