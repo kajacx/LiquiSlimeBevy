@@ -7,7 +7,7 @@ use crate::{
 
 pub struct WasmUpdatePlugin;
 
-impl Plugin for UpdateLogicPlugin {
+impl Plugin for WasmUpdatePlugin {
     fn build(&self, app: &mut App) {
         app.add_system_to_stage(CoreStage::PreUpdate, update_wasm_plugins);
     }

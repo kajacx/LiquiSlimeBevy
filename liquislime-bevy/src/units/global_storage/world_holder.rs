@@ -12,8 +12,7 @@ pub fn set_world(world: &mut World) {
 
 pub fn get_world() -> impl DerefMut<Target = World> {
     // TODO: Horribly unsafe how to ensure safety more properly?
-    let mut locked = GLOBAL_WORLD.lock().expect("Get world mutex lock");
-    //let dereffed = *&mut locked;
+    let locked = GLOBAL_WORLD.lock().expect("Get world mutex lock");
     let inner = locked.0;
     unsafe { &mut *inner }
 }
