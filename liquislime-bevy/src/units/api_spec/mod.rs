@@ -1,4 +1,4 @@
-use self::types::*;
+use self::{helpers::get_slime_grid, types::*};
 
 use super::{
     global_storage::{get_current_unit, get_level_info, get_world},
@@ -6,6 +6,7 @@ use super::{
 };
 
 pub mod bindings;
+mod helpers;
 pub mod types;
 
 fn level_width() -> i32 {
@@ -40,10 +41,18 @@ fn set_own_position(position: TilePosition) {
 }
 
 fn get_slime_amount(position: TilePosition) -> SlimeAmount {
-    SlimeAmount::from_integer(50) // TODO
+    let mut world = get_world();
+    let slime_grid = get_slime_grid(&mut world);
+    slime_grid
+        .try_get_amount(position)
+        .expect("TODO: better logging")
 }
 fn set_slime_amount(position: TilePosition, amount: SlimeAmount) {
-    // TODO
+    let mut world = get_world();
+    let slime_grid = get_slime_grid(&mut world);
+    slime_grid
+        .try_set_amount(position, amount)
+        .expect("TODO: better logging")
 }
 
 fn was_mouse_just_pressed(button: MouseButton) -> bool {

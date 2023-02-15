@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::units::api_spec::types::TilePosition;
+
 use super::SlimeAmount;
 
 #[derive(Component, Debug)]
@@ -27,7 +29,10 @@ impl SlimeGrid {
         self.slime_amounts[self.get_index(x, y)]
     }
 
-    pub fn try_get_amount(self, x: usize, y: usize) -> Option<SlimeAmount> {
+    pub fn try_get_amount(self, position: TilePosition) -> Option<SlimeAmount> {
+        let x = position.x as usize;
+        let y = position.y as usize;
+
         if self.in_range(x, y) {
             Some(self.get_amount(x, y))
         } else {
@@ -41,7 +46,14 @@ impl SlimeGrid {
         self.slime_amounts[index] = amount.non_negative();
     }
 
-    pub fn try_set_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) -> Result<(), ()> {
+    pub fn try_set_amount(
+        &mut self,
+        position: TilePosition,
+        amount: SlimeAmount,
+    ) -> Result<(), ()> {
+        let x = position.x as usize;
+        let y = position.y as usize;
+
         if self.in_range(x, y) {
             self.set_amount(x, y, amount);
             Ok(())
