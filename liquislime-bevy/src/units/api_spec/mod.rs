@@ -1,5 +1,10 @@
 use self::types::*;
 
+use super::{
+    global_storage::{get_current_unit, get_world},
+    UnitId,
+};
+
 pub mod bindings;
 pub mod types;
 
@@ -11,10 +16,25 @@ fn level_height() -> i32 {
 }
 
 fn get_own_position() -> TilePosition {
-    TilePosition::new(2, 5) // TODO
+    let query = get_world().query::<(&UnitId, &TilePosition)>();
+    for (unit_id, tile_position) in &query {
+        if unit_id == get_current_unit() {
+            return tile_position.clone(); // TODO: make sure it is copied and not cloned
+        }
+    }
+    panic!("get_own_position did not find current unit")
 }
+
 fn set_own_position(position: TilePosition) {
-    // TODO
+    let mut query = get_world().query::<(&UnitId, &mut TilePosition)>();
+    for (unit_id, tile_position) in &mut query {
+        if unit_id == get_current_unit() {
+            *tile_position = position;
+            return;
+        }
+    }
+    // TODO: this needs to be reworked way better
+    panic!("set_own_position did not find current unit")
 }
 
 fn get_slime_amount(position: TilePosition) -> SlimeAmount {
