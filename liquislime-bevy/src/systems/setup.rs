@@ -47,7 +47,9 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
                         custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
                         ..Default::default()
                     },
-                    transform: Transform::from_translation(position.to_centered_vec(0.0)),
+                    transform: Transform::from_translation(
+                        position.to_position_center().to_vec3(0.0),
+                    ),
                     ..Default::default()
                 };
 

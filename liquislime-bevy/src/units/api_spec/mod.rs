@@ -19,11 +19,6 @@ fn get_own_position() -> TilePosition {
     let mut world = get_world();
     let mut query = world.query::<(&UnitId, &TilePosition)>();
     for (unit_id, tile_position) in query.iter(&world) {
-        println!(
-            "existing unit: {:?}, current unit: {:?}",
-            unit_id,
-            get_current_unit()
-        );
         if *unit_id == get_current_unit() {
             return tile_position.clone(); // TODO: make sure it is copied and not cloned
         }
