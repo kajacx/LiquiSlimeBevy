@@ -1,9 +1,7 @@
 use self::types::*;
 
 pub mod bindings;
-pub mod current_unit_holder;
 pub mod types;
-pub mod world_holder;
 
 fn level_width() -> i32 {
     10 // TODO
