@@ -32,7 +32,7 @@ fp_export! {
 
     //fn on_mouse_click(event: MouseEvent);
 
-    fn update(elapsed: TimeInterval);
+    fn update(time_elapsed: TimeInterval);
     fn render();
 }
 
