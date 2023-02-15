@@ -1,13 +1,19 @@
-use std::collections::HashMap;
+use bevy::prelude::*;
 
-type UnitMap = HashMap<UnitId, Script>;
+use crate::{
+    components::{SlimeGrid, SlimeSource, TilePosition},
+    units::{api_spec::types::TimeInterval, global_storage::set_world, update_all_units},
+};
 
-static UNIT_SCRIPT_MAP: Mutex<UnitMap> = Mutex::new(HashMap::new());
+pub struct WasmUpdatePlugin;
 
-pub fn register_new_unit(id: UnitId, script: Script) {
-    (&mut *get_map()).insert(id, script);
+impl Plugin for UpdateLogicPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_system_to_stage(CoreStage::PreUpdate, update_wasm_plugins);
+    }
 }
 
-fn get_map() -> impl DerefMut<Target = UnitMap> {
-    UNIT_SCRIPT_MAP.lock().expect("Should lock unit script map")
+fn update_wasm_plugins(world: &mut World) {
+    set_world(world);
+    update_all_units(TimeInterval::from_milliseconds(20.0)); // TODO: proper time elapsed
 }
