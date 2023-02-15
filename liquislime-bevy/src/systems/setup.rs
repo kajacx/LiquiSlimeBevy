@@ -71,7 +71,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         MouseButton::Left,
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
-        "liquislime-plugins/slime-spawner/target/wasm32-unknown-unknown/debug/liquslime_slime_spawner_plugin.wasm"
+        "../liquislime-plugins/slime-spawner/target/wasm32-unknown-unknown/debug/liquislime_slime_spawner_plugin.wasm"
     );
 
     create_spawner(
@@ -82,7 +82,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         MouseButton::Right,
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
-        "liquislime-plugins/slime-voider/target/wasm32-unknown-unknown/debug/liquslime_slime_spawner_plugin.wasm"
+        "../liquislime-plugins/slime-voider/target/wasm32-unknown-unknown/debug/liquislime_slime_voider_plugin.wasm"
     );
 }
 
@@ -115,6 +115,7 @@ fn create_spawner(
         mouse_button: move_button,
     };
 
+    println!("DIR: {:?} {:?}", std::env::current_dir(), plugin_path);
     register_new_unit(unit_id, Script::from_plugin_path(plugin_path));
 
     commands.spawn((spawner, position, sprite, move_on, Building, unit_id));

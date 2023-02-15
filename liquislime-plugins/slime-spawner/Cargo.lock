@@ -70,7 +70,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "liquslime-slime-spawner-plugin"
+name = "liquislime-slime-spawner-plugin"
 version = "0.1.0"
 dependencies = [
  "liquislime-api",

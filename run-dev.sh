@@ -25,4 +25,9 @@ done && \
 cd .. && \
 echo "Plugins built" && \
 \
+echo "Running bevy game in debug mode" && \
+cd liquislime-bevy && \
+cargo run && \
+cd .. && \
+\
 echo "All done"

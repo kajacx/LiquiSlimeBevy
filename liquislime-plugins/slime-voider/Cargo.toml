@@ -1,5 +1,5 @@
 [package]
-name = "liquslime-slime-voider-plugin"
+name = "liquislime-slime-voider-plugin"
 version = "0.1.0"
 authors = ["kajacx"]
 edition = "2018"
