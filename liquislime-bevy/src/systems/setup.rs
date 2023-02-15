@@ -1,8 +1,11 @@
 use bevy::prelude::*;
 
 use crate::{
-    components::{Building, MoveOnClick, SlimeAmount, SlimeGrid, SlimeSource, Tile},
-    units::{api_spec::types::TilePosition, register_new_unit, Script, UnitId},
+    components::{Building, MoveOnClick, SlimeGrid, SlimeSource, Tile},
+    units::{
+        api_spec::types::{SlimeAmount, TilePosition},
+        register_new_unit, Script, UnitId,
+    },
 };
 
 pub struct GameSetupPlugin;

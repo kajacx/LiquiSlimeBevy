@@ -1,8 +1,6 @@
 use bevy::prelude::*;
 
-use crate::units::api_spec::types::TilePosition;
-
-use super::SlimeAmount;
+use crate::units::api_spec::types::{SlimeAmount, TilePosition};
 
 #[derive(Component, Debug)]
 pub struct SlimeGrid {
@@ -29,7 +27,7 @@ impl SlimeGrid {
         self.slime_amounts[self.get_index(x, y)]
     }
 
-    pub fn try_get_amount(self, position: TilePosition) -> Option<SlimeAmount> {
+    pub fn try_get_amount(&self, position: TilePosition) -> Option<SlimeAmount> {
         let x = position.x as usize;
         let y = position.y as usize;
 

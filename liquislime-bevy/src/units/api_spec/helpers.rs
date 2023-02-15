@@ -11,7 +11,7 @@ use super::super::{
     UnitId,
 };
 
-pub fn get_slime_grid(world: &mut World) -> impl DerefMut<Target = SlimeGrid> {
+pub fn get_slime_grid<'a>(world: &'a mut World) -> impl DerefMut<Target = SlimeGrid> + 'a {
     world
         .query::<&mut SlimeGrid>()
         .get_single_mut(world)

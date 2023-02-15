@@ -46,10 +46,11 @@ fn get_slime_amount(position: TilePosition) -> SlimeAmount {
     slime_grid
         .try_get_amount(position)
         .expect("TODO: better logging")
+        .clone() // TODO: force copy
 }
 fn set_slime_amount(position: TilePosition, amount: SlimeAmount) {
     let mut world = get_world();
-    let slime_grid = get_slime_grid(&mut world);
+    let mut slime_grid = get_slime_grid(&mut world);
     slime_grid
         .try_set_amount(position, amount)
         .expect("TODO: better logging")
