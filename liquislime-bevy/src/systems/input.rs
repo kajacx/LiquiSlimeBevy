@@ -2,19 +2,21 @@ use bevy::{input::mouse::MouseButtonInput, prelude::*, render::camera::RenderTar
 
 use crate::{
     components::{Building, MoveOnClick, SlimeGrid, Tile},
-    units::api_spec::types::TilePosition,
+    units::{
+        api_spec::types::{Position, TilePosition},
+        global_storage::{set_mouse_state, MouseState},
+    },
 };
 
 pub struct GameInputPlugin;
 
 impl Plugin for GameInputPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_to_stage(CoreStage::First, move_sources);
+        app.add_system_to_stage(CoreStage::First, update_mouse_position);
     }
 }
 
-fn move_sources(
-    mut spawners: Query<(&mut TilePosition, &MoveOnClick)>,
+fn update_mouse_position(
     mut mouse_input: Res<Input<MouseButton>>,
     windows: Res<Windows>,
     //camera: Query<(&Camera, &GlobalTransform), With<MainCamera>>, // TODO: handle multiple cameras?
@@ -40,6 +42,33 @@ fn move_sources(
     }
     .expect("Window should be found");
 
+    set_mouse_state(MouseState {
+        position: get_mouse_position(window, camera, camera_transform),
+        just_pressed: false,
+        just_released: false,
+        pressed: false,
+    });
+
+    // TODO: re-hook this to global mouse event?
+    // convert to tile position
+    // let tile_pos = TilePosition::from_floats_floor(world_pos.x, world_pos.y);
+
+    // // Game logic once we have the world coords
+    // if tile_pos.x >= 0 && tile_pos.x < 10 && tile_pos.y >= 0 && tile_pos.y < 10 {
+    //     // TODO: hardwired world side. Also: make a new method "in world" in tile position?
+    //     for (mut spawner_position, move_on) in &mut spawners {
+    //         if mouse_input.just_pressed(move_on.mouse_button) {
+    //             *spawner_position = tile_pos;
+    //         }
+    //     }
+    // }
+}
+
+fn get_mouse_position(
+    window: &Window,
+    camera: &Camera,
+    camera_transform: &GlobalTransform,
+) -> Option<Position> {
     // check if the cursor is inside the window and get its position
     if let Some(screen_pos) = window.cursor_position() {
         // get the size of the window
@@ -57,18 +86,11 @@ fn move_sources(
         // reduce it to a 2D value
         let world_pos: Vec2 = world_pos.truncate();
 
-        // TODO: re-hook this to global mouse event?
-        // convert to tile position
-        // let tile_pos = TilePosition::from_floats_floor(world_pos.x, world_pos.y);
-
-        // // Game logic once we have the world coords
-        // if tile_pos.x >= 0 && tile_pos.x < 10 && tile_pos.y >= 0 && tile_pos.y < 10 {
-        //     // TODO: hardwired world side. Also: make a new method "in world" in tile position?
-        //     for (mut spawner_position, move_on) in &mut spawners {
-        //         if mouse_input.just_pressed(move_on.mouse_button) {
-        //             *spawner_position = tile_pos;
-        //         }
-        //     }
-        // }
+        Some(Position {
+            x: world_pos.x,
+            y: world_pos.y,
+        })
+    } else {
+        None
     }
 }

@@ -12,6 +12,13 @@ fn update(time_elapsed: TimeInterval) {
 
     let added_amount_per_second = SlimeAmount::from_integer(1000);
 
+    if let Some(pos) = get_mouse_position() {
+        let pos = pos.to_tile_position();
+        let amount = get_slime_amount(pos);
+        let amount = amount + added_amount_per_second * time_elapsed.to_seconds();
+        set_slime_amount(pos, amount);
+    }
+
     let amount = get_slime_amount(get_own_position());
     let amount = amount + added_amount_per_second * time_elapsed.to_seconds();
     set_slime_amount(get_own_position(), amount);
