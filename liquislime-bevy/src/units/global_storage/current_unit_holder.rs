@@ -1,9 +1,6 @@
 use crate::units::UnitId;
 use bevy::ecs::world::World;
-use std::{
-    ops::{Deref, DerefMut},
-    sync::Mutex,
-};
+use std::sync::Mutex;
 
 // TODO: This could be an atomic cell or something?
 static CURRENT_UNIT: Mutex<Option<UnitId>> = Mutex::new(None);

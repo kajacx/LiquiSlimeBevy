@@ -1,8 +1,5 @@
 use bevy::ecs::world::World;
-use std::{
-    ops::{Deref, DerefMut},
-    sync::Mutex,
-};
+use std::{ops::DerefMut, sync::Mutex};
 
 static GLOBAL_WORLD: Mutex<UnsafeWorldRef> = Mutex::new(UnsafeWorldRef(std::ptr::null_mut()));
 

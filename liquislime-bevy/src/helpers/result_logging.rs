@@ -1,8 +1,8 @@
 use std::fmt::Debug;
 
-use bevy::{prelude::warn, utils::tracing::log::logger};
+use bevy::prelude::warn;
 
-trait ResultLogger<R, E> {
+pub trait ResultLogger<R, E> {
     fn log_err(self);
 
     fn log_err_or(self, or: R) -> R;

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::components::{SlimeGrid, SlimeSource};
+use crate::components::SlimeGrid;
 
 pub struct UpdateLogicPlugin;
 

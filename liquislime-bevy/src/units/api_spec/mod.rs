@@ -4,6 +4,7 @@ use super::{
     global_storage::{get_current_unit, get_level_info, get_mouse_state, get_world},
     UnitId,
 };
+use crate::helpers::ResultLogger;
 
 pub mod bindings;
 mod helpers;
@@ -45,15 +46,13 @@ fn get_slime_amount(position: TilePosition) -> SlimeAmount {
     let slime_grid = get_slime_grid(&mut world);
     slime_grid
         .try_get_amount(position)
-        .expect("TODO: better logging")
-        .clone() // TODO: force copy
+        .log_err_or(SlimeAmount::from_integer(0))
+    //.clone() // TODO: force copy
 }
 fn set_slime_amount(position: TilePosition, amount: SlimeAmount) {
     let mut world = get_world();
     let mut slime_grid = get_slime_grid(&mut world);
-    slime_grid
-        .try_set_amount(position, amount)
-        .expect("TODO: better logging")
+    slime_grid.try_set_amount(position, amount).log_err();
 }
 
 fn was_mouse_just_pressed(button: MouseButton) -> bool {
