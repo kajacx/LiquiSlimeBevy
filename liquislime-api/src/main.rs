@@ -23,7 +23,7 @@ fp_import! {
     fn is_mouse_pressed(button: MouseButton) -> bool;
     fn was_mouse_just_released(button: MouseButton) -> bool;
 
-    fn get_mouse_position() -> Position;
+    fn get_mouse_position() -> Option<Position>;
 }
 
 #[cfg(feature = "api-generation")]

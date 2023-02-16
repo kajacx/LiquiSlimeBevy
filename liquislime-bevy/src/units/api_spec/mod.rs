@@ -1,7 +1,7 @@
 use self::{helpers::get_slime_grid, types::*};
 
 use super::{
-    global_storage::{get_current_unit, get_level_info, get_world},
+    global_storage::{get_current_unit, get_level_info, get_mouse_state, get_world},
     UnitId,
 };
 
@@ -57,15 +57,15 @@ fn set_slime_amount(position: TilePosition, amount: SlimeAmount) {
 }
 
 fn was_mouse_just_pressed(button: MouseButton) -> bool {
-    false // TODO
+    get_mouse_state().just_pressed
 }
 fn is_mouse_pressed(button: MouseButton) -> bool {
-    false // TODO
+    get_mouse_state().pressed
 }
 fn was_mouse_just_released(button: MouseButton) -> bool {
-    false // TODO
+    get_mouse_state().just_released
 }
 
-fn get_mouse_position() -> Position {
-    Position::new(2.5, 5.5) // TODO
+fn get_mouse_position() -> Option<Position> {
+    get_mouse_state().position
 }

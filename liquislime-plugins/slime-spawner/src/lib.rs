@@ -3,7 +3,11 @@ use liquislime_api::*;
 #[fp_export_impl(liquislime_api)]
 fn update(time_elapsed: TimeInterval) {
     if was_mouse_just_pressed(MouseButton::LeftButton) {
-        set_own_position(get_mouse_position().to_tile_position());
+        set_own_position(
+            get_mouse_position()
+                .expect("TODO: single method to return clicked and position")
+                .to_tile_position(),
+        );
     }
 
     let added_amount_per_second = SlimeAmount::from_integer(1000);
