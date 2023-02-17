@@ -12,7 +12,12 @@ derive_more = "0.99.17"
 fp-bindgen = "2.4.0"
 fp-bindgen-support = { version = "2.4.0", features = ["host", "async"] }
 serde = { version = "1.0.152", features = ["derive"] }
-wasmer = { version = "2.3", features = ["singlepass"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasmer = { version = "2.3", features = ["js", "js-default", "js-serializable-module", "singlepass", "compiler", "cranelift", "default-compiler", "default-cranelift", "default-engine", "default-universal", "engine", "universal", "wasmer-compiler-cranelift", "wasmer-compiler-singlepass", "wasmer-engine-universal"], default-features = false}
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+wasmer = { version = "2.3", features = ["sys", "sys-default", "singlepass", "compiler", "cranelift", "default-compiler", "default-cranelift", "default-engine", "default-universal", "engine", "universal", "wasmer-compiler-cranelift", "wasmer-compiler-singlepass", "wasmer-engine-universal"], default-features = false}
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]
