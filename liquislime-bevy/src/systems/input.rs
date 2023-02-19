@@ -31,6 +31,7 @@ fn update_mouse_position(
             return;
         }
     };
+    let t = mouse_input.as_ref();
 
     let (camera, camera_transform) = camera_pair;
 

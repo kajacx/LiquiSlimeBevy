@@ -10,7 +10,7 @@ impl Plugin for WasmUpdatePlugin {
     }
 }
 
-fn update_wasm_plugins(world: &mut World) {
+fn update_wasm_plugins(world: &mut World, input: Res<) {
     set_world(world);
     update_all_units(TimeInterval::from_milliseconds(20.0)); // TODO: proper time elapsed
 }

@@ -17,10 +17,14 @@ static MOUSE_STATE: Mutex<MouseState> = Mutex::new(MouseState {
     just_released: false,
 });
 
+pub fn get_mouse_state() -> impl Deref<Target = MouseState> {
+    MOUSE_STATE.lock().expect("Get mouse state mutex lock")
+}
+
 pub fn set_mouse_state(state: MouseState) {
     *MOUSE_STATE.lock().expect("Get mouse state mutex lock") = state;
 }
 
-pub fn get_mouse_state() -> impl Deref<Target = MouseState> {
-    MOUSE_STATE.lock().expect("Get mouse state mutex lock")
+pub fn update_mouse_state(updater: impl FnMut(&mut MouseState)) {
+    updater(&mut *MOUSE_STATE.lock().expect("Get mouse state mutex lock"));
 }
