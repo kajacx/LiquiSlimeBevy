@@ -56,13 +56,13 @@ fn set_slime_amount(position: TilePosition, amount: SlimeAmount) {
 }
 
 fn was_mouse_just_pressed(button: MouseButton) -> bool {
-    get_mouse_state().just_pressed
+    todo!()
 }
 fn is_mouse_pressed(button: MouseButton) -> bool {
-    get_mouse_state().pressed
+    todo!()
 }
 fn was_mouse_just_released(button: MouseButton) -> bool {
-    get_mouse_state().just_released
+    todo!()
 }
 
 fn get_mouse_position() -> Option<Position> {

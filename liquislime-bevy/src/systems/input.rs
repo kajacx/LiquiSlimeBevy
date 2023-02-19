@@ -45,9 +45,6 @@ fn update_mouse_position(
 
     set_mouse_state(MouseState {
         position: get_mouse_position(window, camera, camera_transform),
-        just_pressed: false,
-        just_released: false,
-        pressed: false,
     });
 
     // TODO: re-hook this to global mouse event?

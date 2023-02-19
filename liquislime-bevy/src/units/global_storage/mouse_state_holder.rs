@@ -5,17 +5,9 @@ use crate::units::api_spec::types::Position;
 #[derive(Clone, Debug)]
 pub struct MouseState {
     pub position: Option<Position>,
-    pub just_pressed: bool,
-    pub pressed: bool,
-    pub just_released: bool,
 }
 
-static MOUSE_STATE: Mutex<MouseState> = Mutex::new(MouseState {
-    position: None,
-    just_pressed: false,
-    pressed: false,
-    just_released: false,
-});
+static MOUSE_STATE: Mutex<MouseState> = Mutex::new(MouseState { position: None });
 
 pub fn get_mouse_state() -> impl Deref<Target = MouseState> {
     MOUSE_STATE.lock().expect("Get mouse state mutex lock")
