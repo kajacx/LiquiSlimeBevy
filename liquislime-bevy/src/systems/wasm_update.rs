@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
-use crate::units::{api_spec::types::TimeInterval, global_storage::set_world, update_all_units};
+use crate::units::{
+    api_spec::types::TimeInterval, global_storage::use_world_reference_in, update_all_units,
+};
 
 pub struct WasmUpdatePlugin;
 
@@ -11,8 +13,7 @@ impl Plugin for WasmUpdatePlugin {
 }
 
 fn update_wasm_plugins(world: &mut World) {
-    // TODO: add a compile-time check that these are called correctly?
-    set_world(world);
-
-    update_all_units(TimeInterval::from_milliseconds(20.0)); // TODO: proper time elapsed
+    use_world_reference_in(world, |token| {
+        update_all_units(TimeInterval::from_milliseconds(20.0), token); // TODO: proper time elapsed
+    });
 }
