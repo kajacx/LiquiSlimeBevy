@@ -3,12 +3,7 @@ use self::{
     types::*,
 };
 
-use super::{
-    global_storage::{
-        get_current_unit, get_level_info, get_mouse_input, get_mouse_state, get_world,
-    },
-    UnitId,
-};
+use super::{global_storage::*, UnitId};
 use crate::helpers::ResultLogger;
 
 pub mod bindings;
@@ -52,7 +47,6 @@ fn get_slime_amount(position: TilePosition) -> SlimeAmount {
     slime_grid
         .try_get_amount(position)
         .log_err_or(SlimeAmount::from_integer(0))
-    //.clone() // TODO: force copy
 }
 fn set_slime_amount(position: TilePosition, amount: SlimeAmount) {
     let mut world = get_world();
@@ -61,13 +55,13 @@ fn set_slime_amount(position: TilePosition, amount: SlimeAmount) {
 }
 
 fn is_mouse_pressed(mouse_button: MouseButton) -> bool {
-    get_mouse_input().pressed(api_mouse_button_to_bevy(mouse_button))
+    read_mouse_input(|input| input.pressed(api_mouse_button_to_bevy(mouse_button)))
 }
 fn was_mouse_just_pressed(mouse_button: MouseButton) -> bool {
-    get_mouse_input().just_pressed(api_mouse_button_to_bevy(mouse_button))
+    read_mouse_input(|input| input.just_pressed(api_mouse_button_to_bevy(mouse_button)))
 }
 fn was_mouse_just_released(mouse_button: MouseButton) -> bool {
-    get_mouse_input().just_released(api_mouse_button_to_bevy(mouse_button))
+    read_mouse_input(|input| input.just_released(api_mouse_button_to_bevy(mouse_button)))
 }
 
 fn get_mouse_position() -> Option<Position> {

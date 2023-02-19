@@ -36,7 +36,7 @@ fn setup_camera(mut commands: Commands) {
 }
 
 fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer>) {
-    move |mut commands, asset_server| {
+    move |mut commands, _asset_server| {
         let mut slime_grid = SlimeGrid::new(width, height);
 
         for x in 0..width {
