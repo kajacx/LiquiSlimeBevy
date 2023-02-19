@@ -1,11 +1,8 @@
-use bevy::{input::mouse::MouseButtonInput, prelude::*, render::camera::RenderTarget};
+use bevy::{prelude::*, render::camera::RenderTarget};
 
-use crate::{
-    components::{Building, MoveOnClick, SlimeGrid, Tile},
-    units::{
-        api_spec::types::{Position, TilePosition},
-        global_storage::{set_mouse_state, MouseState},
-    },
+use crate::units::{
+    api_spec::types::Position,
+    global_storage::{set_mouse_state, MouseState},
 };
 
 pub struct GameInputPlugin;
@@ -17,7 +14,6 @@ impl Plugin for GameInputPlugin {
 }
 
 fn update_mouse_position(
-    mut mouse_input: Res<Input<MouseButton>>,
     windows: Res<Windows>,
     //camera: Query<(&Camera, &GlobalTransform), With<MainCamera>>, // TODO: handle multiple cameras?
     camera_query: Query<(&Camera, &GlobalTransform)>,
@@ -27,11 +23,10 @@ fn update_mouse_position(
     let camera_pair = match camera_query.get_single() {
         Ok(camera) => camera,
         Err(err) => {
-            eprintln!("Oh no, camera not found: {:?}", err);
+            warn!("Oh no, camera not found: {:?}", err);
             return;
         }
     };
-    let t = mouse_input.as_ref();
 
     let (camera, camera_transform) = camera_pair;
 
@@ -46,20 +41,6 @@ fn update_mouse_position(
     set_mouse_state(MouseState {
         position: get_mouse_position(window, camera, camera_transform),
     });
-
-    // TODO: re-hook this to global mouse event?
-    // convert to tile position
-    // let tile_pos = TilePosition::from_floats_floor(world_pos.x, world_pos.y);
-
-    // // Game logic once we have the world coords
-    // if tile_pos.x >= 0 && tile_pos.x < 10 && tile_pos.y >= 0 && tile_pos.y < 10 {
-    //     // TODO: hardwired world side. Also: make a new method "in world" in tile position?
-    //     for (mut spawner_position, move_on) in &mut spawners {
-    //         if mouse_input.just_pressed(move_on.mouse_button) {
-    //             *spawner_position = tile_pos;
-    //         }
-    //     }
-    // }
 }
 
 fn get_mouse_position(

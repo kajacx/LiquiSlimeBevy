@@ -1,5 +1,4 @@
 use crate::units::UnitId;
-use bevy::ecs::world::World;
 use std::sync::Mutex;
 
 // TODO: This could be an atomic cell or something?

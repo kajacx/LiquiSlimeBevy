@@ -1,13 +1,11 @@
-use bevy::{
-    ecs::world::World,
-    prelude::{Input, MouseButton},
-};
+use bevy::prelude::{Input, MouseButton};
 use std::{
     ops::{Deref, DerefMut},
     ptr,
     sync::Mutex,
 };
 
+// TODO: borrow from world instead
 static MOUSE_INPUT: Mutex<UnsafeMouseInputRef> = Mutex::new(UnsafeMouseInputRef(ptr::null()));
 
 pub fn set_mouse_input(mouse_input: &Input<MouseButton>) {

@@ -1,6 +1,6 @@
 use std::borrow::Borrow;
 
-use bevy::{prelude::*, utils::tracing::log::debug};
+use bevy::prelude::*;
 
 use crate::units::{
     api_spec::types::TimeInterval,

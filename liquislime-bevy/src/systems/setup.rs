@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    components::{Building, MoveOnClick, SlimeGrid, SlimeSource, Tile},
+    components::{Building, SlimeGrid, Tile},
     units::{
         api_spec::types::{SlimeAmount, TilePosition},
         register_new_unit, Script, UnitId,
@@ -71,9 +71,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
     create_spawner(
         &mut commands,
         &asset_server,
-        SlimeAmount::from_integer(1),
         TilePosition::new(2, 5),
-        MouseButton::Left,
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         "../liquislime-plugins/slime-spawner/target/wasm32-unknown-unknown/debug/liquislime_slime_spawner_plugin.wasm"
@@ -82,9 +80,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
     create_spawner(
         &mut commands,
         &asset_server,
-        SlimeAmount::from_integer(-1),
         TilePosition::new(7, 1),
-        MouseButton::Right,
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
         "../liquislime-plugins/slime-voider/target/wasm32-unknown-unknown/debug/liquislime_slime_voider_plugin.wasm"
@@ -94,15 +90,11 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
 fn create_spawner(
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
-    amount: SlimeAmount,
     position: TilePosition,
-    move_button: MouseButton,
     texture_file: &'static str,
     unit_id: UnitId,
     plugin_path: &'static str,
 ) {
-    let spawner = SlimeSource { amount };
-
     let sprite = SpriteBundle {
         texture: asset_server.load(texture_file),
         sprite: Sprite {
@@ -116,11 +108,7 @@ fn create_spawner(
         ..Default::default()
     };
 
-    let move_on = MoveOnClick {
-        mouse_button: move_button,
-    };
-
     register_new_unit(unit_id, Script::from_plugin_path(plugin_path));
 
-    commands.spawn((spawner, position, sprite, move_on, Building, unit_id));
+    commands.spawn((position, sprite, Building, unit_id));
 }
