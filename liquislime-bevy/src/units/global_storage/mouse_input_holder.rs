@@ -8,7 +8,7 @@ use std::{
     sync::Mutex,
 };
 
-static MOUSE_INPUT: Mutex<*const Input<MouseButton>> = Mutex::new(ptr::null());
+static MOUSE_INPUT: Mutex<UnsafeMouseInputRef> = Mutex::new(UnsafeMouseInputRef(ptr::null()));
 
 pub fn set_mouse_input(mouse_input: &Input<MouseButton>) {
     (*MOUSE_INPUT.lock().expect("Set mouse input mutex lock")).0 = mouse_input as *const _;
@@ -22,4 +22,4 @@ pub fn get_mouse_input() -> impl Deref<Target = Input<MouseButton>> {
 }
 
 struct UnsafeMouseInputRef(*const Input<MouseButton>);
-//unsafe impl Send for UnsafeWorldRef {}
+unsafe impl Send for UnsafeMouseInputRef {}

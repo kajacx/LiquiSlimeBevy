@@ -25,6 +25,6 @@ pub fn set_mouse_state(state: MouseState) {
     *MOUSE_STATE.lock().expect("Get mouse state mutex lock") = state;
 }
 
-pub fn update_mouse_state(updater: impl FnMut(&mut MouseState)) {
+pub fn update_mouse_state(updater: impl FnOnce(&mut MouseState)) {
     updater(&mut *MOUSE_STATE.lock().expect("Get mouse state mutex lock"));
 }
