@@ -1,5 +1,5 @@
-use bevy::{ecs::world::World, prelude::*};
-use std::{borrow::Borrow, marker::PhantomData, ops::DerefMut, sync::Mutex};
+use bevy::prelude::*;
+use std::{marker::PhantomData, ops::DerefMut, sync::Mutex};
 
 static GLOBAL_WORLD: Mutex<UnsafeWorldRef> = Mutex::new(UnsafeWorldRef(std::ptr::null_mut()));
 
@@ -22,16 +22,8 @@ pub fn get_world() -> impl DerefMut<Target = World> {
      * Finally, you cannot call get_world() twice to get 2 reference, because of the mutex lock.
      */
     unsafe { &mut *inner }
-}
 
-pub fn read_mouse_input<T>(reader: impl FnOnce(&Input<MouseButton>) -> T) -> T {
-    let world = get_world();
-
-    let input = world
-        .get_resource::<Input<MouseButton>>()
-        .expect("Mouse input resource should exist");
-
-    reader(input.borrow())
+    // TODO: this is still unsafe!
 }
 
 struct UnsafeWorldRef(*mut World);
