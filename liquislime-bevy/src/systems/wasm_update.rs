@@ -13,7 +13,13 @@ impl Plugin for WasmUpdatePlugin {
 }
 
 fn update_wasm_plugins(world: &mut World) {
+    let time_resource = world
+        .get_resource::<Time>()
+        .expect("Time resource should exist");
+
+    let time_elapsed = TimeInterval::from_seconds(time_resource.delta_seconds_f64());
+
     use_world_reference_in(world, |token| {
-        update_all_units(TimeInterval::from_milliseconds(20.0), token); // TODO: proper time elapsed
+        update_all_units(time_elapsed, token);
     });
 }

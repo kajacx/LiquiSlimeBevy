@@ -32,11 +32,11 @@ impl TimeInterval {
 
     // TODO: make it work with f64 as well as i64?
     pub fn from_seconds(seconds: f64) -> Self {
-        Self((seconds * FRAGMENTS_IN_SECOND as f64) as i64)
+        Self((seconds * FRAGMENTS_IN_SECOND as f64).round() as i64)
     }
 
     pub fn from_milliseconds(milliseconds: f64) -> Self {
-        Self((milliseconds * (FRAGMENTS_IN_SECOND / 1000) as f64) as i64)
+        Self((milliseconds * (FRAGMENTS_IN_SECOND / 1000) as f64).round() as i64)
     }
 
     pub fn to_seconds(self) -> f64 {
