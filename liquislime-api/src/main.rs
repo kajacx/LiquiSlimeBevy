@@ -48,7 +48,7 @@ fn main() {
                 (
                     "fp-bindgen-support",
                     CargoDependency::with_version_and_features(
-                        "2.4.0",
+                        "3.0.0-beta.1",
                         BTreeSet::from(["async", "guest"])
                     )
                 ),
