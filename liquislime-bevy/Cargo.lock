@@ -2181,7 +2181,9 @@ dependencies = [
  "bevy",
  "derive_more",
  "fp-bindgen-support",
+ "js-sys",
  "serde",
+ "wasm-bindgen",
  "wasmer",
 ]
 
