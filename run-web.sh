@@ -4,9 +4,9 @@
 ./scripts/build-plugins.sh && \
 ./scripts/prepare-host.sh && \
 \
-echo "Running bevy game in debug mode" && \
+echo "Running bevy game in web browser" && \
 cd liquislime-bevy && \
-cargo run --features bevy-host && \
+cargo run --features bevy-host --target=wasm32-unknown-unknown && \
 cd .. && \
 \
 echo "All done"
