@@ -1641,9 +1641,7 @@ checksum = "00b0228411908ca8685dba7fc2cdd70ec9990a6e753e89b6ac91a84c40fbaf4b"
 
 [[package]]
 name = "fp-bindgen-macros"
-version = "2.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5d265c6982516e33fc0232a39aa433c4bcf984544389811de27904659ab13f9"
+version = "3.0.0-beta.1"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -1653,9 +1651,7 @@ dependencies = [
 
 [[package]]
 name = "fp-bindgen-support"
-version = "2.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6f3c5a0fb4f601cd089b19d5a58529148821da7dd59f9d6fef937c740e0611e5"
+version = "3.0.0-beta.1"
 dependencies = [
  "fp-bindgen-macros",
  "once_cell",
@@ -1663,6 +1659,7 @@ dependencies = [
  "serde",
  "serde_bytes",
  "thiserror",
+ "tracing",
  "wasmer",
 ]
 

@@ -42,8 +42,6 @@ dependencies = [
 [[package]]
 name = "fp-bindgen-macros"
 version = "3.0.0-beta.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "179a9f9fba8f20b7f76643df3cdbf31c10dfba79197fc774fe1bbc3a73251cff"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -54,8 +52,6 @@ dependencies = [
 [[package]]
 name = "fp-bindgen-support"
 version = "3.0.0-beta.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d72ed0c94d00685155d7ebd626c76f4f33105010cf26e0a911935bd5f111b77"
 dependencies = [
  "fp-bindgen-macros",
  "once_cell",

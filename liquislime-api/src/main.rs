@@ -47,10 +47,10 @@ fn main() {
             dependencies: BTreeMap::from([
                 (
                     "fp-bindgen-support",
-                    CargoDependency::with_version_and_features(
-                        "3.0.0-beta.1",
-                        BTreeSet::from(["async", "guest"])
-                    )
+                    CargoDependency::with_path_and_features(
+                        "../../../fp-bindgen/fp-bindgen-support",
+                        BTreeSet::from(["async", "guest"]),
+                    ),
                 ),
                 ("derive_more", CargoDependency::with_version("0.99.17"))
             ]),
