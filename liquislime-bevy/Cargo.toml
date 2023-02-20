@@ -22,8 +22,8 @@ wasmer = { version = "2.3", features = ["singlepass"]}
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]
-opt-level = 1
+opt-level = 0
 
 # Enable high optimizations for dependencies (incl. Bevy), but not for our code:
 [profile.dev.package."*"]
-opt-level = 1 # TODO: change back to 3 once the build process is stable
+opt-level = 0 # TODO: change back to 3 once the build process is stable
