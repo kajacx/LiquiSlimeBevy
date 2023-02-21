@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     components::{Building, SlimeGrid, Tile},
+    resources::UnitScriptMap,
     units::{
         api_spec::types::{SlimeAmount, TilePosition},
         register_new_unit, Script, UnitId,
@@ -16,6 +17,10 @@ impl Plugin for GameSetupPlugin {
         app.add_startup_system(spawn_tiles(10, 10)); // TODO: Fixed world size
         app.add_startup_system(spawn_sources);
     }
+}
+
+fn setup_resources(mut commands: Commands) {
+    commands.insert_resource(UnitScriptMap::new());
 }
 
 fn setup_camera(mut commands: Commands) {

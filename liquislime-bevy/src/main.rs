@@ -6,6 +6,7 @@ use systems::AllGamePlugins;
 
 mod components;
 mod helpers;
+mod resources;
 mod systems;
 mod units;
 
