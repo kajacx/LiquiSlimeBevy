@@ -74,7 +74,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         TilePosition::new(2, 5),
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
-        "../liquislime-plugins/slime-spawner/target/wasm32-unknown-unknown/debug/liquislime_slime_spawner_plugin.wasm"
+        "liquislime_slime_spawner_plugin.wasm",
     );
 
     create_spawner(
@@ -83,7 +83,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         TilePosition::new(7, 1),
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
-        "../liquislime-plugins/slime-voider/target/wasm32-unknown-unknown/debug/liquislime_slime_voider_plugin.wasm"
+        "liquislime_slime_voider_plugin.wasm",
     );
 }
 
@@ -93,7 +93,7 @@ fn create_spawner(
     position: TilePosition,
     texture_file: &'static str,
     unit_id: UnitId,
-    plugin_path: &'static str,
+    plugin_filename: &'static str,
 ) {
     let sprite = SpriteBundle {
         texture: asset_server.load(texture_file),
@@ -108,7 +108,28 @@ fn create_spawner(
         ..Default::default()
     };
 
-    register_new_unit(unit_id, Script::from_plugin_path(plugin_path));
+    register_new_unit(unit_id, get_plugin(plugin_filename));
 
     commands.spawn((position, sprite, Building, unit_id));
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn get_plugin(plugin_filename: &str) -> Script {
+    let path = format!("assets/plugins/{plugin_filename}");
+    Script::from_plugin_path(&path)
+}
+
+#[cfg(target_arch = "wasm32")]
+fn get_plugin(plugin_filename: &str) -> Script {
+    // TODO: load via an url request?
+
+    let bytes = if plugin_filename == "liquislime_slime_spawner_plugin.wasm" {
+        include_bytes!("../../assets/plugins/liquislime_slime_spawner_plugin.wasm").as_ref()
+    } else if plugin_filename == "liquislime_slime_voider_plugin.wasm" {
+        include_bytes!("../../assets/plugins/liquislime_slime_voider_plugin.wasm").as_ref()
+    } else {
+        panic!("Unknown plugin: {}", plugin_filename)
+    };
+
+    Script::from_bytes(bytes)
 }
