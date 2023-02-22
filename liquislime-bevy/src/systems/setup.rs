@@ -13,6 +13,7 @@ pub struct GameSetupPlugin;
 
 impl Plugin for GameSetupPlugin {
     fn build(&self, app: &mut App) {
+        app.add_startup_system(setup_resources);
         app.add_startup_system(setup_camera);
         app.add_startup_system(spawn_tiles(10, 10)); // TODO: Fixed world size
         app.add_startup_system(spawn_sources);
@@ -20,7 +21,7 @@ impl Plugin for GameSetupPlugin {
 }
 
 fn setup_resources(mut commands: Commands) {
-    commands.insert_resource(UnitScriptMap::new());
+    //commands.insert_resource(UnitScriptMap::new());
 }
 
 fn setup_camera(mut commands: Commands) {
@@ -76,8 +77,10 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
 fn spawn_sources(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    mut unit_map: ResMut<UnitScriptMap>,
+    //mut unit_map: ResMut<UnitScriptMap>,
 ) {
+    let mut unit_map = UnitScriptMap::new();
+
     create_spawner(
         &mut commands,
         &asset_server,
@@ -85,7 +88,8 @@ fn spawn_sources(
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         "liquislime_slime_spawner_plugin.wasm",
-        &mut *unit_map,
+        //&mut *unit_map,
+        &mut unit_map,
     );
 
     create_spawner(
@@ -95,8 +99,11 @@ fn spawn_sources(
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
         "liquislime_slime_voider_plugin.wasm",
-        &mut *unit_map,
+        //&mut *unit_map,
+        &mut unit_map,
     );
+
+    commands.insert_resource(unit_map);
 }
 
 fn create_spawner(
