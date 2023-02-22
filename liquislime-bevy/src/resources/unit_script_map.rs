@@ -2,7 +2,11 @@ use std::collections::HashMap;
 
 use bevy::prelude::*;
 
-use crate::units::{api_spec::types::TimeInterval, global_storage::WorldRefToken, Script, UnitId};
+use crate::units::{
+    api_spec::types::TimeInterval,
+    global_storage::{set_current_unit, WorldRefToken},
+    Script, UnitId,
+};
 
 #[derive(Clone, Debug, Resource)]
 pub struct UnitScriptMap(HashMap<UnitId, Script>);

@@ -1,5 +1,6 @@
 use super::api_spec::{bindings::Runtime, types::TimeInterval};
 
+#[derive(Clone, Debug)]
 pub struct Script {
     runtime: Runtime,
 }

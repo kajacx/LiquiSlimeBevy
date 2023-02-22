@@ -42,6 +42,7 @@ fn setup_camera(mut commands: Commands) {
 
 fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer>) {
     move |mut commands, _asset_server| {
+        // TODO: unused asset server?
         let mut slime_grid = SlimeGrid::new(width, height);
 
         for x in 0..width {
@@ -72,7 +73,11 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
     }
 }
 
-fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn spawn_sources(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut unit_map: ResMut<UnitScriptMap>,
+) {
     create_spawner(
         &mut commands,
         &asset_server,
@@ -80,6 +85,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         "liquislime_slime_spawner_plugin.wasm",
+        &mut *unit_map,
     );
 
     create_spawner(
@@ -89,6 +95,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
         "liquislime_slime_voider_plugin.wasm",
+        &mut *unit_map,
     );
 }
 
@@ -99,6 +106,7 @@ fn create_spawner(
     texture_file: &'static str,
     unit_id: UnitId,
     plugin_filename: &'static str,
+    unit_map: &mut UnitScriptMap,
 ) {
     let sprite = SpriteBundle {
         texture: asset_server.load(texture_file),
@@ -113,7 +121,7 @@ fn create_spawner(
         ..Default::default()
     };
 
-    register_new_unit(unit_id, get_plugin(plugin_filename));
+    unit_map.register_new_unit(unit_id, get_plugin(plugin_filename));
 
     commands.spawn((position, sprite, Building, unit_id));
 }
