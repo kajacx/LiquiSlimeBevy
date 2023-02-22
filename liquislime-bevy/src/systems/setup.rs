@@ -5,7 +5,7 @@ use crate::{
     resources::UnitScriptMap,
     units::{
         api_spec::types::{SlimeAmount, TilePosition},
-        register_new_unit, Script, UnitId,
+        Script, UnitId,
     },
 };
 

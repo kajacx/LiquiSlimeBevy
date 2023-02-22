@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Arc};
 
 use bevy::prelude::*;
 
@@ -9,7 +9,7 @@ use crate::units::{
 };
 
 #[derive(Clone, Debug, Resource)]
-pub struct UnitScriptMap(HashMap<UnitId, Script>);
+pub struct UnitScriptMap(HashMap<UnitId, Arc<Script>>);
 
 impl UnitScriptMap {
     pub fn new() -> Self {
@@ -17,7 +17,7 @@ impl UnitScriptMap {
     }
 
     pub fn register_new_unit(&mut self, id: UnitId, script: Script) {
-        self.0.insert(id, script);
+        self.0.insert(id, Arc::new(script));
     }
 
     pub fn update_all_units(&self, time_elapsed: TimeInterval, _world_ref: &WorldRefToken) {

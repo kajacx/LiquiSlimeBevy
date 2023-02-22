@@ -1,6 +1,8 @@
+use std::fmt::Debug;
+
 use super::api_spec::{bindings::Runtime, types::TimeInterval};
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Script {
     runtime: Runtime,
 }
@@ -26,5 +28,11 @@ impl Script {
         self.runtime
             .update(time_elapsed)
             .expect("TODO: update should log on error");
+    }
+}
+
+impl Debug for Script {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Script cannot derive Debug, blame Wasmer")
     }
 }

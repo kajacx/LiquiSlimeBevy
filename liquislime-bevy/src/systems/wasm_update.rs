@@ -2,9 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     resources::UnitScriptMap,
-    units::{
-        api_spec::types::TimeInterval, global_storage::use_world_reference_in, update_all_units,
-    },
+    units::{api_spec::types::TimeInterval, global_storage::use_world_reference_in},
 };
 
 pub struct WasmUpdatePlugin;
@@ -27,7 +25,8 @@ fn update_wasm_plugins(world: &mut World) {
         .expect("Unit script map resource should exist");
 
     // TODO: unfortunate clone, but otherwise, the unit map is borrowed from the world
-    let unit_keys = units_resource.keys().to_owned();
+    //let unit_keys = units_resource.keys().to_owned();
+    let unit_map = units_resource.clone();
 
     use_world_reference_in(world, |token| {
         unit_map.update_all_units(time_elapsed, token);
