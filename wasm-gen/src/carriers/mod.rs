@@ -1,6 +1,6 @@
 use crate::*;
 
-trait Carrier: Copy {
+trait Carrier {
     type CarrierType: Copy;
     type SerializeError;
 
