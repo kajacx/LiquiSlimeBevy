@@ -1,9 +1,13 @@
+use crate::*;
+
 trait Carrier: Copy {
+    type CarrierType: Copy;
     type SerializeError;
 
-    fn serialize<T: WasmSerializable>(value: &T) -> Result<Self, SerializeError>;
+    fn serialize<T: WasmSerializable>(value: &T)
+        -> Result<Self::CarrierType, Self::SerializeError>;
 
-    fn deserialize<T: WasmSerializable>(Self) -> Result<T, DeserializeError>;
+    fn deserialize<T: WasmSerializable>(value: Self::CarrierType) -> Result<T, DeserializeError>;
 }
 
 mod u64_const;

@@ -1,4 +1,5 @@
 use crate::traits::WasmSerializable;
+use crate::DeserializeError;
 
 impl WasmSerializable for i32 {
     fn static_size_bounds() -> (usize, Option<usize>) {
@@ -17,15 +18,8 @@ impl WasmSerializable for i32 {
         byte_sink(&self.to_le_bytes())
     }
 
-    fn deserialize_from(bytes: &[u8]) -> Result<Self, ()> {
+    fn deserialize_from(bytes: &[u8]) -> Result<Self, DeserializeError> {
         // TODO: the 4 bytes are (probably) copied here. Slightly annoying.
-        let bytes: Result<[u8; 4], _> = bytes.try_into();
-        match bytes {
-            Ok(bytes) => Ok(Self::from_le_bytes(bytes)),
-            Err(err) => {
-                println!("TODO: proper error handling: {:?}", err);
-                Err(())
-            }
-        }
+        Ok(Self::from_le_bytes(bytes.try_into()?))
     }
 }

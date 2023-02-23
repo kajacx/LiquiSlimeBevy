@@ -1,4 +1,4 @@
-use crate::traits::WasmSerializable;
+use crate::*;
 
 impl WasmSerializable for String {
     fn static_size_bounds() -> (usize, Option<usize>) {
@@ -17,14 +17,7 @@ impl WasmSerializable for String {
         byte_sink(&self.as_bytes())
     }
 
-    fn deserialize_from(bytes: &[u8]) -> Result<Self, ()> {
-        let string = String::from_utf8(Vec::from(bytes));
-        match string {
-            Ok(string) => Ok(string),
-            Err(err) => {
-                println!("TODO: proper error handling: {:?}", err);
-                Err(())
-            }
-        }
+    fn deserialize_from(bytes: &[u8]) -> Result<Self, DeserializeError> {
+        Ok(String::from_utf8(Vec::from(bytes))?)
     }
 }

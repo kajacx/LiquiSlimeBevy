@@ -14,6 +14,18 @@ impl WasmRawType for u32 {
     }
 }
 
+// TODO: proper error handling
+pub struct DeserializeError;
+
+impl<T: core::fmt::Debug> From<T> for DeserializeError {
+    fn from(value: T) -> Self {
+        println!("Deserialization error: {:?}", value);
+        Self
+    }
+}
+
 mod carriers;
 mod impls;
 mod traits;
+
+pub use traits::WasmSerializable;
