@@ -7,6 +7,12 @@ pub struct Script {
     runtime: Runtime,
 }
 
+// FIXME: Is it really safe to just implement these? Probably not ...
+#[cfg(target_arch = "wasm32")]
+unsafe impl Send for Script {}
+#[cfg(target_arch = "wasm32")]
+unsafe impl Sync for Script {}
+
 impl Script {
     pub fn from_plugin_path(path: &str) -> Self {
         // TODO: what to share if multiple units have the same script?
