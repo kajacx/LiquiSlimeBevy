@@ -14,5 +14,6 @@ impl WasmRawType for u32 {
     }
 }
 
+mod carriers;
 mod impls;
 mod traits;
