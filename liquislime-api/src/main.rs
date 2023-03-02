@@ -39,22 +39,27 @@ fp_export! {
 #[cfg(feature = "api-generation")]
 fn main() {
     // For plugin
+
+    let plugin_dependencies = BTreeMap::from([
+        (
+            "fp-bindgen-support",
+            CargoDependency::with_path_and_features(
+                "../../../fp-bindgen/fp-bindgen-support",
+                BTreeSet::from(["async", "guest"]),
+            ),
+        ),
+        ("derive_more", CargoDependency::with_version("0.99.17")),
+    ]);
+
     fp_bindgen!(BindingConfig {
-        bindings_type: BindingsType::RustPlugin(RustPluginConfig {
-            name: "liquislime-api",
-            authors: "[\"kajacx\"]",
-            version: "0.1.0",
-            dependencies: BTreeMap::from([
-                (
-                    "fp-bindgen-support",
-                    CargoDependency::with_path_and_features(
-                        "../../../fp-bindgen/fp-bindgen-support",
-                        BTreeSet::from(["async", "guest"]),
-                    ),
-                ),
-                ("derive_more", CargoDependency::with_version("0.99.17"))
-            ]),
-        }),
+        bindings_type: BindingsType::RustPlugin(
+            RustPluginConfig::builder()
+                .name("liquislime-api")
+                .authors(vec!["kajacx".to_owned()])
+                .version("0.1.0")
+                .dependencies(plugin_dependencies)
+                .build()
+        ),
         path: "bindings/rust-plugin",
     });
 
