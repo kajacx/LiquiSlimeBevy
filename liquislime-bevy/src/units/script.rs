@@ -8,9 +8,10 @@ pub struct Script {
 }
 
 // FIXME: Is it really safe to just implement these? Probably not ...
-#[cfg(target_arch = "wasm32")]
+// Oh no. Oh no.
+//#[cfg(target_arch = "wasm32")]
 unsafe impl Send for Script {}
-#[cfg(target_arch = "wasm32")]
+//#[cfg(target_arch = "wasm32")]
 unsafe impl Sync for Script {}
 
 impl Script {
