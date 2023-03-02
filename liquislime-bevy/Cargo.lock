@@ -1707,7 +1707,7 @@ checksum = "00b0228411908ca8685dba7fc2cdd70ec9990a6e753e89b6ac91a84c40fbaf4b"
 
 [[package]]
 name = "fp-bindgen-macros"
-version = "3.0.0-beta.2"
+version = "2.4.0"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -1717,7 +1717,7 @@ dependencies = [
 
 [[package]]
 name = "fp-bindgen-support"
-version = "3.0.0-beta.2"
+version = "2.4.0"
 dependencies = [
  "fp-bindgen-macros",
  "once_cell",
@@ -1725,7 +1725,6 @@ dependencies = [
  "serde",
  "serde_bytes",
  "thiserror",
- "tracing",
  "wasmer 3.1.1",
  "wasmer-compiler-singlepass 3.1.1",
 ]
@@ -3819,7 +3818,6 @@ dependencies = [
  "wasmer-derive 3.1.1",
  "wasmer-types 3.1.1",
  "wasmer-vm 3.1.1",
- "wasmparser",
  "wat",
  "winapi",
 ]
