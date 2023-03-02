@@ -2,7 +2,6 @@ use std::fmt::Debug;
 
 use super::api_spec::{bindings::Runtime, types::TimeInterval};
 
-#[derive(Clone)]
 pub struct Script {
     runtime: Runtime,
 }
