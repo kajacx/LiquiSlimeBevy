@@ -18,6 +18,7 @@ fn update_wasm_plugins(world: &mut World) {
         .get_resource::<Time>()
         .expect("Time resource should exist");
 
+    // TODO: limit update time to 30 FPS?
     let time_elapsed = TimeInterval::from_seconds(time_resource.delta_seconds_f64());
 
     let units_resource = world
