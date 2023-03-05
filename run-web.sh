@@ -11,7 +11,7 @@ head -n -1 bindings-web-wasmer3.rs > bindings-fixed.rs && \
 tail -n +38 bindings.rs >> bindings-fixed.rs && \
 mv bindings-fixed.rs bindings.rs && \
 cd ../../.. && \
-cargo run --features bevy-host --target=wasm32-unknown-unknown && \
+cargo run --features=bevy-host --target=wasm32-unknown-unknown -- --initial-memory=268435456 --max-memory=268435456 && \
 cd .. && \
 \
 echo "All done"
