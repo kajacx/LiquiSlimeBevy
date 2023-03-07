@@ -3,15 +3,12 @@ use bevy::{
     prelude::*,
 };
 use systems::AllGamePlugins;
-use wasm_bindgen::prelude::*;
 
 mod components;
 mod helpers;
 mod resources;
 mod systems;
 mod units;
-
-//#[wasm_bindgen(memory = "16")]
 
 fn main() {
     App::new()
