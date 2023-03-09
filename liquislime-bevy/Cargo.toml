@@ -8,7 +8,7 @@ bevy-host = []
 
 [dependencies]
 # TODO: update to bevy 0.10.0
-bevy = "0.9.1"
+bevy = "0.10.0"
 derive_more = "0.99.17"
 fp-bindgen-support = { path = "../fp-bindgen/fp-bindgen-support", features = ["host", "async"] }
 serde = { version = "1.0.152", features = ["derive"] }
