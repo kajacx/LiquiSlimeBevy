@@ -9,8 +9,8 @@ pub struct GameRenderingPlugin;
 
 impl Plugin for GameRenderingPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_to_stage(CoreStage::Last, render_slime_color);
-        app.add_system_to_stage(CoreStage::Last, update_building_postion);
+        app.add_system(render_slime_color.in_base_set(CoreSet::Last));
+        app.add_system(update_building_postion.in_base_set(CoreSet::Last));
     }
 }
 

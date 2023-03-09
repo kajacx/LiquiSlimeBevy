@@ -1,4 +1,4 @@
-use bevy::{prelude::*, render::camera::RenderTarget};
+use bevy::prelude::*;
 
 use crate::units::{
     api_spec::types::Position,
@@ -9,13 +9,12 @@ pub struct GameInputPlugin;
 
 impl Plugin for GameInputPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_to_stage(CoreStage::First, update_mouse_position);
+        app.add_system(update_mouse_position.in_base_set(CoreSet::First));
     }
 }
 
 fn update_mouse_position(
-    windows: Res<Windows>,
-    //camera: Query<(&Camera, &GlobalTransform), With<MainCamera>>, // TODO: handle multiple cameras?
+    primary_window: Query<&Window>,
     camera_query: Query<(&Camera, &GlobalTransform)>,
 ) {
     // get the camera info and transform
@@ -31,12 +30,7 @@ fn update_mouse_position(
     let (camera, camera_transform) = camera_pair;
 
     // get the window that the camera is displaying to (or the primary window)
-    let window = if let RenderTarget::Window(id) = camera.target {
-        windows.get(id)
-    } else {
-        windows.get_primary()
-    }
-    .expect("Window should be found");
+    let window = primary_window.single();
 
     set_mouse_state(MouseState {
         position: get_mouse_position(window, camera, camera_transform),

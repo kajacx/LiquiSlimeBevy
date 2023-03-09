@@ -6,7 +6,7 @@ pub struct UpdateLogicPlugin;
 
 impl Plugin for UpdateLogicPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_to_stage(CoreStage::Update, spread_slime);
+        app.add_system(spread_slime.in_base_set(CoreSet::Update));
     }
 }
 

@@ -9,7 +9,7 @@ pub struct WasmUpdatePlugin;
 
 impl Plugin for WasmUpdatePlugin {
     fn build(&self, app: &mut App) {
-        app.add_system_to_stage(CoreStage::PreUpdate, update_wasm_plugins);
+        app.add_system(update_wasm_plugins.in_base_set(CoreSet::PreUpdate));
     }
 }
 
