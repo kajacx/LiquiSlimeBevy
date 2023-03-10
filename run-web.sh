@@ -12,9 +12,9 @@ head -n -1 bindings-web-wasmer3.rs > bindings-fixed.rs && \
 tail -n +38 bindings.rs >> bindings-fixed.rs && \
 mv bindings-fixed.rs bindings.rs && \
 cd ../../.. && \
-#cargo run --features=bevy-host --target=wasm32-unknown-unknown -- --initial-memory=268435456 --max-memory=268435456 && \
-#cargo rustc --target=wasm32-unknown-unknown --features=bevy-host -- -Clink-arg=--initial-memory=268435456 -Clink-arg=--max-memory=268435456 && \
-cargo build --target=wasm32-unknown-unknown --features=bevy-host && \
+#cargo run --target=wasm32-unknown-unknown -- --initial-memory=268435456 --max-memory=268435456 && \
+#cargo rustc --target=wasm32-unknown-unknown -- -Clink-arg=--initial-memory=268435456 -Clink-arg=--max-memory=268435456 && \
+cargo build --target=wasm32-unknown-unknown && \
 wasm-bindgen --out-dir ./out/ --target web ./target/wasm32-unknown-unknown/debug/liquislime-bevy.wasm && \
 cd .. && \
 echo "Bevy game build in WASM" && \

@@ -3,9 +3,6 @@ name = "liquislime-bevy"
 version = "0.1.0"
 edition = "2021"
 
-[features]
-bevy-host = []
-
 [dependencies]
 # TODO: update to bevy 0.10.0
 bevy = "0.10.0"

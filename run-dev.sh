@@ -11,7 +11,7 @@ cat bindings.rs > bindings-original.rs && \
 # tail -n +22 bindings.rs >> bindings-fixed.rs && \
 # mv bindings-fixed.rs bindings.rs && \
 cd ../../.. && \
-cargo run --features bevy-host && \
+cargo run && \
 cd .. && \
 \
 echo "All done"
