@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    components::{Building, SlimeGrid, Tile},
+    components::{Building, SlimeGrid, Tile, TilePositionComponent},
     resources::UnitScriptMap,
     units::{
         api_spec::types::{SlimeAmount, TilePosition},
@@ -63,7 +63,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
                     ..Default::default()
                 };
 
-                commands.spawn((position, sprite, Tile));
+                commands.spawn((TilePositionComponent::from(position), sprite, Tile));
 
                 let amount = SlimeAmount::from_integer(256 * 10 + 128);
                 slime_grid.set_amount(x, y, amount);
@@ -130,7 +130,12 @@ fn create_spawner(
 
     unit_map.register_new_unit(unit_id, get_plugin(plugin_filename));
 
-    commands.spawn((position, sprite, Building, unit_id));
+    commands.spawn((
+        TilePositionComponent::from(position),
+        sprite,
+        Building,
+        unit_id,
+    ));
 }
 
 #[cfg(not(target_arch = "wasm32"))]

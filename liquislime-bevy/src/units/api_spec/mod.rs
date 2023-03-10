@@ -1,7 +1,7 @@
 use self::{helpers::*, types::*};
 
 use super::{global_storage::*, UnitId};
-use crate::helpers::ResultLogger;
+use crate::{components::TilePositionComponent, helpers::ResultLogger};
 
 pub mod bindings;
 mod helpers;
@@ -16,10 +16,10 @@ fn level_height() -> i32 {
 
 fn get_own_position() -> TilePosition {
     let mut world = get_world();
-    let mut query = world.query::<(&UnitId, &TilePosition)>();
+    let mut query = world.query::<(&UnitId, &TilePositionComponent)>();
     for (unit_id, tile_position) in query.iter(&world) {
         if *unit_id == get_current_unit() {
-            return tile_position.clone(); // TODO: make sure it is copied and not cloned
+            return tile_position.0.clone(); // TODO: make sure it is copied and not cloned
         }
     }
     // TODO: log as error and return 0,0 position instead?
@@ -27,10 +27,10 @@ fn get_own_position() -> TilePosition {
 }
 fn set_own_position(position: TilePosition) {
     let mut world = get_world();
-    let mut query = world.query::<(&UnitId, &mut TilePosition)>();
+    let mut query = world.query::<(&UnitId, &mut TilePositionComponent)>();
     for (unit_id, mut tile_position) in query.iter_mut(&mut world) {
         if *unit_id == get_current_unit() {
-            *tile_position = position;
+            tile_position.0 = position;
             return;
         }
     }

@@ -6,7 +6,6 @@ use super::Position;
     Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default, Serialize, Deserialize,
 )]
 #[cfg_attr(feature = "api-generation", derive(fp_bindgen::prelude::Serializable))]
-#[cfg_attr(feature = "bevy-host", derive(bevy::prelude::Component))]
 pub struct TilePosition {
     pub x: i32,
     pub y: i32,

@@ -1,9 +1,6 @@
 use bevy::{prelude::*, transform::TransformSystem};
 
-use crate::{
-    components::{Building, SlimeGrid, Tile},
-    units::api_spec::types::TilePosition,
-};
+use crate::components::{Building, SlimeGrid, Tile, TilePositionComponent};
 
 pub struct GameRenderingPlugin;
 
@@ -17,24 +14,24 @@ impl Plugin for GameRenderingPlugin {
 
 fn render_slime_color(
     grid_query: Query<&SlimeGrid>,
-    mut tile_query: Query<(&mut Sprite, &TilePosition), With<Tile>>,
+    mut tile_query: Query<(&mut Sprite, &TilePositionComponent), With<Tile>>,
 ) {
     let slime_grid = grid_query
         .get_single()
         .expect("Slime Grid should have been created");
 
     for (mut sprite, position) in &mut tile_query {
-        let amount = slime_grid.get_amount(position.x as usize, position.y as usize);
+        let amount = slime_grid.get_amount(position.0.x as usize, position.0.y as usize);
         let rgb = amount.as_integer() as u8;
         sprite.color = Color::rgb_u8(rgb, rgb, rgb);
     }
 }
 
 fn update_building_postion(
-    mut building_query: Query<(&mut Transform, &TilePosition), With<Building>>,
+    mut building_query: Query<(&mut Transform, &TilePositionComponent), With<Building>>,
 ) {
     for (mut transform, position) in &mut building_query {
         let z = transform.translation.z;
-        transform.translation = position.to_position_center().to_vec3(z);
+        transform.translation = position.0.to_position_center().to_vec3(z);
     }
 }
