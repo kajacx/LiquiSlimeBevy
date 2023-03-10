@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
+    helpers::ToVec3,
     resources::UnitScriptMap,
     units::{
         api_spec::types::{SlimeAmount, TilePosition},

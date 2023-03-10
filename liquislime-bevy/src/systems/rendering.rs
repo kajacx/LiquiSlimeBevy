@@ -1,6 +1,9 @@
 use bevy::{prelude::*, transform::TransformSystem};
 
-use crate::components::{Building, SlimeGrid, Tile, TilePositionComponent};
+use crate::{
+    components::{Building, SlimeGrid, Tile, TilePositionComponent},
+    helpers::ToVec3,
+};
 
 pub struct GameRenderingPlugin;
 
