@@ -1,15 +1,18 @@
 use bevy::prelude::*;
 
-use crate::units::{
-    api_spec::types::Position,
-    global_storage::{set_mouse_state, MouseState},
+use crate::{
+    helpers::InputRead,
+    units::{
+        api_spec::types::Position,
+        global_storage::{set_mouse_state, MouseState},
+    },
 };
 
 pub struct GameInputPlugin;
 
 impl Plugin for GameInputPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(update_mouse_position.in_base_set(CoreSet::First));
+        app.add_system(update_mouse_position.in_base_set(InputRead));
     }
 }
 

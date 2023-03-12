@@ -1,17 +1,16 @@
-use bevy::{prelude::*, transform::TransformSystem};
+use bevy::prelude::*;
 
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
-    helpers::ToVec3,
+    helpers::{RenderSync, ToVec3},
 };
 
 pub struct GameRenderingPlugin;
 
 impl Plugin for GameRenderingPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(render_slime_color.in_base_set(CoreSet::Last));
-        //app.add_system(update_building_postion.in_base_set(CoreSet::Last));
-        app.add_system(update_building_postion.before(TransformSystem::TransformPropagate));
+        app.add_system(render_slime_color.in_base_set(RenderSync));
+        app.add_system(update_building_postion.in_base_set(RenderSync));
     }
 }
 

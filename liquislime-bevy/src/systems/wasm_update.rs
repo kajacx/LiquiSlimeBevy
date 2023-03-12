@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
+    helpers::WasmUpdate,
     resources::UnitScriptMap,
     units::{api_spec::types::TimeInterval, global_storage::use_world_reference_in},
 };
@@ -9,7 +10,7 @@ pub struct WasmUpdatePlugin;
 
 impl Plugin for WasmUpdatePlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(update_wasm_plugins.in_base_set(CoreSet::PreUpdate));
+        app.add_system(update_wasm_plugins.in_base_set(WasmUpdate::Update));
     }
 }
 
