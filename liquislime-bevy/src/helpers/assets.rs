@@ -1,5 +1,6 @@
 use bevy::{
     asset::{AssetLoader, LoadedAsset},
+    prelude::*,
     reflect::TypeUuid,
 };
 
@@ -26,5 +27,14 @@ impl AssetLoader for RawBytesLoader {
             load_context.set_default_asset(LoadedAsset::new(RawBytes(bytes_vec)));
             Ok(())
         })
+    }
+}
+
+pub struct AssetsGamePlugins;
+
+impl Plugin for AssetsGamePlugins {
+    fn build(&self, app: &mut App) {
+        app.add_asset::<RawBytes>()
+            .init_asset_loader::<RawBytesLoader>();
     }
 }
