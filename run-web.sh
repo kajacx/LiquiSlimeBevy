@@ -18,4 +18,4 @@ cd liquislime-bevy/webserver && \
 docker-compose down && docker-compose up -d && \
 cd ../.. && \
 \
-echo "All done"
+echo "All done, play the game at http://127.0.0.1:8088/out/"
