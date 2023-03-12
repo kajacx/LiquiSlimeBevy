@@ -155,6 +155,7 @@ fn get_plugin(
     // Script::from_plugin_path(&path)
 
     let path = format!("plugins/{plugin_filename}");
+    info!("{path}");
     let handle: Handle<RawBytes> = asset_server.load(path);
 
     let content = byte_assets

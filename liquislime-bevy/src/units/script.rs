@@ -13,18 +13,6 @@ unsafe impl Send for Script {}
 //#[cfg(target_arch = "wasm32")]
 unsafe impl Sync for Script {}
 
-fn assert_send<T: Send>() {}
-fn assert_sync<T: Sync>() {}
-
-fn instance() {
-    // assert_send::<wasmer::Instance>();
-    // assert_sync::<wasmer::Instance>();
-    // assert_sync::<RuntimeMutex>();
-    // assert_send::<RuntimeMutex>();
-    // assert_sync::<wasmer::Module>();
-    // assert_send::<wasmer::Module>();
-}
-
 impl Script {
     pub fn from_plugin_path(path: &str) -> Self {
         // TODO: what to share if multiple units have the same script?
