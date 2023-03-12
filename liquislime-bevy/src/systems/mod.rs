@@ -1,6 +1,6 @@
 use bevy::{app::PluginGroupBuilder, prelude::*};
 
-use crate::helpers::AssetsGamePlugins;
+use crate::helpers::{AssetsGamePlugins, StagesPlugin};
 
 mod input;
 mod rendering;
@@ -14,6 +14,7 @@ impl PluginGroup for AllGamePlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(AssetsGamePlugins)
+            .add(StagesPlugin)
             .add(setup::GameSetupPlugin)
             .add(input::GameInputPlugin)
             .add(update_logic::UpdateLogicPlugin)
