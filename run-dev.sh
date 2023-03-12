@@ -5,12 +5,7 @@
 ./scripts/prepare-host.sh && \
 \
 echo "Running bevy game in debug mode" && \
-cd liquislime-bevy/src/units/api_spec && \
-cat bindings.rs > bindings-original.rs && \
-# cat bindings-sys.rs > bindings-fixed.rs && \
-# tail -n +22 bindings.rs >> bindings-fixed.rs && \
-# mv bindings-fixed.rs bindings.rs && \
-cd ../../.. && \
+cd liquislime-bevy && \
 cargo run && \
 cd .. && \
 \
