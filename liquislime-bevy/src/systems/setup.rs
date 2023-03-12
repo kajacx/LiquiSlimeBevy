@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
-    helpers::ToVec3,
+    helpers::{RawBytes, ToVec3},
     resources::UnitScriptMap,
     units::{
         api_spec::types::{SlimeAmount, TilePosition},
@@ -78,7 +78,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
 fn spawn_sources(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    //mut unit_map: ResMut<UnitScriptMap>,
+    mut byte_assets: ResMut<Assets<RawBytes>>,
 ) {
     let mut unit_map = UnitScriptMap::new();
 
@@ -91,6 +91,7 @@ fn spawn_sources(
         "liquislime_slime_spawner_plugin.wasm",
         //&mut *unit_map,
         &mut unit_map,
+        &mut byte_assets,
     );
 
     create_spawner(
@@ -102,6 +103,7 @@ fn spawn_sources(
         "liquislime_slime_voider_plugin.wasm",
         //&mut *unit_map,
         &mut unit_map,
+        &mut byte_assets,
     );
 
     commands.insert_resource(unit_map);
@@ -115,6 +117,7 @@ fn create_spawner(
     unit_id: UnitId,
     plugin_filename: &'static str,
     unit_map: &mut UnitScriptMap,
+    byte_assets: &mut ResMut<Assets<RawBytes>>,
 ) {
     let sprite = SpriteBundle {
         texture: asset_server.load(texture_file),
@@ -129,7 +132,10 @@ fn create_spawner(
         ..Default::default()
     };
 
-    unit_map.register_new_unit(unit_id, get_plugin(plugin_filename));
+    unit_map.register_new_unit(
+        unit_id,
+        get_plugin(plugin_filename, asset_server, byte_assets),
+    );
 
     commands.spawn((
         TilePositionComponent::from(position),
@@ -140,22 +146,32 @@ fn create_spawner(
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-fn get_plugin(plugin_filename: &str) -> Script {
-    let path = format!("assets/plugins/{plugin_filename}");
-    Script::from_plugin_path(&path)
+fn get_plugin(
+    plugin_filename: &str,
+    asset_server: &Res<AssetServer>,
+    byte_assets: &mut ResMut<Assets<RawBytes>>,
+) -> Script {
+    // let path = format!("assets/plugins/{plugin_filename}");
+    // Script::from_plugin_path(&path)
+
+    let path = format!("plugins/{plugin_filename}");
+    let handle: Handle<RawBytes> = asset_server.load(path);
+
+    let content = byte_assets
+        .get(&handle)
+        .expect("WASM plugin asset should be found");
+
+    Script::from_bytes(content.0.as_ref())
+
+    //todo!()
 }
 
 #[cfg(target_arch = "wasm32")]
-fn get_plugin(plugin_filename: &str) -> Script {
-    // TODO: load via an url request?
+fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> Script {
+    // let path = format!("plugins/{plugin_filename}");
+    // let bytes = asset_server.load(path);
 
-    let bytes = if plugin_filename == "liquislime_slime_spawner_plugin.wasm" {
-        include_bytes!("../../assets/plugins/liquislime_slime_spawner_plugin.wasm").as_ref()
-    } else if plugin_filename == "liquislime_slime_voider_plugin.wasm" {
-        include_bytes!("../../assets/plugins/liquislime_slime_voider_plugin.wasm").as_ref()
-    } else {
-        panic!("Unknown plugin: {}", plugin_filename)
-    };
+    // bytes.letttte();
 
-    Script::from_bytes(bytes)
+    // Script::from_bytes(bytes)
 }
