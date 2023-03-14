@@ -60,9 +60,9 @@ impl MaybeLoadedScript {
 
     pub fn try_get_script<'a>(
         &'a mut self,
-        byte_assets: &mut Assets<ScriptAsset>,
+        script_assets: &mut Assets<ScriptAsset>,
     ) -> Option<&'a Script> {
-        self.try_load(byte_assets);
+        self.try_load(script_assets);
 
         match self {
             Self::Loaded(script) => Some(script),
@@ -70,9 +70,9 @@ impl MaybeLoadedScript {
         }
     }
 
-    fn try_load(&mut self, byte_assets: &mut Assets<ScriptAsset>) {
+    fn try_load(&mut self, script_assets: &mut Assets<ScriptAsset>) {
         let loaded_script = if let Self::Loading(handle) = self {
-            byte_assets.get(handle)
+            script_assets.get(handle)
         } else {
             None
         };

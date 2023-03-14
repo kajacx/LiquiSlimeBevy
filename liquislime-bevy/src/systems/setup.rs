@@ -133,32 +133,9 @@ fn create_spawner(
     ));
 }
 
-//#[cfg(not(target_arch = "wasm32"))]
 fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> MaybeLoadedScript {
-    // let path = format!("assets/plugins/{plugin_filename}");
-    // Script::from_plugin_path(&path)
-
     let path = format!("plugins/{plugin_filename}");
-    info!("{path}");
     let handle: Handle<ScriptAsset> = asset_server.load(path);
 
-    // let content = byte_assets
-    //     .get(&handle)
-    //     .expect("WASM plugin asset should be found");
-
-    // Script::from_bytes(content.0.as_ref())
-
     MaybeLoadedScript::new(handle)
-
-    //todo!()
 }
-
-// #[cfg(target_arch = "wasm32")]
-// fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> Script {
-// let path = format!("plugins/{plugin_filename}");
-// let bytes = asset_server.load(path);
-
-// bytes.letttte();
-
-// Script::from_bytes(bytes)
-// }
