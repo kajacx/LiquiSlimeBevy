@@ -2,11 +2,11 @@ use bevy::prelude::*;
 
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
-    helpers::{RawBytes, ToVec3},
+    helpers::{ScriptAsset, ToVec3},
     resources::UnitScriptMap,
     units::{
         api_spec::types::{SlimeAmount, TilePosition},
-        MaybeLoadedScript, Script, UnitId,
+        MaybeLoadedScript, UnitId,
     },
 };
 
@@ -75,11 +75,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
     }
 }
 
-fn spawn_sources(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut byte_assets: ResMut<Assets<RawBytes>>,
-) {
+fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
     let mut unit_map = UnitScriptMap::new();
 
     create_spawner(
@@ -89,9 +85,7 @@ fn spawn_sources(
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         "liquislime_slime_spawner_plugin.wasm",
-        //&mut *unit_map,
         &mut unit_map,
-        &mut byte_assets,
     );
 
     create_spawner(
@@ -101,9 +95,7 @@ fn spawn_sources(
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
         "liquislime_slime_voider_plugin.wasm",
-        //&mut *unit_map,
         &mut unit_map,
-        &mut byte_assets,
     );
 
     commands.insert_resource(unit_map);
@@ -117,7 +109,6 @@ fn create_spawner(
     unit_id: UnitId,
     plugin_filename: &'static str,
     unit_map: &mut UnitScriptMap,
-    byte_assets: &mut ResMut<Assets<RawBytes>>,
 ) {
     let sprite = SpriteBundle {
         texture: asset_server.load(texture_file),
@@ -132,10 +123,7 @@ fn create_spawner(
         ..Default::default()
     };
 
-    unit_map.register_new_unit(
-        unit_id,
-        get_plugin(plugin_filename, asset_server, byte_assets),
-    );
+    unit_map.register_new_unit(unit_id, get_plugin(plugin_filename, asset_server));
 
     commands.spawn((
         TilePositionComponent::from(position),
@@ -146,17 +134,13 @@ fn create_spawner(
 }
 
 //#[cfg(not(target_arch = "wasm32"))]
-fn get_plugin(
-    plugin_filename: &str,
-    asset_server: &Res<AssetServer>,
-    byte_assets: &mut ResMut<Assets<RawBytes>>,
-) -> MaybeLoadedScript {
+fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> MaybeLoadedScript {
     // let path = format!("assets/plugins/{plugin_filename}");
     // Script::from_plugin_path(&path)
 
     let path = format!("plugins/{plugin_filename}");
     info!("{path}");
-    let handle: Handle<RawBytes> = asset_server.load(path);
+    let handle: Handle<ScriptAsset> = asset_server.load(path);
 
     // let content = byte_assets
     //     .get(&handle)

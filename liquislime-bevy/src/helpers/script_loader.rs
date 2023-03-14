@@ -26,8 +26,7 @@ impl AssetLoader for ScriptLoader {
         load_context: &'a mut bevy::asset::LoadContext,
     ) -> bevy::utils::BoxedFuture<'a, Result<(), bevy::asset::Error>> {
         Box::pin(async move {
-            let bytes_vec: Vec<u8> = bytes.into();
-            let script = Script::from_bytes(bytes.as_ref());
+            let script = Script::from_bytes(bytes);
             let asset = ScriptAsset(Arc::new(script));
             load_context.set_default_asset(LoadedAsset::new(asset));
             Ok(())

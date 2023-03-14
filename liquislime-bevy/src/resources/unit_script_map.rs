@@ -6,11 +6,11 @@ use std::{
 use bevy::prelude::*;
 
 use crate::{
-    helpers::RawBytes,
+    helpers::ScriptAsset,
     units::{
         api_spec::types::TimeInterval,
         global_storage::{get_world, set_current_unit, WorldRefToken},
-        MaybeLoadedScript, Script, UnitId,
+        MaybeLoadedScript, UnitId,
     },
 };
 
@@ -30,7 +30,7 @@ impl UnitScriptMap {
     pub fn update_all_units(&self, time_elapsed: TimeInterval, _world_ref: &WorldRefToken) {
         for (unit_id, maybe_script) in self.0.iter() {
             let mut world = get_world();
-            let mut asset = world.resource_mut::<Assets<RawBytes>>();
+            let mut asset = world.resource_mut::<Assets<ScriptAsset>>();
 
             let mut script = maybe_script
                 .try_lock()

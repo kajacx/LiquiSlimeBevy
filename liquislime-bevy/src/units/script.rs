@@ -1,8 +1,8 @@
-use std::fmt::Debug;
+use std::{fmt::Debug, sync::Arc};
 
-use bevy::prelude::{Assets, Handle, ResMut};
+use bevy::prelude::{Assets, Handle};
 
-use crate::helpers::RawBytes;
+use crate::helpers::ScriptAsset;
 
 use super::api_spec::{bindings::Runtime, types::TimeInterval};
 
@@ -49,28 +49,28 @@ impl Debug for Script {
 
 #[derive(Debug)]
 pub enum MaybeLoadedScript {
-    Loaded(Script),
-    Loading(Handle<RawBytes>), // TODO: add from impl
+    Loaded(Arc<Script>),
+    Loading(Handle<ScriptAsset>), // TODO: add from impl
 }
 
 impl MaybeLoadedScript {
-    pub fn new(handle: Handle<RawBytes>) -> Self {
+    pub fn new(handle: Handle<ScriptAsset>) -> Self {
         Self::Loading(handle)
     }
 
     pub fn try_get_script<'a>(
         &'a mut self,
-        byte_assets: &mut Assets<RawBytes>,
+        byte_assets: &mut Assets<ScriptAsset>,
     ) -> Option<&'a Script> {
         self.try_load(byte_assets);
 
         match self {
             Self::Loaded(script) => Some(script),
-            Self::Loading(handle) => None,
+            Self::Loading(_) => None,
         }
     }
 
-    fn try_load(&mut self, byte_assets: &mut Assets<RawBytes>) {
+    fn try_load(&mut self, byte_assets: &mut Assets<ScriptAsset>) {
         let loaded_script = if let Self::Loading(handle) = self {
             byte_assets.get(handle)
         } else {
@@ -78,7 +78,7 @@ impl MaybeLoadedScript {
         };
 
         if let Some(script) = loaded_script {
-            *self = Self::Loaded(Script::from_bytes(script.0.as_ref()));
+            *self = Self::Loaded(script.0.clone());
         }
     }
 }
