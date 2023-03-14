@@ -1,5 +1,9 @@
 use std::fmt::Debug;
 
+use bevy::prelude::{Assets, Handle, ResMut};
+
+use crate::helpers::RawBytes;
+
 use super::api_spec::{bindings::Runtime, types::TimeInterval};
 
 pub struct Script {
@@ -40,5 +44,40 @@ impl Script {
 impl Debug for Script {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Script cannot derive Debug, blame Wasmer")
+    }
+}
+
+pub enum MaybeLoadedScript {
+    Loaded(Script),
+    Loading(Handle<RawBytes>), // TODO: add from impl
+}
+
+impl MaybeLoadedScript {
+    pub fn new(handle: Handle<RawBytes>) -> Self {
+        Self::Loading(handle)
+    }
+
+    pub fn try_get_script<'a>(
+        &'a mut self,
+        byte_assets: &mut ResMut<Assets<RawBytes>>,
+    ) -> Option<&'a Script> {
+        self.try_load(byte_assets);
+
+        match self {
+            Self::Loaded(script) => Some(script),
+            Self::Loading(handle) => None,
+        }
+    }
+
+    fn try_load(&mut self, byte_assets: &mut ResMut<Assets<RawBytes>>) {
+        let loaded_script = if let Self::Loading(handle) = self {
+            byte_assets.get(handle)
+        } else {
+            None
+        };
+
+        if let Some(script) = loaded_script {
+            *self = Self::Loaded(Script::from_bytes(script.0.as_ref()));
+        }
     }
 }
