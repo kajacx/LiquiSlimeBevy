@@ -145,7 +145,7 @@ fn create_spawner(
     ));
 }
 
-#[cfg(not(target_arch = "wasm32"))]
+//#[cfg(not(target_arch = "wasm32"))]
 fn get_plugin(
     plugin_filename: &str,
     asset_server: &Res<AssetServer>,
@@ -169,12 +169,12 @@ fn get_plugin(
     //todo!()
 }
 
-#[cfg(target_arch = "wasm32")]
-fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> Script {
-    // let path = format!("plugins/{plugin_filename}");
-    // let bytes = asset_server.load(path);
+// #[cfg(target_arch = "wasm32")]
+// fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> Script {
+// let path = format!("plugins/{plugin_filename}");
+// let bytes = asset_server.load(path);
 
-    // bytes.letttte();
+// bytes.letttte();
 
-    // Script::from_bytes(bytes)
-}
+// Script::from_bytes(bytes)
+// }
