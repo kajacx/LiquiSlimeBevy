@@ -47,6 +47,7 @@ impl Debug for Script {
     }
 }
 
+#[derive(Debug)]
 pub enum MaybeLoadedScript {
     Loaded(Script),
     Loading(Handle<RawBytes>), // TODO: add from impl
@@ -59,7 +60,7 @@ impl MaybeLoadedScript {
 
     pub fn try_get_script<'a>(
         &'a mut self,
-        byte_assets: &mut ResMut<Assets<RawBytes>>,
+        byte_assets: &mut Assets<RawBytes>,
     ) -> Option<&'a Script> {
         self.try_load(byte_assets);
 
@@ -69,7 +70,7 @@ impl MaybeLoadedScript {
         }
     }
 
-    fn try_load(&mut self, byte_assets: &mut ResMut<Assets<RawBytes>>) {
+    fn try_load(&mut self, byte_assets: &mut Assets<RawBytes>) {
         let loaded_script = if let Self::Loading(handle) = self {
             byte_assets.get(handle)
         } else {

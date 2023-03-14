@@ -6,7 +6,7 @@ use crate::{
     resources::UnitScriptMap,
     units::{
         api_spec::types::{SlimeAmount, TilePosition},
-        Script, UnitId,
+        MaybeLoadedScript, Script, UnitId,
     },
 };
 
@@ -150,7 +150,7 @@ fn get_plugin(
     plugin_filename: &str,
     asset_server: &Res<AssetServer>,
     byte_assets: &mut ResMut<Assets<RawBytes>>,
-) -> Script {
+) -> MaybeLoadedScript {
     // let path = format!("assets/plugins/{plugin_filename}");
     // Script::from_plugin_path(&path)
 
@@ -158,11 +158,13 @@ fn get_plugin(
     info!("{path}");
     let handle: Handle<RawBytes> = asset_server.load(path);
 
-    let content = byte_assets
-        .get(&handle)
-        .expect("WASM plugin asset should be found");
+    // let content = byte_assets
+    //     .get(&handle)
+    //     .expect("WASM plugin asset should be found");
 
-    Script::from_bytes(content.0.as_ref())
+    // Script::from_bytes(content.0.as_ref())
+
+    MaybeLoadedScript::new(handle)
 
     //todo!()
 }
