@@ -17,7 +17,7 @@ echo "Restarting webserver" && \
 cd liquislime-bevy/webserver && \
 rm -rf assets && \
 cp -r ../assets . && \
-sudo docker-compose down && docker-compose up -d && \
+sudo docker-compose down && sudo docker-compose up -d && \
 cd ../.. && \
 \
-echo "All done, play the game at http://127.0.0.1:8088/webserver/"
+echo "All done, play the game at http://liquislime.com:8088/webserver/"
