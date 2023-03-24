@@ -49,7 +49,7 @@ impl DerefMut for WorldRef<'_> {
         /* SAFETY:
          * Setting the world referene is not public. The only way to set it is via the `use_world_reference_in` function.
          * That takes the mutable reference to the world, so no one else can use it while the function runs.
-         * And it is only while the function run that this code will be reached, because of the null check.
+         * And it is only while the function runs that this code will be reached, because of the null check.
          * You also cannot call the `use_world_reference_in` twice at the same time because of the THREAD_LOCK.
          * Finally, you cannot call get_world() twice to get 2 references, because of the mutex lock.
          */
