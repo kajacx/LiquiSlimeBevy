@@ -18,6 +18,7 @@ fp_import! {
 
     fn get_slime_amount(position: TilePosition) -> SlimeAmount;
     fn set_slime_amount(position: TilePosition, amount: SlimeAmount);
+    fn add_slime_amount(position: TilePosition, amount: SlimeAmount) -> SlimeAmount;
 
     fn is_mouse_pressed(mouse_button: MouseButton) -> bool;
     fn was_mouse_just_pressed(mouse_button: MouseButton) -> bool;

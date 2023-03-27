@@ -30,7 +30,7 @@ impl SlimeAmount {
         Self(0)
     }
 
-    pub fn from_integer(amount: i64) -> Self {
+    pub const fn from_integer(amount: i64) -> Self {
         Self(amount * ONE_SLIME_AMOUNT)
     }
 
