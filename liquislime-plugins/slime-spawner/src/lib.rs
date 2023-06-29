@@ -1,28 +1,28 @@
-wit_bindgen::generate!
+// use liquislime_api::*;
 
-#[fp_export_impl(liquislime_api)]
-fn update(time_elapsed: TimeInterval) {
-    let amount_dbg =
-        *SLIME_AMOUNT.lock().unwrap() + SlimeAmount::from_float(time_elapsed.to_seconds());
-    *SLIME_AMOUNT.lock().unwrap() = amount_dbg;
+// struct Spawner;
 
-    if was_mouse_just_pressed(MouseButton::LeftButton) {
-        set_own_position(
-            get_mouse_position()
-                .expect("TODO: single method to return clicked and position")
-                .to_tile_position(),
-        );
-    }
+// impl LiquislimeUnit for Spawner {
+//     fn update(time_elapsed: TimeInterval) {
+//         let added_amount_per_second = SlimeAmount::from_integer(1000);
 
-    let added_amount_per_second = SlimeAmount::from_integer(1000);
+//         let amount = added_amount_per_second * time_elapsed.to_seconds();
 
-    if let Some(pos) = get_mouse_position() {
-        let pos = pos.to_tile_position();
-        //let amount =  added_amount_per_second * time_elapsed.to_seconds();
-        let amount = amount_dbg * time_elapsed.to_seconds();
-        add_slime_amount(pos, amount);
-    }
+//         add_slime_amount(get_own_position(), amount);
+//     }
+// }
 
-    let amount = added_amount_per_second * time_elapsed.to_seconds();
-    // add_slime_amount(get_own_position(), amount);
+// export_liquislime_unit_my!(Spawner);
+
+wit_bindgen::generate!({
+    path: "../../protocol.wit",
+    world: "liquislime-unit",
+});
+
+struct Spawner;
+
+impl LiquislimeUnit for Spawner {
+    fn update(_: TimeInterval) {}
 }
+
+export_liquislime_unit!(Spawner);
