@@ -1,6 +1,5 @@
 #!/usr/bin/sh
 
-./scripts/build-api.sh && \
 ./scripts/build-plugins.sh && \
 ./scripts/prepare-host.sh && \
 \

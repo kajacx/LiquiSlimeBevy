@@ -1,0 +1,21 @@
+package liquislime:protocol
+
+world liquislime-unit {
+  record time-interval {
+    fragments: s64
+  }
+  
+  record slime-amount {
+    amount: s64,
+  }
+  
+  record tile-position {
+    x: s32,
+    y: s32,
+  }
+
+  import get-own-position: func() -> tile-position
+  import add-slime-amount: func(position: tile-position, amount: slime-amount)
+
+  export update: func(time-elapsed: time-interval)
+}

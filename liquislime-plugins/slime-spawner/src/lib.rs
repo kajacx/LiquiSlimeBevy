@@ -1,7 +1,4 @@
-use liquislime_api::*;
-use std::sync::Mutex;
-
-static SLIME_AMOUNT: Mutex<SlimeAmount> = Mutex::new(SlimeAmount::from_integer(0));
+wit_bindgen::generate!
 
 #[fp_export_impl(liquislime_api)]
 fn update(time_elapsed: TimeInterval) {

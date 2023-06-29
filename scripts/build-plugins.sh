@@ -6,7 +6,8 @@ cd liquislime-plugins && \
 for plugin in */; do
   cd $plugin && \
   cargo build --target wasm32-unknown-unknown && \
-  cp target/wasm32-unknown-unknown/debug/*.wasm ../../liquislime-bevy/assets/plugins/ && \
+  cd target/wasm32-unknown-unknown/debug && wasm-tools component new *.wasm -o out/$plugin-component.wasm && cd ../../.. && \
+  cp target/wasm32-unknown-unknown/debug/out/component-$plugin.wasm ../../liquislime-bevy/assets/plugins/ && \
   cd ..
 done && \
 cd .. && \
