@@ -8,3 +8,4 @@ crate-type = ["rlib", "cdylib"]
 
 [dependencies]
 wit-bindgen = { version = "0.8.0" }
+derive_more = { version = "0.99.17" }

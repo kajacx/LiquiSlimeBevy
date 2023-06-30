@@ -8,4 +8,4 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
-liquislime-api = { path = "../../liquislime-api/bindings/rust-plugin" }
+liquislime-api = { path = "../../liquislime-rust-api" }
