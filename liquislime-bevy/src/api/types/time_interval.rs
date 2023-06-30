@@ -19,7 +19,7 @@ const FRAGMENTS_IN_SECOND: i64 = 18_000;
     PartialOrd,
     Ord,
 )]
-pub struct TimeInterval(i64);
+pub struct TimeInterval(pub i64);
 
 impl TimeInterval {
     pub fn new() -> Self {

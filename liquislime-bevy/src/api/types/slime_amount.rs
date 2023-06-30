@@ -19,7 +19,7 @@ const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
     PartialOrd,
     Ord,
 )]
-pub struct SlimeAmount(i64);
+pub struct SlimeAmount(pub i64);
 
 impl SlimeAmount {
     pub fn new() -> Self {

@@ -24,8 +24,7 @@ fn render_slime_color(
 
     for (mut sprite, position) in &mut tile_query {
         let amount = slime_grid.get_amount(position.0.x as usize, position.0.y as usize);
-        // let rgb = amount.as_integer() as u8;
-        let rgb = amount.amount as u8;
+        let rgb = amount.as_integer() as u8;
         sprite.color = Color::rgb_u8(rgb, rgb, rgb);
     }
 }
@@ -34,9 +33,7 @@ fn update_building_postion(
     mut building_query: Query<(&mut Transform, &TilePositionComponent), With<Building>>,
 ) {
     for (mut transform, position) in &mut building_query {
-        // let z = transform.translation.z;
-        // transform.translation = position.0.to_position_center().to_vec3(z);
-        transform.translation.x = position.0.x;
-        transform.translation.y = position.0.y;
+        let z = transform.translation.z;
+        transform.translation = position.0.to_position_center().to_vec3(z);
     }
 }

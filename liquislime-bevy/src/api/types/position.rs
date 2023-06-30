@@ -1,27 +1,14 @@
-use crate::SlimeAmount;
+use super::*;
+use bevy::prelude::Vec3;
 use derive_more::{Add, AddAssign, Sub, SubAssign};
 
-#[derive(
-    Debug,
-    Clone,
-    Copy,
-    Default,
-    Add,
-    Sub,
-    AddAssign,
-    SubAssign,
-    PartialEq,
-    Eq,
-    Hash,
-    PartialOrd,
-    Ord,
-)]
+#[derive(Debug, Clone, Copy, Default, Add, Sub, AddAssign, SubAssign, PartialEq, PartialOrd)]
 pub struct Position {
-    x: f32,
-    y: f32,
+    pub x: f32,
+    pub y: f32,
 }
 
-impl TilePosition {
+impl Position {
     pub fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
@@ -36,5 +23,9 @@ impl TilePosition {
 
     pub fn to_tile_position(self) -> TilePosition {
         TilePosition::from_position(self)
+    }
+
+    pub fn to_vec3(self, z: f32) -> Vec3 {
+        Vec3::new(self.x, self.y, z)
     }
 }

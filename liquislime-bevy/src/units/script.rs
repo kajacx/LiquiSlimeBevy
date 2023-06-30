@@ -6,16 +6,16 @@ use crate::api::*;
 use crate::helpers::ScriptAsset;
 
 #[derive(Debug)]
-struct ScriptInstance {
+pub struct ScriptInstance {
     instance: UnitInstance,
 }
 
 impl ScriptInstance {
-    fn new(instance: UnitInstance) -> Self {
+    pub fn new(instance: UnitInstance) -> Self {
         Self { instance }
     }
 
-    fn update(&self, time_elapsed: TimeInterval) {
+    pub fn update(&self, time_elapsed: TimeInterval) {
         self.instance.update(time_elapsed);
     }
 }

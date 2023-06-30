@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::api::{NonNegative, SlimeAmount, TilePosition};
+use crate::api::{SlimeAmount, TilePosition};
 
 #[derive(Component, Debug)]
 pub struct SlimeGrid {
@@ -13,13 +13,12 @@ pub struct SlimeGrid {
 
 impl SlimeGrid {
     pub fn new(width: usize, height: usize) -> Self {
-        let zero_slime = SlimeAmount { amount: 0 };
         Self {
             width,
             height,
 
-            slime_amounts: vec![zero_slime.clone(); width * height],
-            slime_additions: vec![zero_slime.clone(); width * height],
+            slime_amounts: vec![SlimeAmount::new(); width * height],
+            slime_additions: vec![SlimeAmount::new(); width * height],
         }
     }
 
@@ -110,7 +109,7 @@ impl SlimeGrid {
     pub fn spread_slime(&mut self) {
         for index in 0..self.slime_additions.len() {
             self.slime_amounts[index] += self.slime_additions[index];
-            self.slime_additions[index] = SlimeAmount { amount: 0 };
+            self.slime_additions[index] = SlimeAmount::from_integer(0);
         }
     }
 }

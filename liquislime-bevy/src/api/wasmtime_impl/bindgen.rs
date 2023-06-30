@@ -8,8 +8,27 @@ use wasmtime::{
     Config, Engine, Store,
 };
 
-mod bindgen;
-use bindgen::{LiquislimeHost, LiquislimeUnit};
+wasmtime::component::bindgen!({
+    path: "../protocol.wit",
+    world: "liquislime-unit"
+});
+
+#[derive(Debug)]
+pub struct LiquislimeHost;
+
+impl LiquislimeUnitImports for LiquislimeHost {
+    fn get_own_position(&mut self) -> wasmtime::Result<TilePosition> {
+        todo!("import get own")
+    }
+
+    fn add_slime_amount(
+        &mut self,
+        position: TilePosition,
+        amount: SlimeAmount,
+    ) -> wasmtime::Result<()> {
+        todo!("import add slime")
+    }
+}
 
 pub struct UnitModule {
     store: Arc<Mutex<Store<LiquislimeHost>>>,
@@ -25,7 +44,7 @@ impl Debug for UnitModule {
 
 pub struct UnitInstance {
     store: Arc<Mutex<Store<LiquislimeHost>>>,
-    instance: bindgen::LiquislimeUnit,
+    instance: LiquislimeUnit,
 }
 
 impl Debug for UnitInstance {
@@ -70,11 +89,10 @@ impl UnitModule {
 }
 
 impl UnitInstance {
-    pub fn update(&self, time_elapsed: crate::api::TimeInterval) {
-        let time_elapsed = bindgen::TimeInterval {
+    fn update(&self, time_elapsed: crate::api::TimeInterval) {
+        let time_elapsed = TimeInterval {
             fragments: time_elapsed.0,
         };
-
         self.instance
             .call_update(&mut *self.store.try_lock().unwrap(), time_elapsed)
             .unwrap();

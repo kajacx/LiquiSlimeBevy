@@ -6,11 +6,11 @@ use bevy::{
     reflect::TypeUuid,
 };
 
-use crate::units::ScriptInstance;
+use crate::{api::UnitModule, units::ScriptInstance};
 
 #[derive(Clone, Debug, TypeUuid)]
 #[uuid = "39f0d1f8-a7eb-4eaa-887b-4f31a73c196e"]
-pub struct ScriptAsset(pub Arc<Script>);
+pub struct ScriptAsset(pub Arc<ScriptInstance>);
 
 #[derive(Clone, Debug, Default)]
 pub struct ScriptLoader;
