@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::wit::TimeInterval;
+use crate::api::TimeInterval;
 use crate::{
     helpers::WasmUpdate, resources::UnitScriptMap, units::global_storage::use_world_reference_in,
 };

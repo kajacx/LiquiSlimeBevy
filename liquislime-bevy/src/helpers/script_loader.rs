@@ -6,7 +6,7 @@ use bevy::{
     reflect::TypeUuid,
 };
 
-use crate::units::Script;
+use crate::units::ScriptInstance;
 
 #[derive(Clone, Debug, TypeUuid)]
 #[uuid = "39f0d1f8-a7eb-4eaa-887b-4f31a73c196e"]
@@ -26,7 +26,9 @@ impl AssetLoader for ScriptLoader {
         load_context: &'a mut bevy::asset::LoadContext,
     ) -> bevy::utils::BoxedFuture<'a, Result<(), bevy::asset::Error>> {
         Box::pin(async move {
-            let script = Script::from_bytes(bytes);
+            let unit_module = UnitModule::from_bytes(bytes);
+            let unit_instance = unit_module.instantiate();
+            let script = ScriptInstance::new(unit_instance);
             let asset = ScriptAsset(Arc::new(script));
             load_context.set_default_asset(LoadedAsset::new(asset));
             Ok(())

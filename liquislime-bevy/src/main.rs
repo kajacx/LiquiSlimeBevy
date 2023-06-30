@@ -4,12 +4,12 @@ use bevy::{
 };
 use systems::AllGamePlugins;
 
+mod api;
 mod components;
 mod helpers;
 mod resources;
 mod systems;
 mod units;
-mod wit;
 
 fn main() {
     App::new()

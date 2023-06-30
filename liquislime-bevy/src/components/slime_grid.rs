@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::wit::{NonNegative, SlimeAmount, TilePosition};
+use crate::api::{NonNegative, SlimeAmount, TilePosition};
 
 #[derive(Component, Debug)]
 pub struct SlimeGrid {

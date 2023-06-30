@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::wit::*;
+use crate::api::*;
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
     helpers::ScriptAsset,
@@ -80,7 +80,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
     create_spawner(
         &mut commands,
         &asset_server,
-        TilePosition::new(2, 5),
+        crate::api::TilePosition::new(2, 5),
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         "liquislime_slime_spawner_plugin.wasm",
@@ -90,7 +90,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
     create_spawner(
         &mut commands,
         &asset_server,
-        TilePosition::new(7, 1),
+        crate::api::TilePosition::new(7, 1),
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
         "liquislime_slime_voider_plugin.wasm",

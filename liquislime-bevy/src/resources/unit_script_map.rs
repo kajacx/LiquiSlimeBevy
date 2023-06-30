@@ -6,12 +6,12 @@ use std::{
 use bevy::prelude::*;
 
 use crate::{
+    api::TimeInterval,
     helpers::ScriptAsset,
     units::{
         global_storage::{get_world, set_current_unit, WorldRefToken},
         MaybeLoadedScript, UnitId,
     },
-    wit::TimeInterval,
 };
 
 #[derive(Clone, Debug, Resource)]
