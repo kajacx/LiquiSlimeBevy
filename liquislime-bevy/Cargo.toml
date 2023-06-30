@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 bevy = "0.10.1"
 derive_more = "0.99.17"
-serde = { version = "1.0.164", features = ["derive"] }
+# serde = { version = "1.0.164", features = ["derive"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 wasmtime = { version = "10.0.1", features = ["component-model"]}

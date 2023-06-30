@@ -9,6 +9,7 @@ mod helpers;
 mod resources;
 mod systems;
 mod units;
+mod wit;
 
 fn main() {
     App::new()

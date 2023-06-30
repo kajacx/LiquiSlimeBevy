@@ -16,7 +16,7 @@ impl PluginGroup for AllGamePlugins {
             .add(AssetsGamePlugins)
             .add(StagesPlugin)
             .add(setup::GameSetupPlugin)
-            .add(input::GameInputPlugin)
+            // .add(input::GameInputPlugin)
             .add(update_logic::UpdateLogicPlugin)
             .add(wasm_update::WasmUpdatePlugin)
             .add(rendering::GameRenderingPlugin)

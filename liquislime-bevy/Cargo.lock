@@ -2429,7 +2429,6 @@ dependencies = [
  "bevy",
  "derive_more",
  "js-sys",
- "serde",
  "wasm-bindgen",
  "wasmtime",
 ]

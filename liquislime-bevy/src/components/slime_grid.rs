@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::units::api_spec::types::{SlimeAmount, TilePosition};
+use crate::wit::{NonNegative, SlimeAmount, TilePosition};
 
 #[derive(Component, Debug)]
 pub struct SlimeGrid {
@@ -13,16 +13,16 @@ pub struct SlimeGrid {
 
 impl SlimeGrid {
     pub fn new(width: usize, height: usize) -> Self {
+        let zero_slime = SlimeAmount { amount: 0 };
         Self {
             width,
             height,
 
-            slime_amounts: vec![SlimeAmount::new(); width * height],
-            slime_additions: vec![SlimeAmount::new(); width * height],
+            slime_amounts: vec![zero_slime.clone(); width * height],
+            slime_additions: vec![zero_slime.clone(); width * height],
         }
     }
 
-    #[inline]
     pub fn get_amount(&self, x: usize, y: usize) -> SlimeAmount {
         self.slime_amounts[self.get_index(x, y)]
     }
@@ -38,7 +38,6 @@ impl SlimeGrid {
         }
     }
 
-    #[inline]
     pub fn set_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) {
         let index = self.get_index(x, y);
         self.slime_amounts[index] = amount.non_negative();
@@ -60,7 +59,6 @@ impl SlimeGrid {
         }
     }
 
-    #[inline]
     pub fn add_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) {
         let index = self.get_index(x, y);
         let amount = self.slime_amounts[index] + amount;
@@ -76,12 +74,10 @@ impl SlimeGrid {
         }
     }
 
-    #[inline]
     pub fn in_range(&self, x: usize, y: usize) -> bool {
         x < self.width && y < self.height
     }
 
-    #[inline]
     fn get_index(&self, x: usize, y: usize) -> usize {
         x + y * self.width
     }
@@ -100,7 +96,6 @@ impl SlimeGrid {
         }
     }
 
-    #[inline]
     fn prepare_spread_between(&mut self, i1: usize, i2: usize) {
         let current_amount = self.slime_amounts[i1];
         let neighbor_amount = self.slime_amounts[i2];
@@ -115,7 +110,7 @@ impl SlimeGrid {
     pub fn spread_slime(&mut self) {
         for index in 0..self.slime_additions.len() {
             self.slime_amounts[index] += self.slime_additions[index];
-            self.slime_additions[index] = SlimeAmount::from_integer(0);
+            self.slime_additions[index] = SlimeAmount { amount: 0 };
         }
     }
 }

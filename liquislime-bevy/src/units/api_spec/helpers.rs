@@ -11,22 +11,22 @@ pub fn get_slime_grid<'a>(world: &'a mut World) -> impl DerefMut<Target = SlimeG
         .expect("Slime Grid should have been created")
 }
 
-pub fn api_mouse_button_to_bevy(
-    mouse_button: super::types::MouseButton,
-) -> bevy::prelude::MouseButton {
-    match mouse_button {
-        super::MouseButton::LeftButton => bevy::prelude::MouseButton::Left,
-        super::MouseButton::RightButton => bevy::prelude::MouseButton::Right,
-        super::MouseButton::MiddleButton => bevy::prelude::MouseButton::Middle,
-    }
-}
+// pub fn api_mouse_button_to_bevy(
+//     mouse_button: super::types::MouseButton,
+// ) -> bevy::prelude::MouseButton {
+//     match mouse_button {
+//         super::MouseButton::LeftButton => bevy::prelude::MouseButton::Left,
+//         super::MouseButton::RightButton => bevy::prelude::MouseButton::Right,
+//         super::MouseButton::MiddleButton => bevy::prelude::MouseButton::Middle,
+//     }
+// }
 
-pub fn read_mouse_input<T>(reader: impl FnOnce(&Input<MouseButton>) -> T) -> T {
-    let world = get_world();
+// pub fn read_mouse_input<T>(reader: impl FnOnce(&Input<MouseButton>) -> T) -> T {
+//     let world = get_world();
 
-    let input = world
-        .get_resource::<Input<MouseButton>>()
-        .expect("Mouse input resource should exist");
+//     let input = world
+//         .get_resource::<Input<MouseButton>>()
+//         .expect("Mouse input resource should exist");
 
-    reader(input.borrow())
-}
+//     reader(input.borrow())
+// }

@@ -8,10 +8,10 @@ use bevy::prelude::*;
 use crate::{
     helpers::ScriptAsset,
     units::{
-        api_spec::types::TimeInterval,
         global_storage::{get_world, set_current_unit, WorldRefToken},
         MaybeLoadedScript, UnitId,
     },
+    wit::TimeInterval,
 };
 
 #[derive(Clone, Debug, Resource)]
