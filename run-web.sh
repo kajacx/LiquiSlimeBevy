@@ -1,8 +1,6 @@
 #!/usr/bin/sh
 
-./scripts/build-api.sh && \
 ./scripts/build-plugins.sh && \
-./scripts/prepare-host.sh && \
 \
 echo "Running bevy game in web browser" && \
 cd liquislime-bevy && \
@@ -10,7 +8,11 @@ cd liquislime-bevy && \
 # cargo rustc --target=wasm32-unknown-unknown -- -Clink-arg=--initial-memory=268435456 -Clink-arg=--max-memory=268435456 && \
 cargo build --target=wasm32-unknown-unknown && \
 wasm-bindgen --out-dir ./webserver/ --target web ./target/wasm32-unknown-unknown/debug/liquislime-bevy.wasm && \
-cd .. && \
+# HACK to make jco work
+cd assets/plugins && \
+echo slime-spawner > slime-spawner-component.wasm && \
+echo slime-voider > slime-voider-component.wasm && \
+cd ../../.. && \
 echo "Bevy game built in WASM" && \
 \
 echo "Restarting webserver" && \
