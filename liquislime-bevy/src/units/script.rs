@@ -1,42 +1,54 @@
+use std::sync::Mutex;
 use std::{fmt::Debug, sync::Arc};
 
 use bevy::prelude::{Assets, Handle};
+use wasmtime::component::*;
+use wasmtime::Config;
+use wasmtime::Engine;
+use wasmtime::Store;
 
 use crate::helpers::ScriptAsset;
 
-use super::api_spec::{bindings::Runtime, types::TimeInterval};
+use crate::wit::*;
 
 pub struct Script {
-    runtime: Runtime,
+    // store: Arc<Mutex<wasmtime::Store>>,
+    store: Mutex<wasmtime::Store<LiquislimeHost>>,
+    instance: crate::wit::LiquislimeUnit,
 }
 
 // FIXME: Is it really safe to just implement these? Probably not ...
 // Oh no. Oh no.
 //#[cfg(target_arch = "wasm32")]
-unsafe impl Send for Script {}
+// unsafe impl Send for Script {}
 //#[cfg(target_arch = "wasm32")]
-unsafe impl Sync for Script {}
+// unsafe impl Sync for Script {}
 
 impl Script {
-    pub fn from_plugin_path(path: &str) -> Self {
-        // TODO: what to share if multiple units have the same script?
-        // TODO: propage error to caller
-        let bytes = std::fs::read(path).expect("Should read path when creating script");
-        Self::from_bytes(&bytes)
-    }
-
     pub fn from_bytes(bytes: &[u8]) -> Self {
-        let runtime = Runtime::new(bytes).expect("Should create script runtime from bytes");
-        Self::new(runtime)
-    }
+        let mut config = Config::new();
+        config.wasm_component_model(true);
 
-    pub fn new(runtime: Runtime) -> Self {
-        Self { runtime }
+        let engine = Engine::new(&config).unwrap();
+        let mut store = Store::new(&engine, LiquislimeHost);
+
+        let component = Component::new(&store.engine(), &bytes).expect("create component");
+
+        let mut linker = Linker::new(store.engine());
+
+        LiquislimeUnit::add_to_linker(&mut linker, |state| state).unwrap();
+        let (liquislime_unit, _instance) =
+            LiquislimeUnit::instantiate(&mut store, &component, &linker).unwrap();
+
+        Self {
+            store: Mutex::new(store),
+            instance: liquislime_unit,
+        }
     }
 
     pub fn update(&self, time_elapsed: TimeInterval) {
-        self.runtime
-            .update(time_elapsed)
+        self.instance
+            .call_update(&mut *self.store.try_lock().unwrap(), time_elapsed)
             .expect("TODO: update should log on error");
     }
 }

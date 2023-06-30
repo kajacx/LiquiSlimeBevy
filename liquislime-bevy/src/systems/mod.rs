@@ -2,7 +2,7 @@ use bevy::{app::PluginGroupBuilder, prelude::*};
 
 use crate::helpers::{AssetsGamePlugins, StagesPlugin};
 
-mod input;
+// mod input;
 mod rendering;
 mod setup;
 mod update_logic;

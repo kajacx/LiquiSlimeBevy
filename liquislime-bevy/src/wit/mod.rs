@@ -3,7 +3,7 @@ wasmtime::component::bindgen!({
     world: "liquislime-unit"
 });
 
-struct LiquislimeHost;
+pub struct LiquislimeHost;
 
 impl LiquislimeUnitImports for LiquislimeHost {
     fn get_own_position(&mut self) -> wasmtime::Result<TilePosition> {

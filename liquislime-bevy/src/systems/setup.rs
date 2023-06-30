@@ -1,13 +1,11 @@
 use bevy::prelude::*;
 
+use crate::wit::*;
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
-    helpers::{ScriptAsset, ToVec3},
+    helpers::ScriptAsset,
     resources::UnitScriptMap,
-    units::{
-        api_spec::types::{SlimeAmount, TilePosition},
-        MaybeLoadedScript, UnitId,
-    },
+    units::{MaybeLoadedScript, UnitId},
 };
 
 pub struct GameSetupPlugin;
@@ -59,7 +57,8 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
                         ..Default::default()
                     },
                     transform: Transform::from_translation(
-                        position.to_position_center().to_vec3(0.0),
+                        // position.to_position_center().to_vec3(0.0),
+                        Vec3::new(x as _, y as _, 0.0),
                     ),
                     ..Default::default()
                 };

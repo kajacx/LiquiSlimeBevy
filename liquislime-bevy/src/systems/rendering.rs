@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
-    helpers::{RenderSync, ToVec3},
+    helpers::RenderSync,
 };
 
 pub struct GameRenderingPlugin;
@@ -34,7 +34,9 @@ fn update_building_postion(
     mut building_query: Query<(&mut Transform, &TilePositionComponent), With<Building>>,
 ) {
     for (mut transform, position) in &mut building_query {
-        let z = transform.translation.z;
-        transform.translation = position.0.to_position_center().to_vec3(z);
+        // let z = transform.translation.z;
+        // transform.translation = position.0.to_position_center().to_vec3(z);
+        transform.translation.x = position.0.x;
+        transform.translation.y = position.0.y;
     }
 }

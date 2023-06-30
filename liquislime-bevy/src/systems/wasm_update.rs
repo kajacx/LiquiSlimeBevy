@@ -1,9 +1,8 @@
 use bevy::prelude::*;
 
+use crate::wit::TimeInterval;
 use crate::{
-    helpers::WasmUpdate,
-    resources::UnitScriptMap,
-    units::{api_spec::types::TimeInterval, global_storage::use_world_reference_in},
+    helpers::WasmUpdate, resources::UnitScriptMap, units::global_storage::use_world_reference_in,
 };
 
 pub struct WasmUpdatePlugin;
