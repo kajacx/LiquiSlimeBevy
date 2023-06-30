@@ -1,4 +1,4 @@
-// pub mod api_spec;
+pub mod api_spec;
 pub mod global_storage;
 mod script;
 mod unit_id;

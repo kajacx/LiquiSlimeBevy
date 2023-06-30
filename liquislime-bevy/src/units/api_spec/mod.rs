@@ -13,7 +13,7 @@ fn level_height() -> i32 {
     get_level_info().height as i32
 }
 
-fn get_own_position() -> TilePosition {
+pub fn get_own_position() -> TilePosition {
     let mut world = get_world();
     let mut query = world.query::<(&UnitId, &TilePositionComponent)>();
     for (unit_id, tile_position) in query.iter(&world) {
@@ -49,7 +49,7 @@ fn get_own_position() -> TilePosition {
 //     let mut slime_grid = get_slime_grid(&mut world);
 //     slime_grid.try_set_amount(position, amount).log_err();
 // }
-fn add_slime_amount(position: TilePosition, amount: SlimeAmount) -> SlimeAmount {
+pub fn add_slime_amount(position: TilePosition, amount: SlimeAmount) -> SlimeAmount {
     println!("Adding slime amount: {:?}", amount);
 
     let mut world = get_world();
@@ -62,8 +62,7 @@ fn add_slime_amount(position: TilePosition, amount: SlimeAmount) -> SlimeAmount 
             .expect("We have checked if position is in range");
         new_amount
     } else {
-        // SlimeAmount::from_integer(0)
-        SlimeAmount { amount: 0 }
+        SlimeAmount::from_integer(0)
     }
 }
 

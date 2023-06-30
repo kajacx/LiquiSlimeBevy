@@ -40,6 +40,8 @@ impl UnitScriptMap {
 
             drop(world);
 
+            // info!("UPDATE? {:?}", script);
+
             if let Some(script) = script {
                 set_current_unit(*unit_id);
                 script.update(time_elapsed);

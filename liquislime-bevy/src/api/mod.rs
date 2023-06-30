@@ -1,3 +1,4 @@
+#[allow(unused)]
 mod types;
 pub use types::*;
 
