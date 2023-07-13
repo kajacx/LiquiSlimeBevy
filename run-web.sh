@@ -9,10 +9,11 @@ cd liquislime-bevy && \
 cargo build --target=wasm32-unknown-unknown && \
 wasm-bindgen --out-dir ./webserver/ --target web ./target/wasm32-unknown-unknown/debug/liquislime-bevy.wasm && \
 # HACK to make jco work
-cd assets/plugins && \
-echo slime-spawner > slime-spawner-component.wasm && \
-echo slime-voider > slime-voider-component.wasm && \
-cd ../../.. && \
+# cd assets/plugins && \
+# echo slime-spawner > slime-spawner-component.wasm && \
+# echo slime-voider > slime-voider-component.wasm && \
+# cd ../../.. && \
+cd .. && \
 echo "Bevy game built in WASM" && \
 \
 echo "Restarting webserver" && \

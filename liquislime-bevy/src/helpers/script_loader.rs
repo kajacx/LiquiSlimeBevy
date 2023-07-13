@@ -17,7 +17,7 @@ pub struct ScriptLoader;
 
 impl AssetLoader for ScriptLoader {
     fn extensions(&self) -> &[&str] {
-        &["wasm"]
+        &["wasm", "zip"]
     }
 
     fn load<'a>(
@@ -26,8 +26,8 @@ impl AssetLoader for ScriptLoader {
         load_context: &'a mut bevy::asset::LoadContext,
     ) -> bevy::utils::BoxedFuture<'a, Result<(), bevy::asset::Error>> {
         Box::pin(async move {
-            let unit_module = UnitModule::from_bytes(bytes).await;
-            let unit_instance = unit_module.instantiate().await;
+            let unit_module = UnitModule::from_bytes(bytes);
+            let unit_instance = unit_module.instantiate();
             let script = ScriptInstance::new(unit_instance);
             let asset = ScriptAsset(Arc::new(script));
             load_context.set_default_asset(LoadedAsset::new(asset));

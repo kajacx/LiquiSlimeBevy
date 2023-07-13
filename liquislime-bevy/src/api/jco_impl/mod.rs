@@ -23,6 +23,8 @@ pub struct UnitInstance {
 }
 
 // SAFETY: Bevy says it runs on only one "thread" (web worker) on the web
+unsafe impl Send for UnitModule {}
+unsafe impl Sync for UnitModule {}
 unsafe impl Send for UnitInstance {}
 unsafe impl Sync for UnitInstance {}
 

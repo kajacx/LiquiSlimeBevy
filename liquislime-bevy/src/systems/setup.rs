@@ -84,7 +84,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         // "liquislime_slime_spawner_plugin.wasm",
-        "slime-spawner-component.wasm",
+        "slime-spawner-universal.zip",
         &mut unit_map,
     );
 
@@ -95,7 +95,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
         // "liquislime_slime_voider_plugin.wasm",
-        "slime-voider-component.wasm",
+        "slime-voider-universal.zip",
         &mut unit_map,
     );
 

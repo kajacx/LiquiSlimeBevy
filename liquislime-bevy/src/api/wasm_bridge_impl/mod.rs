@@ -4,7 +4,7 @@ use std::{
 };
 
 use wasm_bridge::{
-    component::{Component, Linker},
+    component::{new_universal_component, Component, Linker},
     Config, Engine, Store,
 };
 
@@ -34,6 +34,15 @@ impl Debug for UnitInstance {
     }
 }
 
+// SAFETY: Bevy says it runs on only one "thread" (web worker) on the web
+#[cfg(target_arch = "wasm32")]
+mod impls {
+    unsafe impl Send for super::UnitModule {}
+    unsafe impl Sync for super::UnitModule {}
+    unsafe impl Send for super::UnitInstance {}
+    unsafe impl Sync for super::UnitInstance {}
+}
+
 impl UnitModule {
     pub fn from_bytes(bytes: &[u8]) -> Self {
         // TODO: share same store between multiple modules
@@ -43,7 +52,8 @@ impl UnitModule {
         let engine = Engine::new(&config).unwrap();
         let store = Store::new(&engine, LiquislimeHost);
 
-        let component = Component::new(&store.engine(), &bytes).unwrap();
+        //let component = Component::new(&store.engine(), &bytes).unwrap();
+        let component = new_universal_component(&store.engine(), &bytes).unwrap();
 
         let mut linker = Linker::new(store.engine());
         LiquislimeUnit::add_to_linker(&mut linker, |state| state).unwrap();
