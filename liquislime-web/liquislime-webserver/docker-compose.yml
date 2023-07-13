@@ -7,5 +7,7 @@ services:
     ports:
       - "8088:80"
     volumes:
-      - ..:/usr/share/nginx/html
+      - .:/usr/share/nginx/html
     restart: unless-stopped
+
+networks: {}
