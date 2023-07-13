@@ -6,6 +6,7 @@ pub(crate) mod protocol {
     });
 }
 
+#[allow(unused)]
 mod types;
 pub use types::*;
 

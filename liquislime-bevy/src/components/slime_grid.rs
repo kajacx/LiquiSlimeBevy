@@ -11,6 +11,7 @@ pub struct SlimeGrid {
     slime_additions: Vec<SlimeAmount>, // used for spreading the slime
 }
 
+#[allow(unused)]
 impl SlimeGrid {
     pub fn new(width: usize, height: usize) -> Self {
         Self {

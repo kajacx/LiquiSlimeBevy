@@ -1,39 +1,26 @@
-use bevy::prelude::*;
+use bevy::{ecs::schedule::ScheduleLabel, prelude::*};
 
-#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
-#[system_set(base)]
-pub struct InputRead;
-
-#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
-#[system_set(base)]
-pub enum WasmUpdate {
-    Update,
-    Render,
+#[derive(Debug, Hash, PartialEq, Eq, Clone, ScheduleLabel, SystemSet)]
+pub enum Phase {
+    InputRead,
+    WasmUpdate,
+    GameUpdate,
+    WasmRender,
+    GameRender,
 }
-
-#[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
-#[system_set(base)]
-pub struct RenderSync;
 
 pub struct StagesPlugin;
 
 impl Plugin for StagesPlugin {
     fn build(&self, app: &mut App) {
         app.configure_sets(
+            Update,
             (
-                CoreSet::PreUpdateFlush,
-                InputRead,
-                WasmUpdate::Update,
-                CoreSet::Update,
-            )
-                .chain(),
-        );
-        app.configure_sets(
-            (
-                CoreSet::UpdateFlush,
-                WasmUpdate::Render,
-                RenderSync,
-                CoreSet::PostUpdate,
+                Phase::InputRead,
+                Phase::WasmUpdate,
+                Phase::GameUpdate,
+                Phase::WasmRender,
+                Phase::GameRender,
             )
                 .chain(),
         );

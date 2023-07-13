@@ -3,12 +3,12 @@ use std::sync::Arc;
 use bevy::{
     asset::{AssetLoader, LoadedAsset},
     prelude::*,
-    reflect::TypeUuid,
+    reflect::{TypePath, TypeUuid},
 };
 
 use crate::{api::UnitModule, units::ScriptInstance};
 
-#[derive(Clone, Debug, TypeUuid)]
+#[derive(Clone, Debug, TypeUuid, TypePath)]
 #[uuid = "39f0d1f8-a7eb-4eaa-887b-4f31a73c196e"]
 pub struct ScriptAsset(pub Arc<ScriptInstance>);
 

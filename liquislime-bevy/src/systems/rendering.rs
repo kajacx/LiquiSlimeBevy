@@ -2,15 +2,15 @@ use bevy::prelude::*;
 
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
-    helpers::RenderSync,
+    helpers::Phase,
 };
 
 pub struct GameRenderingPlugin;
 
 impl Plugin for GameRenderingPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(render_slime_color.in_base_set(RenderSync));
-        app.add_system(update_building_postion.in_base_set(RenderSync));
+        app.add_systems(Update, render_slime_color.in_set(Phase::GameRender));
+        app.add_systems(Update, update_building_position.in_set(Phase::GameRender));
     }
 }
 
@@ -29,7 +29,7 @@ fn render_slime_color(
     }
 }
 
-fn update_building_postion(
+fn update_building_position(
     mut building_query: Query<(&mut Transform, &TilePositionComponent), With<Building>>,
 ) {
     for (mut transform, position) in &mut building_query {

@@ -9,6 +9,7 @@ mod components;
 mod helpers;
 mod resources;
 mod systems;
+#[allow(unused)]
 mod units;
 
 fn main() {
@@ -22,8 +23,8 @@ fn main() {
             }),
             ..Default::default()
         }))
-        .add_plugin(LogDiagnosticsPlugin::default())
-        .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        .add_plugins(LogDiagnosticsPlugin::default())
+        .add_plugins(FrameTimeDiagnosticsPlugin::default())
         .add_plugins(AllGamePlugins)
         .run();
 }

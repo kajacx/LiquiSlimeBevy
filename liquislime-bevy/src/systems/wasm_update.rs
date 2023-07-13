@@ -2,14 +2,14 @@ use bevy::prelude::*;
 
 use crate::api::TimeInterval;
 use crate::{
-    helpers::WasmUpdate, resources::UnitScriptMap, units::global_storage::use_world_reference_in,
+    helpers::Phase, resources::UnitScriptMap, units::global_storage::use_world_reference_in,
 };
 
 pub struct WasmUpdatePlugin;
 
 impl Plugin for WasmUpdatePlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(update_wasm_plugins.in_base_set(WasmUpdate::Update));
+        app.add_systems(Update, update_wasm_plugins.in_set(Phase::WasmUpdate));
     }
 }
 

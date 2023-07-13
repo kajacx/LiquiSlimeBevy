@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 
-use crate::components::SlimeGrid;
+use crate::{components::SlimeGrid, helpers::Phase};
 
 pub struct UpdateLogicPlugin;
 
 impl Plugin for UpdateLogicPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spread_slime.in_base_set(CoreSet::Update));
+        app.add_systems(Update, spread_slime.in_set(Phase::GameUpdate));
     }
 }
 
