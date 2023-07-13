@@ -1,5 +1,8 @@
 #!/usr/bin/sh
 
+echo "TODO: refactor this script"
+exit 1
+
 echo "Building plugins" && \
 rm liquislime-bevy/assets/plugins/*.wasm && \
 cd liquislime-plugins && \

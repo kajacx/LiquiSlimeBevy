@@ -1,5 +1,8 @@
 #!/usr/bin/sh
 
+echo "TODO: refactor this script"
+exit 1
+
 ./scripts/build-api.sh && \
 ./scripts/build-plugins-release.sh && \
 ./scripts/prepare-host.sh && \
