@@ -41,5 +41,7 @@ impl<T: LiquislimeUnit> protocol::LiquislimeUnit for T {
 //     };
 // }
 
+// Target arch will always be wasm32, but this removes Rust Analyzer faulty error
+#[cfg(target_arch = "wasm32")]
 pub use protocol::__link_section;
 pub use protocol::call_update;
