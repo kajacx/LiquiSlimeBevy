@@ -1,9 +1,11 @@
 mod building;
+mod script_component;
 mod slime_grid;
 mod tile;
 mod tile_position;
 
-pub use building::Building;
-pub use slime_grid::SlimeGrid;
-pub use tile::Tile;
-pub use tile_position::TilePositionComponent;
+pub use building::*;
+pub use script_component::*;
+pub use slime_grid::*;
+pub use tile::*;
+pub use tile_position::*;

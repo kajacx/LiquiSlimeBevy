@@ -1,16 +1,11 @@
-use std::sync::Arc;
-
 use bevy::{
     asset::{AssetLoader, LoadedAsset},
     prelude::*,
-    reflect::{TypePath, TypeUuid},
 };
 
-use crate::{api::UnitModule, units::ScriptInstance};
+use crate::api::UnitModule;
 
-#[derive(Clone, Debug, TypeUuid, TypePath)]
-#[uuid = "39f0d1f8-a7eb-4eaa-887b-4f31a73c196e"]
-pub struct ScriptAsset(pub Arc<ScriptInstance>);
+use super::ScriptModule;
 
 #[derive(Clone, Debug, Default)]
 pub struct ScriptLoader;
@@ -27,9 +22,7 @@ impl AssetLoader for ScriptLoader {
     ) -> bevy::utils::BoxedFuture<'a, Result<(), bevy::asset::Error>> {
         Box::pin(async move {
             let unit_module = UnitModule::from_bytes(bytes);
-            let unit_instance = unit_module.instantiate();
-            let script = ScriptInstance::new(unit_instance);
-            let asset = ScriptAsset(Arc::new(script));
+            let asset = ScriptModule::new("TODO: module name".into(), unit_module);
             load_context.set_default_asset(LoadedAsset::new(asset));
             Ok(())
         })
@@ -40,7 +33,7 @@ pub struct AssetsGamePlugins;
 
 impl Plugin for AssetsGamePlugins {
     fn build(&self, app: &mut App) {
-        app.add_asset::<ScriptAsset>()
+        app.add_asset::<ScriptModule>()
             .init_asset_loader::<ScriptLoader>();
     }
 }

@@ -2,6 +2,7 @@ use bevy::{ecs::schedule::ScheduleLabel, prelude::*};
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, ScheduleLabel, SystemSet)]
 pub enum Phase {
+    AssetLoad,
     InputRead,
     WasmUpdate,
     GameUpdate,
@@ -24,5 +25,6 @@ impl Plugin for StagesPlugin {
             )
                 .chain(),
         );
+        app.configure_sets(Update, (Phase::AssetLoad, Phase::WasmUpdate).chain());
     }
 }

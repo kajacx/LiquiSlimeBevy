@@ -1,11 +1,11 @@
 use bevy::prelude::*;
 
 use crate::api::*;
+use crate::assets::ScriptModule;
+use crate::components::ScriptComponent;
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
-    helpers::ScriptAsset,
-    resources::UnitScriptMap,
-    units::{MaybeLoadedScript, UnitId},
+    units::UnitId,
 };
 
 pub struct GameSetupPlugin;
@@ -74,7 +74,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
 }
 
 fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let mut unit_map = UnitScriptMap::new();
+    // let mut unit_map = UnitScriptMap::new();
 
     create_spawner(
         &mut commands,
@@ -84,7 +84,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         UnitId(1),
         // "liquislime_slime_spawner_plugin.wasm",
         "slime-spawner-universal.zip",
-        &mut unit_map,
+        // &mut unit_map,
     );
 
     create_spawner(
@@ -95,10 +95,10 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         UnitId(2),
         // "liquislime_slime_voider_plugin.wasm",
         "slime-voider-universal.zip",
-        &mut unit_map,
+        // &mut unit_map,
     );
 
-    commands.insert_resource(unit_map);
+    // commands.insert_resource(unit_map);
 }
 
 fn create_spawner(
@@ -108,7 +108,7 @@ fn create_spawner(
     texture_file: &'static str,
     unit_id: UnitId,
     plugin_filename: &'static str,
-    unit_map: &mut UnitScriptMap,
+    //unit_map: &mut UnitScriptMap,
 ) {
     let sprite = SpriteBundle {
         texture: asset_server.load(texture_file),
@@ -123,19 +123,21 @@ fn create_spawner(
         ..Default::default()
     };
 
-    unit_map.register_new_unit(unit_id, get_plugin(plugin_filename, asset_server));
+    //unit_map.register_new_unit(unit_id, get_plugin(plugin_filename, asset_server));
+    let script_component = get_plugin(plugin_filename, asset_server);
 
     commands.spawn((
         TilePositionComponent::from(position),
         sprite,
         Building,
+        script_component,
         unit_id,
     ));
 }
 
-fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> MaybeLoadedScript {
+fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> ScriptComponent {
     let path = format!("plugins/{plugin_filename}");
-    let handle: Handle<ScriptAsset> = asset_server.load(path);
+    let handle: Handle<ScriptModule> = asset_server.load(path);
 
-    MaybeLoadedScript::new(handle)
+    ScriptComponent::new(handle)
 }

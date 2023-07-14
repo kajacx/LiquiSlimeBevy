@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use bevy::{
     diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
     prelude::*,
@@ -5,11 +7,11 @@ use bevy::{
 use systems::AllGamePlugins;
 
 mod api;
+mod assets;
 mod components;
 mod helpers;
 mod resources;
 mod systems;
-#[allow(unused)]
 mod units;
 
 fn main() {

@@ -1,9 +1,10 @@
 use bevy::prelude::*;
 
 use crate::api::TimeInterval;
-use crate::{
-    helpers::Phase, resources::UnitScriptMap, units::global_storage::use_world_reference_in,
-};
+use crate::components::{ScriptComponent, TilePositionComponent};
+use crate::units::global_storage::set_current_unit;
+use crate::units::UnitId;
+use crate::{helpers::Phase, units::global_storage::use_world_reference_in};
 
 pub struct WasmUpdatePlugin;
 
@@ -21,15 +22,38 @@ fn update_wasm_plugins(world: &mut World) {
     // TODO: limit update time to 30 FPS?
     let time_elapsed = TimeInterval::from_seconds(time_resource.delta_seconds_f64());
 
-    let units_resource = world
-        .get_resource::<UnitScriptMap>()
-        .expect("Unit script map resource should exist");
-
     // TODO: unfortunate clone, but otherwise, the unit map is borrowed from the world
     //let unit_keys = units_resource.keys().to_owned();
-    let unit_map = units_resource.clone();
+    // let unit_map = units_resource.clone();
 
-    use_world_reference_in(world, |token| {
-        unit_map.update_all_units(time_elapsed, token);
-    });
+    let mut units_and_ids = vec![];
+    let mut all_ready = true;
+
+    let mut units = world.query::<(&ScriptComponent, &UnitId)>();
+    for (unit, id) in units.iter(world) {
+        // println!("HELLO {:?}", unit);
+        let instance = unit.instance();
+        if let Some(instance) = unit.instance() {
+            units_and_ids.push((id.clone(), instance.clone()));
+        } else {
+            all_ready = false;
+            break;
+        }
+    }
+
+    if all_ready {
+        use_world_reference_in(world, move |_| {
+            for (unit_id, script) in units_and_ids {
+                set_current_unit(unit_id);
+                script.update(time_elapsed);
+            }
+        });
+    } else {
+        // TODO: display a loading bar or something?
+        info!("Loading waiting for asset load ...");
+    }
+
+    // use_world_reference_in(world, |token| {
+    //     unit_map.update_all_units(time_elapsed, token);
+    // });
 }
