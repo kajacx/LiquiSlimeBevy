@@ -1,7 +1,7 @@
 #!/usr/bin/sh
 set -e
 
-./scripts/build-plugins.sh
+# Run from parent folder
 
 echo "Running bevy game in debug mode"
 cd liquislime-bevy && cargo run
