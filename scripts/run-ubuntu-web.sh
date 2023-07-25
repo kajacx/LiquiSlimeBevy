@@ -11,4 +11,4 @@ cd liquislime-web/liquislime-webserver
 sudo docker-compose down && sudo docker-compose up -d
 cd ../..
 
-echo "All done, play the game at http://liquislime.com:8088/webserver/"
+echo "All done, play the game at http://liquislime.com:8088/"
