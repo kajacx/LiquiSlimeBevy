@@ -48,7 +48,8 @@ fn get_mouse_position(
         let window_size = Vec2::new(window.width() as f32, window.height() as f32);
 
         // convert screen position [0..resolution] to ndc [-1..1] (gpu coordinates)
-        let ndc = (screen_pos / window_size) * 2.0 - Vec2::ONE;
+        let mut ndc = (screen_pos / window_size) * 2.0 - Vec2::ONE;
+        ndc.y = -ndc.y; // TODO: Y got flipped, investigate
 
         // matrix for undoing the projection and camera transform
         let ndc_to_world = camera_transform.compute_matrix() * camera.projection_matrix().inverse();

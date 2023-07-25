@@ -52,8 +52,6 @@ pub fn get_own_position() -> TilePosition {
 //     slime_grid.try_set_amount(position, amount).log_err();
 // }
 pub fn add_slime_amount(position: TilePosition, amount: SlimeAmount) -> SlimeAmount {
-    println!("Adding slime amount: {:?}", amount);
-
     let mut world = get_world();
     let mut slime_grid = get_slime_grid(&mut world);
     let curr_amount = slime_grid.try_get_amount(position);
