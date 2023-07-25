@@ -21,10 +21,12 @@ cd liquislime-web
 # cargo run --target=wasm32-unknown-unknown -- --initial-memory=268435456 --max-memory=268435456
 # cargo rustc --target=wasm32-unknown-unknown -- -Clink-arg=--initial-memory=268435456 -Clink-arg=--max-memory=268435456
 
-cargo build "$mode" --target=wasm32-unknown-unknown
-[ "$mode" = "--release" ]; if
+cargo build $mode --target=wasm32-unknown-unknown
+if [ "$mode" = "--release" ]; then
+  echo "Copying RELEASE wasm file"
   wasm-bindgen --out-dir ./liquislime-webserver/ --target web ./target/wasm32-unknown-unknown/release/liquislime-bevy.wasm
 else
+  echo "Copying DEBUG wasm file"
   wasm-bindgen --out-dir ./liquislime-webserver/ --target web ./target/wasm32-unknown-unknown/debug/liquislime-bevy.wasm
 fi
 
