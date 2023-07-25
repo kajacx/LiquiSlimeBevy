@@ -13,7 +13,7 @@ impl UnitModule {
         let store = UnitStore::new();
         let store_obj = store.store_mut();
 
-        let component = new_universal_component(&store_obj.engine(), &bytes).unwrap();
+        let component = Component::new(&store_obj.engine(), &bytes).unwrap();
 
         let mut linker = Linker::new(store_obj.engine());
         LiquislimeUnit::add_to_linker(&mut linker, |state| state).unwrap();

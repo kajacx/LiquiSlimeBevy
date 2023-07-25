@@ -24,4 +24,4 @@ wasm-bindgen --out-dir ./liquislime-webserver/ --target web ./target/wasm32-unkn
 
 echo "Bevy game built in WASM"
 
-echo "All done, play the game at http://127.0.0.1:8088/"
+# echo "All done, play the game at http://127.0.0.1:8088/"

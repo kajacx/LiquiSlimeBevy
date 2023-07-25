@@ -4,4 +4,4 @@ set -e
 # Run from parent folder
 
 ./scripts/build-plugins.sh
-./scripts/start-web.sh
+./scripts/start-sys.sh
