@@ -19,8 +19,10 @@ fn update_wasm_plugins(world: &mut World) {
         .get_resource::<Time>()
         .expect("Time resource should exist");
 
-    // TODO: limit update time to 30 FPS?
     let time_elapsed = TimeInterval::from_seconds(time_resource.delta_seconds_f64());
+
+    // "Limit" update delta, it will lag below 30 FPS
+    let time_elapsed = time_elapsed.min(TimeInterval::from_seconds(1.0 / 30.0));
 
     // TODO: unfortunate clone, but otherwise, the unit map is borrowed from the world
     //let unit_keys = units_resource.keys().to_owned();
