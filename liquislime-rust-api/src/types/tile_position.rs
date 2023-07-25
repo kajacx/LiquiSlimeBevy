@@ -1,4 +1,4 @@
-use crate::SlimeAmount;
+use super::*;
 use derive_more::{Add, AddAssign, Sub, SubAssign};
 
 #[derive(
@@ -17,8 +17,8 @@ use derive_more::{Add, AddAssign, Sub, SubAssign};
     Ord,
 )]
 pub struct TilePosition {
-    x: i32,
-    y: i32,
+    pub x: i32,
+    pub y: i32,
 }
 
 impl TilePosition {
@@ -28,6 +28,18 @@ impl TilePosition {
 
     pub fn add_slime_amount(self, amount: SlimeAmount) {
         crate::protocol::add_slime_amount(self.as_protocol(), amount.as_protocol());
+    }
+
+    pub fn from_position(position: Position) -> Self {
+        Self::new(position.x.floor() as i32, position.y.floor() as i32)
+    }
+
+    pub fn to_position_center(self) -> Position {
+        Position::from_tile_center(self)
+    }
+
+    pub fn to_position_bottom_left(self) -> Position {
+        Position::from_tile_bottom_left(self)
     }
 
     pub(crate) fn as_protocol(self) -> crate::protocol::TilePosition {
@@ -43,16 +55,4 @@ impl TilePosition {
             y: position.y,
         }
     }
-
-    // pub fn from_position(position: Position) -> Self {
-    //     Self::new(position.x.floor() as i32, position.y.floor() as i32)
-    // }
-
-    // pub fn to_position_center(self) -> Position {
-    //     Position::from_tile_center(self)
-    // }
-
-    // pub fn to_position_bottom_left(self) -> Position {
-    //     Position::from_tile_bottom_left(self)
-    // }
 }

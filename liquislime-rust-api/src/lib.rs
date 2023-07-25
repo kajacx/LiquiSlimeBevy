@@ -15,9 +15,13 @@ pub fn get_own_position() -> TilePosition {
     TilePosition::new(pos.x, pos.y)
 }
 
-// pub fn add_slime_amount(position: TilePosition, amount: SlimeAmount) {
-//     protocol::add_slime_amount(position.0, amount.0)
-// }
+pub fn get_mouse_touch() -> Option<Position> {
+    if protocol::is_mouse_pressed(protocol::MouseInput::Primary) {
+        protocol::get_mouse_position().map(Position::from_protocol)
+    } else {
+        None
+    }
+}
 
 pub trait LiquislimeUnit {
     fn update(time_elapsed: TimeInterval);
@@ -28,10 +32,6 @@ impl<T: LiquislimeUnit> protocol::LiquislimeUnit for T {
         T::update(TimeInterval::from_protocol(time_elapsed))
     }
 }
-
-// struct UnitHolder;
-
-// static UNIT_HOLDER: Mutex<Option<Box<dyn LiquislimeUnit>>> = Mutex::new(Option::None);
 
 // pub use protocol::export_liquislime_unit;
 
