@@ -1,6 +1,8 @@
 use std::fmt::Debug;
 
-use crate::units::api_spec::{add_slime_amount, get_own_position};
+use crate::units::{api_spec::*, global_storage::get_mouse_state};
+
+use wasm_bridge::Result;
 
 wasm_bridge::component::bindgen!({
     path: "../protocol.wit",
@@ -11,25 +13,20 @@ wasm_bridge::component::bindgen!({
 pub struct LiquislimeHost;
 
 impl LiquislimeUnitImports for LiquislimeHost {
-    fn get_own_position(&mut self) -> wasm_bridge::Result<TilePosition> {
-        let position = get_own_position();
-        Ok(TilePosition {
-            x: position.x,
-            y: position.y,
-        })
+    fn get_own_position(&mut self) -> Result<TilePosition> {
+        Ok(get_own_position().into())
     }
 
-    fn add_slime_amount(
-        &mut self,
-        position: TilePosition,
-        amount: SlimeAmount,
-    ) -> wasm_bridge::Result<()> {
-        let position = crate::api::TilePosition {
-            x: position.x,
-            y: position.y,
-        };
-        let amount = crate::api::SlimeAmount(amount.amount);
-        add_slime_amount(position, amount);
+    fn add_slime_amount(&mut self, position: TilePosition, amount: SlimeAmount) -> Result<()> {
+        add_slime_amount(position.into(), amount.into());
         Ok(())
+    }
+
+    fn get_mouse_position(&mut self) -> Result<Option<Position>> {
+        Ok(get_mouse_state().position.map(Into::into))
+    }
+
+    fn is_mouse_pressed(&mut self, _button: MouseInput) -> Result<bool> {
+        Ok(is_mouse_pressed())
     }
 }

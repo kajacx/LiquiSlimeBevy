@@ -1,3 +1,5 @@
+use bevy::prelude::*;
+
 use self::helpers::*;
 
 use super::{global_storage::*, UnitId};
@@ -76,6 +78,16 @@ pub fn add_slime_amount(position: TilePosition, amount: SlimeAmount) -> SlimeAmo
 //     read_mouse_input(|input| input.just_released(api_mouse_button_to_bevy(mouse_button)))
 // }
 
-// fn get_mouse_position() -> Option<Position> {
-//     get_mouse_state().position
-// }
+pub fn get_mouse_position() -> Option<Position> {
+    get_mouse_state().position
+}
+
+pub fn is_mouse_pressed() -> bool {
+    let world = get_world();
+
+    let input = world
+        .get_resource::<Input<MouseButton>>()
+        .expect("Mouse input resource should exist");
+
+    input.pressed(MouseButton::Left)
+}

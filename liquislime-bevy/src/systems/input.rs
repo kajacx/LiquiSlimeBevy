@@ -1,9 +1,9 @@
+use crate::helpers::*;
 use bevy::prelude::*;
 
-use crate::units::{
-    api_spec::types::Position,
-    global_storage::{set_mouse_state, MouseState},
-};
+use crate::units::global_storage::{set_mouse_state, MouseState};
+
+use crate::api::Position;
 
 pub struct GameInputPlugin;
 

@@ -1,6 +1,6 @@
 use std::{ops::Deref, sync::Mutex};
 
-use crate::units::api_spec::types::Position;
+use crate::api::Position;
 
 // TODO: rename to mouse position
 #[derive(Clone, Debug)]

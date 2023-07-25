@@ -14,8 +14,20 @@ world liquislime-unit {
     y: s32,
   }
 
+  record position {
+    x: float32,
+    y: float32,
+  }
+ 
+  enum mouse-input {
+    primary
+  }
+
   import get-own-position: func() -> tile-position
   import add-slime-amount: func(position: tile-position, amount: slime-amount)
+
+  import get-mouse-position: func() -> option<position>
+  import is-mouse-pressed: func(input: mouse-input) -> bool
 
   export update: func(time-elapsed: time-interval)
 }
