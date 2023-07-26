@@ -1,5 +1,4 @@
 #![allow(unused)]
-#![feature(async_closure)]
 
 use bevy::{
     diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
