@@ -2,12 +2,31 @@
 set -e
 
 # Run from parent folder
+mode="$1"
 
-./scripts/build-plugins.sh
-./scripts/start-web.sh
+echo "Copying liquislime source"
+rm -rf liquislime-web/.cargo
+rm -rf liquislime-web/src
+rm -rf liquislime-web/Cargo.toml
+cp -r liquislime-bevy/.cargo liquislime-web/
+cp -r liquislime-bevy/src liquislime-web/
+cp -r liquislime-bevy/Cargo.toml liquislime-web/
 
-echo "Restarting webserver"
-cd liquislime-web/liquislime-webserver
-docker-compose down && docker-compose up -d
+echo "Copying liquislime assets"
+rm -rf liquislime-web/liquislime-webserver/assets
+cp -r liquislime-bevy/assets liquislime-web/liquislime-webserver/
 
-echo "All done, play the game at http://127.0.0.1:8088/"
+echo "Running bevy game in web browser"
+cd liquislime-web
+
+cargo build $mode --target=wasm32-unknown-unknown
+if [ "$mode" = "--release" ]; then
+  echo "Copying RELEASE wasm file"
+  wasm-bindgen --out-dir ./liquislime-webserver/ --target web ./target/wasm32-unknown-unknown/release/liquislime-bevy.wasm
+else
+  echo "Copying DEBUG wasm file"
+  wasm-bindgen --out-dir ./liquislime-webserver/ --target web ./target/wasm32-unknown-unknown/debug/liquislime-bevy.wasm
+fi
+
+echo "Bevy game built in WASM"
+

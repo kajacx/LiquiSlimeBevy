@@ -11,6 +11,11 @@ rm -f liquislime-bevy/assets/plugins/*.wasm
 cd liquislime-plugins
 for plugin in */; do
   plugin=`echo $plugin | sed -E s#/##`
+  if [ "$plugin" = "target" ]; then
+    continue
+  fi
+
+  echo "Building plugin $plugin"
 
   cd $plugin
   cargo component build --release

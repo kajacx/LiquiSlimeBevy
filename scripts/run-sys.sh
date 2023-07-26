@@ -3,5 +3,7 @@ set -e
 
 # Run from parent folder
 
-./scripts/build-plugins.sh
-./scripts/start-sys.sh
+echo "Running bevy game in debug mode"
+cd liquislime-bevy && cargo run
+
+echo "All done"
