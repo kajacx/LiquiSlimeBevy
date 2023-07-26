@@ -14,13 +14,15 @@ mod resources;
 mod systems;
 mod units;
 
+static RENDER_CANVAS_ID: &str = "game_render";
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "Liquislime!".into(),
                 resolution: (800.0, 600.0).into(),
-                canvas: Some("#game_render".into()),
+                canvas: Some(format!("#{RENDER_CANVAS_ID}")),
                 ..Default::default()
             }),
             ..Default::default()
