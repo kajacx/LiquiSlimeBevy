@@ -9,16 +9,15 @@ pub struct UnitModule {
 }
 
 impl UnitModule {
-    pub fn from_bytes(bytes: &[u8]) -> Self {
+    pub async fn from_bytes(bytes: &[u8]) -> Self {
         let store = UnitStore::new();
-        let store_obj = store.store_mut();
+        let engine = store.store_mut().engine().clone();
 
-        let component = Component::new(&store_obj.engine(), &bytes).unwrap();
+        let component = component_new_async(&engine, &bytes).await.unwrap();
 
-        let mut linker = Linker::new(store_obj.engine());
+        let mut linker = Linker::new(&engine);
         LiquislimeUnit::add_to_linker(&mut linker, |state| state).unwrap();
 
-        drop(store_obj);
         Self {
             store,
             linker,
@@ -27,13 +26,12 @@ impl UnitModule {
     }
 
     pub fn instantiate(&self) -> UnitInstance {
-        // TODO: wasm file might be bad, this should be user error
         let (instance, _) = LiquislimeUnit::instantiate(
             &mut *self.store.store_mut(),
             &self.component,
             &self.linker,
         )
-        .unwrap();
+        .expect("TODO: user error");
 
         UnitInstance::new(self.store.clone(), instance)
     }

@@ -12,7 +12,7 @@ derive_more = "0.99.17"
   git = "https://github.com/kajacx/wasm-bridge.git"
   rev = "b425ed346766451aa9cabe3da454f4f39bb7fd53"
   default-features = false
-  features = ["component-model", "wasi"]
+  features = ["component-model"]
   
 
 # Enable a small amount of optimization in debug mode

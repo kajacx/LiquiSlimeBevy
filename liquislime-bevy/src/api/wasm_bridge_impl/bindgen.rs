@@ -6,10 +6,9 @@ use wasm_bridge::Result;
 
 wasm_bridge::component::bindgen!({
     path: "../protocol.wit",
-    world: "liquislime-unit"
+    world: "liquislime-unit",
 });
 
-#[derive(Debug)]
 pub struct LiquislimeHost;
 
 impl LiquislimeUnitImports for LiquislimeHost {
@@ -28,5 +27,11 @@ impl LiquislimeUnitImports for LiquislimeHost {
 
     fn is_mouse_pressed(&mut self, _button: MouseInput) -> Result<bool> {
         Ok(is_mouse_pressed())
+    }
+}
+
+impl Debug for LiquislimeHost {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "LiquislimeHost cannot derive Debug")
     }
 }

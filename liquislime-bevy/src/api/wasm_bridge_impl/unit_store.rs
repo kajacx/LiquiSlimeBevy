@@ -3,9 +3,8 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use wasm_bridge::{Config, Engine, Store};
-
 use super::*;
+use wasm_bridge::{Config, Engine, Store};
 
 #[derive(Clone)]
 pub struct UnitStore {

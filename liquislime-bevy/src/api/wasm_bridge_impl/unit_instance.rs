@@ -1,4 +1,5 @@
 use super::*;
+use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 
 pub struct UnitInstance {
     store: UnitStore,
@@ -15,9 +16,10 @@ impl UnitInstance {
             fragments: time_elapsed.0,
         };
 
-        self.instance
+        let future = self
+            .instance
             .call_update(&mut *self.store.store_mut(), time_elapsed)
-            .unwrap();
+            .expect("TODO: user error");
     }
 }
 
