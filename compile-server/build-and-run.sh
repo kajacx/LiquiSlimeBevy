@@ -9,3 +9,4 @@ cp -r liquislime-rust-api compile-server/
 cd compile-server
 sed -i -E 's#"../protocol.wit"#"../../protocol.wit"#' liquislime-rust-api/src/lib.rs
 
+cargo run
