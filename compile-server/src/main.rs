@@ -1,3 +1,5 @@
+use std::process::Command;
+
 use rocket::*;
 
 #[get("/")]
@@ -7,8 +9,27 @@ fn index() -> &'static str {
 
 #[post("/compile", data = "<source_code>")]
 fn compile(source_code: String) -> Vec<u8> {
-    // vec![4, 5, 6]
-    source_code.into_bytes()
+    std::fs::write("user-plugin/src/lib.rs", source_code.as_bytes()).expect("write bytes");
+
+    let output = Command::new("cargo")
+        .arg("component")
+        .arg("build")
+        .arg("--release")
+        .current_dir("./user-plugin")
+        .output()
+        .expect("run cargo component build");
+
+    println!("Command exit code: {}", output.status);
+    println!("{}", String::from_utf8_lossy(&output.stdout));
+    eprintln!("{}", String::from_utf8_lossy(&output.stderr));
+    // println!("{}", output);
+
+    if output.status.success() {
+        std::fs::read("user-plugin/target/wasm32-wasi/release/liquislime_user_plugin.wasm")
+            .expect("should read wasm file")
+    } else {
+        vec![]
+    }
 }
 
 #[launch]
