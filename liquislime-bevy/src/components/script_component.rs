@@ -1,10 +1,11 @@
 use std::sync::{Arc, Mutex};
 
 use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
+use wasm_bridge::{component::component_new_async, Engine};
 
-use crate::{assets::ScriptModule, units::ScriptInstance};
+use crate::{api::UnitModule, assets::ScriptModule, units::ScriptInstance};
 
-#[derive(Debug, Component)]
+#[derive(Clone, Debug, Component)]
 pub struct ScriptComponent {
     inner: Arc<Mutex<ScriptComponentInner>>,
 }
@@ -14,6 +15,7 @@ enum ScriptComponentInner {
     Loaded(ScriptInstance),
     AssetLoading(Handle<ScriptModule>),
     // Instantiating,
+    OnlineCompiling, // Compiling source from text field
 }
 
 impl ScriptComponent {
@@ -71,5 +73,20 @@ impl ScriptComponent {
             Loaded(instance) => Some(instance.clone()),
             _ => None,
         }
+    }
+
+    pub fn load_from_bytes(&self, bytes: Vec<u8>) {
+        let thread_pool = AsyncComputeTaskPool::get();
+
+        *self.inner.lock().unwrap() = ScriptComponentInner::OnlineCompiling;
+
+        let self_clone = self.clone();
+        thread_pool.spawn_local(async move {
+            // let component = component_new_async(&Engine::default(), bytes).await.expect("load component from bytes");
+            let unit_module = UnitModule::from_bytes(&bytes).await;
+            let script_module = ScriptModule::new("custom-unit".into(), unit_module);
+
+            *self_clone.inner.lock().unwrap() = self_clone.spawn_instantiate_task(&script_module);
+        });
     }
 }
