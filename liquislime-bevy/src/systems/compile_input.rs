@@ -1,8 +1,9 @@
 use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 
 use crate::{
-    components::SlimeGrid,
+    components::{ScriptComponent, SlimeGrid},
     helpers::{CompileInput, Phase},
+    units::UnitId,
 };
 
 pub struct CompileInputPlugin;
@@ -13,13 +14,24 @@ impl Plugin for CompileInputPlugin {
     }
 }
 
-fn compile_input() {
+fn compile_input(query: Query<(&UnitId, &ScriptComponent)>) {
     if cfg!(not(target_arch = "wasm32")) {
         return;
     }
 
     if get_status() == Status::Waiting {
-        start_compilation_task(get_custom_unit_source());
+        let unit = query
+            .iter()
+            .find_map(|(id, script)| {
+                if *id == UnitId(1) {
+                    Some(script.clone())
+                } else {
+                    None
+                }
+            })
+            .expect("Find unit with id 1");
+
+        start_compilation_task(unit, get_custom_unit_source());
         set_status(Status::Compiling);
     }
 }
@@ -75,14 +87,17 @@ fn get_custom_unit_source() -> String {
         .unwrap()
 }
 
-fn start_compilation_task(source: String) {
+fn start_compilation_task(unit: ScriptComponent, source: String) {
+    info!("Starting compilation task");
     let thread_pool = AsyncComputeTaskPool::get();
-    thread_pool.spawn_local(compile_task(source));
+    thread_pool.spawn_local(compile_task(unit, source));
 }
 
-async fn compile_task(source: String) {
+async fn compile_task(unit: ScriptComponent, source: String) {
+    info!("Started compilation task");
+
     let resp = reqwest::Client::new()
-        .post("127.0.0.1:8000/compile")
+        .post("http://127.0.0.1:8000/compile")
         .body(source)
         .send()
         .await
@@ -90,5 +105,12 @@ async fn compile_task(source: String) {
 
     info!("RESP: {:?}", resp);
 
-    set_status(Status::Success);
+    let bytes = resp.bytes().await.expect("RESP should be bytes");
+
+    if bytes.is_empty() {
+        set_status(Status::Error);
+    } else {
+        unit.load_from_bytes(bytes.into());
+        set_status(Status::Success);
+    }
 }
