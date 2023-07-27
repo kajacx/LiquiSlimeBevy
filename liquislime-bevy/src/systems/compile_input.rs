@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 
 use crate::{
     components::SlimeGrid,
@@ -13,12 +13,13 @@ impl Plugin for CompileInputPlugin {
     }
 }
 
-// #[cfg(not(target_arch = "wasm32"))]
-// fn compile_input() {}
-
-// #[cfg(target_arch = "wasm32")]
 fn compile_input() {
+    if cfg!(not(target_arch = "wasm32")) {
+        return;
+    }
+
     if get_status() == Status::Waiting {
+        start_compilation_task(get_custom_unit_source());
         set_status(Status::Compiling);
     }
 }
@@ -28,6 +29,8 @@ enum Status {
     Idle,
     Waiting,   // Use has pressed "compile"
     Compiling, // Compilation is ongoing
+    Success,   // Like idle, but last compilation was successful
+    Error,     // Like idle, but last compilation failed
 }
 
 fn get_status() -> Status {
@@ -41,6 +44,10 @@ fn get_status() -> Status {
         Status::Waiting
     } else if status_text == "compiling" {
         Status::Compiling
+    } else if status_text == "success" {
+        Status::Success
+    } else if status_text == "error" {
+        Status::Error
     } else {
         panic!("Cannot get status")
     }
@@ -51,10 +58,37 @@ fn set_status(status: Status) {
         Status::Idle => "idle",
         Status::Waiting => "waiting",
         Status::Compiling => "compiling",
+        Status::Success => "success",
+        Status::Error => "error",
     };
 
     js_sys::eval(&format!(
         "document.getElementById('status').innerText = '{text}'"
     ))
     .unwrap();
+}
+
+fn get_custom_unit_source() -> String {
+    js_sys::eval("document.getElementById('custom_source').value")
+        .unwrap()
+        .as_string()
+        .unwrap()
+}
+
+fn start_compilation_task(source: String) {
+    let thread_pool = AsyncComputeTaskPool::get();
+    thread_pool.spawn_local(compile_task(source));
+}
+
+async fn compile_task(source: String) {
+    let resp = reqwest::Client::new()
+        .post("127.0.0.1:8000/compile")
+        .body(source)
+        .send()
+        .await
+        .expect("send post request");
+
+    info!("RESP: {:?}", resp);
+
+    set_status(Status::Success);
 }

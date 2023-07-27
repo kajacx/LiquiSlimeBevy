@@ -8,6 +8,7 @@ bevy = "0.11.0"
 derive_more = "0.99.17"
 # wasm-bridge = { version = "0.2.1", features = ["component-model"] }
 js-sys = "0.3.64" # TODO: make it a wasm-only dependency?
+reqwest = "0.11.18"
 
 [dependencies.wasm-bridge] 
   git = "https://github.com/kajacx/wasm-bridge.git"
