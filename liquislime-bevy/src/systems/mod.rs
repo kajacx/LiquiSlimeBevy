@@ -4,6 +4,7 @@ use crate::assets::AssetsGamePlugins;
 use crate::helpers::StagesPlugin;
 
 mod asset_load;
+mod compile_input;
 mod input;
 mod rendering;
 mod setup;
@@ -23,5 +24,6 @@ impl PluginGroup for AllGamePlugins {
             .add(update_logic::UpdateLogicPlugin)
             .add(wasm_update::WasmUpdatePlugin)
             .add(rendering::GameRenderingPlugin)
+            .add(compile_input::CompileInputPlugin)
     }
 }
