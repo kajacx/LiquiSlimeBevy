@@ -9,8 +9,6 @@ impl LiquislimeUnit for Spawner {
         get_own_position().add_slime_amount(added_amount);
 
         if let Some(position) = get_mouse_touch() {
-            // TODO: needs proper fixing
-            // println!("Hello from wasi {:?}", position);
             position
                 .to_tile_position()
                 .add_slime_amount(added_amount * 3);

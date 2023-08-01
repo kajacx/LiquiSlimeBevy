@@ -12,6 +12,20 @@ impl Position {
         Self { x, y }
     }
 
+    pub fn add_x(self, x_add: f32) -> Self {
+        Self {
+            x: self.x + x_add,
+            ..self
+        }
+    }
+
+    pub fn add_y(self, y_add: f32) -> Self {
+        Self {
+            y: self.y + y_add,
+            ..self
+        }
+    }
+
     pub fn from_tile_center(tile_position: TilePosition) -> Self {
         Self::new(tile_position.x as f32 + 0.5, tile_position.y as f32 + 0.5)
     }
