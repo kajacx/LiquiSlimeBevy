@@ -1,3 +1,5 @@
-*
-!/.gitignore
-!/liquislime-webserver
+/.cargo/
+/src/
+/target/
+/Cargo.toml
+/Cargo.lock
