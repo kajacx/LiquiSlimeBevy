@@ -25,7 +25,7 @@ fn render_slime_color(
     for (mut sprite, position) in &mut tile_query {
         let amount = slime_grid.get_amount(position.0.x as usize, position.0.y as usize);
         let rgb = amount.as_integer() as u8;
-        sprite.color = Color::rgb_u8(rgb, rgb, rgb);
+        sprite.color = Color::rgb_u8(rgb / 4, rgb, rgb / 2);
     }
 }
 
