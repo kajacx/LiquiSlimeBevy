@@ -122,18 +122,22 @@ pub fn is_mouse_pressed() -> bool {
 fn get_touch_window_position(touch: &Touch) -> Vec2 {
     let global_position = touch.position();
 
-    let window_x = js_sys::eval(&format!(
-        "document.getElementById('{}').getBoundingClientRect().x",
-        crate::RENDER_CANVAS_ID
-    ))
+    let window_x = unsafe {
+        js_sys::eval(&format!(
+            "document.getElementById('{}').getBoundingClientRect().x",
+            crate::RENDER_CANVAS_ID
+        ))
+    }
     .unwrap()
     .as_f64()
     .unwrap();
 
-    let window_y = js_sys::eval(&format!(
-        "document.getElementById('{}').getBoundingClientRect().y",
-        crate::RENDER_CANVAS_ID
-    ))
+    let window_y = unsafe {
+        js_sys::eval(&format!(
+            "document.getElementById('{}').getBoundingClientRect().y",
+            crate::RENDER_CANVAS_ID
+        ))
+    }
     .unwrap()
     .as_f64()
     .unwrap();

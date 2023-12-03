@@ -68,7 +68,7 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
 
 fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
     let mut create_unit = move |position: TilePosition,
-                                texture_file: &str,
+                                texture_file: &'static str,
                                 unit_id: UnitId,
                                 plugin_filename: &str| {
         let sprite = SpriteBundle {

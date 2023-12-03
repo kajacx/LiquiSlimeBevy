@@ -33,7 +33,7 @@ impl ScriptComponent {
         let new = match &*lock {
             AssetLoading(handle) => {
                 // TODO: use .map
-                let module = script_assets.get(&handle);
+                let module = script_assets.get(*&handle);
                 if let Some(module) = module {
                     Some(self.spawn_instantiate_task(module))
                 } else {

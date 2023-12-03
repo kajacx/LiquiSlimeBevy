@@ -46,7 +46,7 @@ enum Status {
 }
 
 fn get_status() -> Status {
-    let status_text = js_sys::eval("document.getElementById('status').innerText")
+    let status_text = unsafe { js_sys::eval("document.getElementById('status').innerText") }
         .unwrap()
         .as_string()
         .unwrap();
@@ -74,14 +74,16 @@ fn set_status(status: Status) {
         Status::Error => "error",
     };
 
-    js_sys::eval(&format!(
-        "document.getElementById('status').innerText = '{text}'"
-    ))
+    unsafe {
+        js_sys::eval(&format!(
+            "document.getElementById('status').innerText = '{text}'"
+        ))
+    }
     .unwrap();
 }
 
 fn get_custom_unit_source() -> String {
-    js_sys::eval("document.getElementById('custom_source').value")
+    unsafe { js_sys::eval("document.getElementById('custom_source').value") }
         .unwrap()
         .as_string()
         .unwrap()

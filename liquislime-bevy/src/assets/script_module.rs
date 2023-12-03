@@ -1,9 +1,9 @@
-use bevy::reflect::{TypePath, TypeUuid};
+use bevy::prelude::*;
 
 use crate::{api::UnitModule, units::ScriptInstance};
 
-#[derive(Debug, TypeUuid, TypePath)]
-#[uuid = "39f0d1f8-a7eb-4eaa-887b-4f31a73c196e"]
+#[derive(Debug, Asset, TypePath)]
+// #[uuid = "39f0d1f8-a7eb-4eaa-887b-4f31a73c196e"]
 pub struct ScriptModule {
     pub name: String,
     pub module: UnitModule,
