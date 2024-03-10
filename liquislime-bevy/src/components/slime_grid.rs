@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::api::{SlimeAmount, TilePosition};
 
-#[derive(Component, Debug)]
+#[derive(Debug)]
 pub struct SlimeGrid {
     width: usize,
     height: usize,
@@ -23,23 +23,20 @@ impl SlimeGrid {
         }
     }
 
-    pub fn get_amount(&self, x: usize, y: usize) -> SlimeAmount {
-        self.slime_amounts[self.get_index(x, y)]
+    pub fn get_amount(&self, position: TilePosition) -> SlimeAmount {
+        self.slime_amounts[self.get_index(position)]
     }
 
     pub fn try_get_amount(&self, position: TilePosition) -> Option<SlimeAmount> {
-        let x = position.x as usize;
-        let y = position.y as usize;
-
-        if self.in_range(x, y) {
-            Some(self.get_amount(x, y))
+        if self.in_range(position) {
+            Some(self.get_amount(position))
         } else {
             None
         }
     }
 
-    pub fn set_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) {
-        let index = self.get_index(x, y);
+    pub fn set_amount(&mut self, position: TilePosition, amount: SlimeAmount) {
+        let index = self.get_index(position);
         self.slime_amounts[index] = amount.non_negative();
     }
 
@@ -48,50 +45,57 @@ impl SlimeGrid {
         position: TilePosition,
         amount: SlimeAmount,
     ) -> Result<(), ()> {
-        let x = position.x as usize;
-        let y = position.y as usize;
-
-        if self.in_range(x, y) {
-            self.set_amount(x, y, amount);
+        if self.in_range(position) {
+            self.set_amount(position, amount);
             Ok(())
         } else {
             Err(())
         }
     }
 
-    pub fn add_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) {
-        let index = self.get_index(x, y);
+    pub fn add_amount(&mut self, position: TilePosition, amount: SlimeAmount) {
+        let index = self.get_index(position);
         let amount = self.slime_amounts[index] + amount;
         self.slime_amounts[index] = amount.non_negative();
     }
 
-    pub fn try_add_amount(&mut self, x: usize, y: usize, amount: SlimeAmount) -> Result<(), ()> {
-        if self.in_range(x, y) {
-            self.add_amount(x, y, amount);
+    pub fn try_add_amount(
+        &mut self,
+        position: TilePosition,
+        amount: SlimeAmount,
+    ) -> Result<(), ()> {
+        if self.in_range(position) {
+            self.add_amount(position, amount);
             Ok(())
         } else {
             Err(())
         }
     }
 
-    pub fn in_range(&self, x: usize, y: usize) -> bool {
-        x < self.width && y < self.height
+    pub fn in_range(&self, position: TilePosition) -> bool {
+        (position.x as usize) < self.width && (position.y as usize) < self.height
     }
 
-    fn get_index(&self, x: usize, y: usize) -> usize {
-        x + y * self.width
+    fn get_index(&self, position: TilePosition) -> usize {
+        position.x as usize + position.y as usize * self.width
     }
 
     pub fn prepare_slime_spread(&mut self) {
         for y in 0..(self.height - 1) {
             for x in 0..self.width {
-                self.prepare_spread_between(self.get_index(x, y), self.get_index(x, y + 1));
+                self.prepare_spread_between(
+                    self.get_index(TilePosition::new(x as _, y as _)),
+                    self.get_index(TilePosition::new(x as _, (y + 1) as _)),
+                );
             }
         }
 
         for y in 0..self.height {
             for x in 0..(self.width - 1) {
-                self.prepare_spread_between(self.get_index(x + 1, y), self.get_index(x, y));
+                self.prepare_spread_between(
+                    self.get_index(TilePosition::new((x + 1) as _, y as _)),
+                    self.get_index(TilePosition::new(x as _, y as _)),
+                );
             }
         }
     }

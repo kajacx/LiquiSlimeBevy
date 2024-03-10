@@ -56,11 +56,11 @@ pub fn get_own_position() -> TilePosition {
 pub fn add_slime_amount(position: TilePosition, amount: SlimeAmount) -> SlimeAmount {
     let mut world = get_world();
     let mut slime_grid = get_slime_grid(&mut world);
-    let curr_amount = slime_grid.try_get_amount(position);
+    let curr_amount = slime_grid.try_get_amount(0, position);
     if let Some(curr) = curr_amount {
         let new_amount = (curr + amount).non_negative();
         slime_grid
-            .try_set_amount(position, new_amount)
+            .try_set_amount(0, position, new_amount)
             .expect("We have checked if position is in range");
         new_amount
     } else {

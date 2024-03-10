@@ -11,6 +11,7 @@ rm -rf liquislime-web/Cargo.toml
 cp -r liquislime-bevy/.cargo liquislime-web/
 cp -r liquislime-bevy/src liquislime-web/
 cp -r liquislime-bevy/Cargo.toml liquislime-web/
+cp -r liquislime-bevy/rust-toolchain.toml liquislime-web/rust-toolchain.toml
 
 echo "Copying liquislime assets"
 rm -rf liquislime-web/liquislime-webserver/assets

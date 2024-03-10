@@ -2,11 +2,11 @@ use std::{borrow::Borrow, ops::DerefMut};
 
 use bevy::prelude::*;
 
-use crate::{components::SlimeGrid, units::global_storage::get_world};
+use crate::{components::SlimeGrids, units::global_storage::get_world};
 
-pub fn get_slime_grid<'a>(world: &'a mut World) -> impl DerefMut<Target = SlimeGrid> + 'a {
+pub fn get_slime_grid<'a>(world: &'a mut World) -> impl DerefMut<Target = SlimeGrids> + 'a {
     world
-        .query::<&mut SlimeGrid>()
+        .query::<&mut SlimeGrids>()
         .get_single_mut(world)
         .expect("Slime Grid should have been created")
 }

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    components::{Building, SlimeGrid, Tile, TilePositionComponent},
+    components::{Building, SlimeGrids, Tile, TilePositionComponent},
     helpers::Phase,
 };
 
@@ -15,7 +15,7 @@ impl Plugin for GameRenderingPlugin {
 }
 
 fn render_slime_color(
-    grid_query: Query<&SlimeGrid>,
+    grid_query: Query<&SlimeGrids>,
     mut tile_query: Query<(&mut Sprite, &TilePositionComponent), With<Tile>>,
 ) {
     let slime_grid = grid_query
@@ -23,9 +23,18 @@ fn render_slime_color(
         .expect("Slime Grid should have been created");
 
     for (mut sprite, position) in &mut tile_query {
-        let amount = slime_grid.get_amount(position.0.x as usize, position.0.y as usize);
-        let rgb = amount.as_integer() as u8;
-        sprite.color = Color::rgb_u8(rgb / 4, rgb, rgb / 2);
+        let amount0 = slime_grid.get_amount(0, position.0).as_integer();
+        let amount1 = slime_grid.get_amount(1, position.0).as_integer();
+
+        if amount0 > 0 {
+            let rgb = amount0.clamp(0, 255) as u8;
+            sprite.color = Color::rgb_u8(rgb / 4, rgb, rgb / 2);
+        } else if amount1 > 0 {
+            let rgb = amount1.clamp(0, 255) as u8;
+            sprite.color = Color::rgb_u8(rgb, rgb / 2, rgb / 4);
+        } else {
+            sprite.color = Color::BLACK;
+        }
     }
 }
 

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{components::SlimeGrid, helpers::Phase};
+use crate::{components::SlimeGrids, helpers::Phase};
 
 pub struct UpdateLogicPlugin;
 
@@ -10,7 +10,7 @@ impl Plugin for UpdateLogicPlugin {
     }
 }
 
-fn spread_slime(mut query: Query<&mut SlimeGrid>) {
+fn spread_slime(mut query: Query<&mut SlimeGrids>) {
     let mut slime_grid = query
         .get_single_mut()
         .expect("Slime Grid should have been created");

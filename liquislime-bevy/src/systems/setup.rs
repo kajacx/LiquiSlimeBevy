@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::api::*;
 use crate::assets::ScriptModule;
-use crate::components::ScriptComponent;
+use crate::components::{ScriptComponent, SlimeGrids};
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
     units::UnitId,
@@ -35,8 +35,7 @@ fn setup_camera(mut commands: Commands) {
 
 fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer>) {
     move |mut commands, _asset_server| {
-        // TODO: unused asset server?
-        let mut slime_grid = SlimeGrid::new(width, height);
+        let mut slime_grid = SlimeGrids::new(width, height);
 
         for x in 0..width {
             for y in 0..height {
@@ -56,9 +55,6 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
                 };
 
                 commands.spawn((TilePositionComponent::from(position), sprite, Tile));
-
-                let amount = SlimeAmount::from_integer(256 * 10 + 128);
-                slime_grid.set_amount(x, y, amount);
             }
         }
 
