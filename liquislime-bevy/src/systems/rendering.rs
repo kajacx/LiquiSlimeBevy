@@ -23,19 +23,30 @@ fn render_slime_color(
         .expect("Slime Grid should have been created");
 
     for (mut sprite, position) in &mut tile_query {
-        let amount0 = slime_grid.get_amount(0, position.0).as_integer();
-        let amount1 = slime_grid.get_amount(1, position.0).as_integer();
+        let amount0 = slime_grid.get_amount(0, position.0).as_float() as f32;
+        let amount1 = slime_grid.get_amount(1, position.0).as_float() as f32;
 
-        if amount0 > 0 && amount0 > amount1 {
-            let rgb = amount0.clamp(0, 255) as u8;
-            sprite.color = Color::rgb_u8(rgb / 4, rgb, rgb / 2);
-        } else if amount1 > 0 {
-            let rgb = amount1.clamp(0, 255) as u8;
-            sprite.color = Color::rgb_u8(rgb, rgb / 2, rgb / 4);
+        let background = Color::rgb(0.6, 0.6, 0.6);
+        let color0 = Color::GREEN;
+        let color1 = Color::ORANGE;
+
+        if amount0 > 0.0 {
+            sprite.color = color_blend(color0, background, amount0 / 100.0 + 0.25);
+        } else if amount1 > 0.0 {
+            sprite.color = color_blend(color1, background, amount1 / 100.0 + 0.25);
         } else {
-            sprite.color = Color::BLACK;
+            sprite.color = background;
         }
     }
+}
+
+fn color_blend(color0: Color, color1: Color, blend: f32) -> Color {
+    let blend = blend.clamp(0.0, 1.0);
+    Color::rgb(
+        color0.r() * blend + color1.r() * (1.0 - blend),
+        color0.g() * blend + color1.g() * (1.0 - blend),
+        color0.b() * blend + color1.b() * (1.0 - blend),
+    )
 }
 
 fn update_building_position(
