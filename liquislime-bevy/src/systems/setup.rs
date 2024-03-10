@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 
-use crate::api::*;
 use crate::assets::ScriptModule;
 use crate::components::{ScriptComponent, SlimeGrids};
+use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
     units::UnitId,
@@ -13,7 +13,7 @@ pub struct GameSetupPlugin;
 impl Plugin for GameSetupPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_camera);
-        app.add_systems(Startup, spawn_tiles(10, 10)); // TODO: Fixed world size
+        app.add_systems(Startup, spawn_tiles(WORLD_WIDTH, WORLD_HEIGHT));
         app.add_systems(Startup, spawn_sources);
     }
 }

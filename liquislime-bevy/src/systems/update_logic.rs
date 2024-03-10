@@ -17,4 +17,5 @@ fn spread_slime(mut query: Query<&mut SlimeGrids>) {
 
     slime_grid.prepare_slime_spread();
     slime_grid.spread_slime();
+    slime_grid.annihilate_slime();
 }

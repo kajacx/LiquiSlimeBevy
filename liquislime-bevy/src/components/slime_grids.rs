@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::api::{SlimeAmount, TilePosition};
+use crate::{
+    api::{Position, SlimeAmount, TilePosition},
+    WORLD_HEIGHT, WORLD_WIDTH,
+};
 
 use super::SlimeGrid;
 
@@ -60,6 +63,19 @@ impl SlimeGrids {
     pub fn spread_slime(&mut self) {
         for grid in self.grids.iter_mut() {
             grid.spread_slime()
+        }
+    }
+
+    pub fn annihilate_slime(&mut self) {
+        for x in 0..WORLD_WIDTH {
+            for y in 0..WORLD_HEIGHT {
+                let position = TilePosition::new(x as _, y as _);
+                let amount = self.grids[0]
+                    .get_amount(position)
+                    .min(self.grids[1].get_amount(position));
+                self.grids[0].add_amount(position, -amount);
+                self.grids[1].add_amount(position, -amount);
+            }
         }
     }
 }

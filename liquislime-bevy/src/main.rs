@@ -14,6 +14,9 @@ mod resources;
 mod systems;
 mod units;
 
+pub const WORLD_WIDTH: usize = 10;
+pub const WORLD_HEIGHT: usize = 10;
+
 static RENDER_CANVAS_ID: &str = "game_render";
 
 fn main() {
