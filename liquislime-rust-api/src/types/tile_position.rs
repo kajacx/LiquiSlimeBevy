@@ -26,8 +26,12 @@ impl TilePosition {
         Self { x, y }
     }
 
-    pub fn add_slime_amount(self, amount: SlimeAmount) {
-        crate::protocol::add_slime_amount(self.as_protocol(), amount.as_protocol());
+    pub fn add_slime_amount(self, faction: Faction, amount: SlimeAmount) {
+        crate::protocol::add_slime_amount(
+            faction.as_protocol(),
+            self.as_protocol(),
+            amount.as_protocol(),
+        );
     }
 
     pub fn add_x(self, x_add: i32) -> Self {

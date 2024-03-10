@@ -26,7 +26,7 @@ fn render_slime_color(
         let amount0 = slime_grid.get_amount(0, position.0).as_integer();
         let amount1 = slime_grid.get_amount(1, position.0).as_integer();
 
-        if amount0 > 0 {
+        if amount0 > 0 && amount0 > amount1 {
             let rgb = amount0.clamp(0, 255) as u8;
             sprite.color = Color::rgb_u8(rgb / 4, rgb, rgb / 2);
         } else if amount1 > 0 {

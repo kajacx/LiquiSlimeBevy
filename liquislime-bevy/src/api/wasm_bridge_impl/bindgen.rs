@@ -16,8 +16,13 @@ impl LiquislimeUnitImports for LiquislimeHost {
         Ok(get_own_position().into())
     }
 
-    fn add_slime_amount(&mut self, position: TilePosition, amount: SlimeAmount) -> Result<()> {
-        add_slime_amount(position.into(), amount.into());
+    fn add_slime_amount(
+        &mut self,
+        faction: Faction,
+        position: TilePosition,
+        amount: SlimeAmount,
+    ) -> Result<()> {
+        add_slime_amount(faction.into(), position.into(), amount.into());
         Ok(())
     }
 

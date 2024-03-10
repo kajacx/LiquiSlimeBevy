@@ -1,6 +1,12 @@
 use super::bindgen;
 use crate::api;
 
+impl From<bindgen::Faction> for api::Faction {
+    fn from(value: bindgen::Faction) -> Self {
+        Self::new(value.id)
+    }
+}
+
 impl From<bindgen::SlimeAmount> for api::SlimeAmount {
     fn from(value: bindgen::SlimeAmount) -> Self {
         Self(value.amount)
