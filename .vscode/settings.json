@@ -1,3 +1,8 @@
 {
-  "cSpell.words": ["liquislime"]
+  "cSpell.words": ["liquislime"],
+  "files.exclude": {
+    "**/.git": true,
+    "**/target": true,
+    "/liquislime-web/src": true
+  }
 }
