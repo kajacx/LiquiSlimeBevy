@@ -4,21 +4,17 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = "0.12.1"
-derive_more = "0.99.17"
-# wasm-bridge = { version = "0.2.1", features = ["component-model"] }
-js-sys = "0.3.66" # TODO: make it a wasm-only dependency?
-reqwest = "0.11.22"
-
-[dependencies.wasm-bridge] 
-  version = "0.3.1"
-  default-features = false
-  features = ["component-model"]
+bevy = { version = "0.12.1", default-features = false, features = ["bevy_asset", "bevy_sprite", "bevy_winit", "png"]}
+tracing = {version = "0.1.40", default-features = false }
+derive_more = {version =  "0.99.17", default-features = false, features = ["add", "add_assign", "not", "from", "into"]}
+wasm-bridge = { version = "0.3.1", default-features = false, features = ["component-model"] }
+js-sys = { version =  "0.3.66", default-features = false } # TODO: make it a wasm-only dependency?
+reqwest = { version = "0.11.22", default-features = false }
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]
-opt-level = 0 # TODO: change to 1?
+opt-level = 0 
 
 # Enable high optimizations for dependencies (incl. Bevy), but not for our code:
 [profile.dev.package."*"]
-opt-level = 1 # TODO: change back to 3?
+opt-level = 1
