@@ -31,12 +31,13 @@ impl Fairing for CORS {
 
 #[post("/compile", data = "<source_code>")]
 fn compile(source_code: String) -> Vec<u8> {
-    std::fs::write("user-plugin/src/lib.rs", source_code.as_bytes()).expect("write bytes");
+    std::fs::write("user-plugin/src/plugin.rs", source_code.as_bytes()).expect("write bytes");
 
     let output = Command::new("cargo")
         .arg("component")
         .arg("build")
         .arg("--release")
+        .arg("wasm32-unknown-unknown")
         .current_dir("./user-plugin")
         .output()
         .expect("run cargo component build");
@@ -47,8 +48,10 @@ fn compile(source_code: String) -> Vec<u8> {
     // println!("{}", output);
 
     if output.status.success() {
-        std::fs::read("user-plugin/target/wasm32-wasi/release/liquislime_user_plugin.wasm")
-            .expect("should read wasm file")
+        std::fs::read(
+            "user-plugin/target/wasm32-unknown-unknown/release/liquislime_user_plugin.wasm",
+        )
+        .expect("should read wasm file")
     } else {
         vec![]
     }
