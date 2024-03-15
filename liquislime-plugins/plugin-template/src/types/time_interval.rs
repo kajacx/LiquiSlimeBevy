@@ -22,7 +22,7 @@ const FRAGMENTS_IN_SECOND: i64 = 18_000;
 pub struct TimeInterval(i64);
 
 impl TimeInterval {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self(0)
     }
 
@@ -42,11 +42,11 @@ impl TimeInterval {
         (self.0 as f64) / ((FRAGMENTS_IN_SECOND * 1000) as f64)
     }
 
-    pub(crate) fn as_protocol(self) -> crate::protocol::TimeInterval {
+    pub fn as_protocol(self) -> crate::protocol::TimeInterval {
         crate::protocol::TimeInterval { fragments: self.0 }
     }
 
-    pub(crate) fn from_protocol(interval: crate::protocol::TimeInterval) -> Self {
+    pub fn from_protocol(interval: crate::protocol::TimeInterval) -> Self {
         Self(interval.fragments)
     }
 }

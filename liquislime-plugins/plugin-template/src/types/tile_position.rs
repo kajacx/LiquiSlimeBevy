@@ -22,7 +22,7 @@ pub struct TilePosition {
 }
 
 impl TilePosition {
-    pub fn new(x: i32, y: i32) -> Self {
+    pub const fn new(x: i32, y: i32) -> Self {
         Self { x, y }
     }
 
@@ -34,14 +34,14 @@ impl TilePosition {
         );
     }
 
-    pub fn add_x(self, x_add: i32) -> Self {
+    pub const fn add_x(self, x_add: i32) -> Self {
         Self {
             x: self.x + x_add,
             ..self
         }
     }
 
-    pub fn add_y(self, y_add: i32) -> Self {
+    pub const fn add_y(self, y_add: i32) -> Self {
         Self {
             y: self.y + y_add,
             ..self
@@ -60,14 +60,14 @@ impl TilePosition {
         Position::from_tile_bottom_left(self)
     }
 
-    pub(crate) fn as_protocol(self) -> crate::protocol::TilePosition {
+    pub fn as_protocol(self) -> crate::protocol::TilePosition {
         crate::protocol::TilePosition {
             x: self.x,
             y: self.y,
         }
     }
 
-    pub(crate) fn from_protocol(position: crate::protocol::TilePosition) -> Self {
+    pub fn from_protocol(position: crate::protocol::TilePosition) -> Self {
         Self {
             x: position.x,
             y: position.y,

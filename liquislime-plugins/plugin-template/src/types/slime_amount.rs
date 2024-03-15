@@ -22,11 +22,11 @@ const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
 pub struct SlimeAmount(i64);
 
 impl SlimeAmount {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self(0)
     }
 
-    pub fn from_integer(amount: i64) -> Self {
+    pub const fn from_integer(amount: i64) -> Self {
         Self(amount * ONE_SLIME_AMOUNT)
     }
 
@@ -46,11 +46,11 @@ impl SlimeAmount {
         (self.0 as f64) / (ONE_SLIME_AMOUNT as f64)
     }
 
-    pub(crate) fn as_protocol(self) -> crate::protocol::SlimeAmount {
+    pub fn as_protocol(self) -> crate::protocol::SlimeAmount {
         crate::protocol::SlimeAmount { amount: self.0 }
     }
 
-    pub(crate) fn from_protocol(amount: crate::protocol::SlimeAmount) -> Self {
+    pub fn from_protocol(amount: crate::protocol::SlimeAmount) -> Self {
         Self(amount.amount)
     }
 }

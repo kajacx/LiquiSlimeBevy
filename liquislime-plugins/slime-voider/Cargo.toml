@@ -11,4 +11,5 @@ crate-type = ["cdylib"]
 package = "liquislime:slime-voider"
 
 [dependencies]
-liquislime-api = { path = "../../liquislime-rust-api" }
+wit-bindgen = { version = "0.15.0" }
+derive_more = { version = "0.99.17" }

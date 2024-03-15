@@ -11,8 +11,7 @@ js-sys = "0.3.66" # TODO: make it a wasm-only dependency?
 reqwest = "0.11.22"
 
 [dependencies.wasm-bridge] 
-  git = "https://github.com/kajacx/wasm-bridge.git"
-  rev = "b425ed346766451aa9cabe3da454f4f39bb7fd53"
+  version = "0.3.1"
   default-features = false
   features = ["component-model"]
 

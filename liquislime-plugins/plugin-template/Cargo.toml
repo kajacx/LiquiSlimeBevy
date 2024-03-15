@@ -1,5 +1,5 @@
 [package]
-name = "liquislime_slime_spawner_plugin"
+name = "liquislime-plugin-template"
 version = "0.1.0"
 authors = ["kajacx"]
 edition = "2021"

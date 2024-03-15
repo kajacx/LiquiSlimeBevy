@@ -7,11 +7,11 @@ pub struct Faction {
 }
 
 impl Faction {
-    pub fn faction0() -> Self {
+    pub const fn faction0() -> Self {
         Self { id: 0 }
     }
 
-    pub fn faction1() -> Self {
+    pub const fn faction1() -> Self {
         Self { id: 1 }
     }
 

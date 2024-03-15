@@ -1,4 +1,4 @@
-package liquislime:protocol
+package liquislime:protocol;
 
 world liquislime-unit {
   record time-interval {
@@ -27,11 +27,11 @@ world liquislime-unit {
     primary
   }
 
-  import get-own-position: func() -> tile-position
-  import add-slime-amount: func(faction: faction, position: tile-position, amount: slime-amount)
+  import get-own-position: func() -> tile-position;
+  import add-slime-amount: func(faction: faction, position: tile-position, amount: slime-amount);
 
-  import get-mouse-position: func() -> option<position>
-  import is-mouse-pressed: func(input: mouse-input) -> bool
+  import get-mouse-position: func() -> option<position>;
+  import is-mouse-pressed: func(input: mouse-input) -> bool;
 
-  export update: func(time-elapsed: time-interval)
+  export update: func(time-elapsed: time-interval);
 }

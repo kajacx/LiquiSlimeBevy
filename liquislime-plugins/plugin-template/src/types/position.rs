@@ -8,7 +8,7 @@ pub struct Position {
 }
 
 impl Position {
-    pub fn new(x: f32, y: f32) -> Self {
+    pub const fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
 
@@ -30,7 +30,7 @@ impl Position {
         Self::new(tile_position.x as f32 + 0.5, tile_position.y as f32 + 0.5)
     }
 
-    pub fn from_tile_bottom_left(tile_position: TilePosition) -> Self {
+    pub const fn from_tile_bottom_left(tile_position: TilePosition) -> Self {
         Self::new(tile_position.x as f32, tile_position.y as f32)
     }
 
@@ -38,14 +38,19 @@ impl Position {
         TilePosition::from_position(self)
     }
 
-    pub(crate) fn as_protocol(self) -> crate::protocol::Position {
+    pub fn is_in_bounds(self) -> bool {
+        //FIXME: implement this
+        true
+    }
+
+    pub fn as_protocol(self) -> crate::protocol::Position {
         crate::protocol::Position {
             x: self.x,
             y: self.y,
         }
     }
 
-    pub(crate) fn from_protocol(position: crate::protocol::Position) -> Self {
+    pub fn from_protocol(position: crate::protocol::Position) -> Self {
         Self {
             x: position.x,
             y: position.y,
