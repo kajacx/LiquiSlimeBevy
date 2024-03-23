@@ -90,7 +90,7 @@ pub fn is_mouse_pressed() -> bool {
     let mut world = get_world();
 
     let input = world
-        .get_resource::<Input<MouseButton>>()
+        .get_resource::<ButtonInput<MouseButton>>()
         .expect("Mouse input resource should exist");
 
     let pressed = input.pressed(MouseButton::Left);

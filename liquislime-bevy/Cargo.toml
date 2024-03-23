@@ -4,11 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = { version = "0.12.1", default-features = false, features = ["bevy_asset", "bevy_sprite", "bevy_winit", "png", "webgl2"]}
+bevy = { version = "0.13.0", default-features = false, features = ["bevy_asset", "bevy_sprite", "bevy_winit", "png", "webgl2"]}
 tracing = {version = "0.1.40", default-features = false }
 derive_more = {version =  "0.99.17", default-features = false, features = ["add", "add_assign", "not", "from", "into"]}
 wasm-bridge = { version = "0.3.1", default-features = false, features = ["component-model"] }
-js-sys = { version =  "0.3.66", default-features = false } # TODO: make it a wasm-only dependency?
+js-sys = { version =  "0.3.66", default-features = false }
 reqwest = { version = "0.11.22", default-features = false }
 
 # Enable a small amount of optimization in debug mode

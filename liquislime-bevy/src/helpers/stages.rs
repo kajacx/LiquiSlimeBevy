@@ -29,6 +29,6 @@ impl Plugin for StagesPlugin {
                 .chain(),
         );
         app.configure_sets(Update, (Phase::AssetLoad, Phase::WasmUpdate).chain());
-        app.configure_set(Update, CompileInput);
+        app.configure_sets(Update, CompileInput);
     }
 }
