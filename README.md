@@ -4,7 +4,7 @@ A video game inspired by the Creeper World video games written in Bevy.
 
 ## Customizable unit behaviour
 
-A core feature of the game is (or will be) the ability to program unit behaviour in Rust, and then
+A core feature of the game is (or will be) the ability to program unit behavior in Rust, and then
 load and the resulting code at runtime using WASM.
 
 Currently I am using a [custom fork](https://github.com/kajacx/fp-bindgen) of [fp-bindgen](https://github.com/fiberplane/fp-bindgen),

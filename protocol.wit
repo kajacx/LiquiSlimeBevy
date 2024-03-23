@@ -28,7 +28,10 @@ world liquislime-unit {
   }
 
   import get-own-position: func() -> tile-position;
-  import add-slime-amount: func(faction: faction, position: tile-position, amount: slime-amount);
+  import get-own-faction: func() -> faction;
+
+  import get-slime-amount: func(faction: faction, position: tile-position) -> slime-amount;
+  import set-slime-amount: func(faction: faction, position: tile-position, amount: slime-amount);
 
   import get-mouse-position: func() -> option<position>;
   import is-mouse-pressed: func(input: mouse-input) -> bool;

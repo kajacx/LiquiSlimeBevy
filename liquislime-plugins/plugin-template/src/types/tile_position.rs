@@ -26,8 +26,49 @@ impl TilePosition {
         Self { x, y }
     }
 
+    pub fn get_own_slime_amount(self) -> SlimeAmount {
+        self.get_slime_amount(Faction::get_own_faction())
+    }
+
+    pub fn get_slime_amount(self, faction: Faction) -> SlimeAmount {
+        SlimeAmount::from_protocol(crate::protocol::get_slime_amount(
+            faction.as_protocol(),
+            self.as_protocol(),
+        ))
+    }
+
+    pub fn set_own_slime_amount(self, amount: SlimeAmount) {
+        self.set_slime_amount(Faction::get_own_faction(), amount)
+    }
+
+    pub fn set_slime_amount(self, faction: Faction, amount: SlimeAmount) {
+        crate::protocol::set_slime_amount(
+            faction.as_protocol(),
+            self.as_protocol(),
+            amount.as_protocol(),
+        )
+    }
+
+    pub fn set_own_slime_amount_at_least(self, amount: SlimeAmount) {
+        self.set_slime_amount_at_least(Faction::get_own_faction(), amount)
+    }
+
+    pub fn set_slime_amount_at_least(self, faction: Faction, amount: SlimeAmount) {
+        let amount = SlimeAmount::max(self.get_slime_amount(faction), amount);
+        crate::protocol::set_slime_amount(
+            faction.as_protocol(),
+            self.as_protocol(),
+            amount.as_protocol(),
+        )
+    }
+
+    pub fn add_own_slime_amount(self, amount: SlimeAmount) {
+        self.add_slime_amount(Faction::get_own_faction(), amount)
+    }
+
     pub fn add_slime_amount(self, faction: Faction, amount: SlimeAmount) {
-        crate::protocol::add_slime_amount(
+        let amount = self.get_slime_amount(faction) + amount;
+        crate::protocol::set_slime_amount(
             faction.as_protocol(),
             self.as_protocol(),
             amount.as_protocol(),

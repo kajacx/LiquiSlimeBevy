@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::assets::ScriptModule;
-use crate::components::{ScriptComponent, SlimeGrids};
+use crate::components::{FactionComponent, ScriptComponent, SlimeGrids};
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
@@ -63,7 +63,8 @@ fn spawn_tiles(width: usize, height: usize) -> impl Fn(Commands, Res<AssetServer
 }
 
 fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let mut create_unit = move |position: TilePosition,
+    let mut create_unit = move |faction: Faction,
+                                position: TilePosition,
                                 texture_file: &'static str,
                                 unit_id: UnitId,
                                 plugin_filename: &str| {
@@ -83,6 +84,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         let script_component = get_plugin(plugin_filename, &asset_server);
 
         commands.spawn((
+            FactionComponent::from(faction),
             TilePositionComponent::from(position),
             sprite,
             Building,
@@ -92,6 +94,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
 
     create_unit(
+        Faction::new(0),
         crate::api::TilePosition::new(2, 5),
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
@@ -99,6 +102,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
     );
 
     create_unit(
+        Faction::new(1),
         crate::api::TilePosition::new(7, 1),
         "tiles_grayscale/tile_0055.png",
         UnitId(2),

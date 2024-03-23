@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
+    api::Faction,
     components::{Building, SlimeGrids, Tile, TilePositionComponent},
     helpers::Phase,
 };
@@ -23,8 +24,12 @@ fn render_slime_color(
         .expect("Slime Grid should have been created");
 
     for (mut sprite, position) in &mut tile_query {
-        let amount0 = slime_grid.get_amount(0, position.0).as_float() as f32;
-        let amount1 = slime_grid.get_amount(1, position.0).as_float() as f32;
+        let amount0 = slime_grid
+            .get_amount(Faction::new(0), position.0)
+            .as_float() as f32;
+        let amount1 = slime_grid
+            .get_amount(Faction::new(1), position.0)
+            .as_float() as f32;
 
         let background = Color::rgb(0.6, 0.6, 0.6);
         let color0 = Color::GREEN;

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    api::{Position, SlimeAmount, TilePosition},
+    api::{Faction, Position, SlimeAmount, TilePosition},
     WORLD_HEIGHT, WORLD_WIDTH,
 };
 
@@ -20,38 +20,25 @@ impl SlimeGrids {
         }
     }
 
-    pub fn get_amount(&self, grid: usize, position: TilePosition) -> SlimeAmount {
-        self.grids[grid].get_amount(position)
+    pub fn get_amount(&self, faction: Faction, position: TilePosition) -> SlimeAmount {
+        self.grids[faction.index()].get_amount(position)
     }
 
-    pub fn try_get_amount(&self, grid: usize, position: TilePosition) -> Option<SlimeAmount> {
-        self.grids[grid].try_get_amount(position)
+    pub fn try_get_amount(&self, faction: Faction, position: TilePosition) -> Option<SlimeAmount> {
+        self.grids[faction.index()].try_get_amount(position)
     }
 
-    pub fn set_amount(&mut self, grid: usize, position: TilePosition, amount: SlimeAmount) {
-        self.grids[grid].set_amount(position, amount);
+    pub fn set_amount(&mut self, faction: Faction, position: TilePosition, amount: SlimeAmount) {
+        self.grids[faction.index()].set_amount(position, amount);
     }
 
     pub fn try_set_amount(
         &mut self,
-        grid: usize,
+        faction: Faction,
         position: TilePosition,
         amount: SlimeAmount,
     ) -> Result<(), ()> {
-        self.grids[grid].try_set_amount(position, amount)
-    }
-
-    pub fn add_amount(&mut self, grid: usize, position: TilePosition, amount: SlimeAmount) {
-        self.grids[grid].add_amount(position, amount);
-    }
-
-    pub fn try_add_amount(
-        &mut self,
-        grid: usize,
-        position: TilePosition,
-        amount: SlimeAmount,
-    ) -> Result<(), ()> {
-        self.grids[grid].try_add_amount(position, amount)
+        self.grids[faction.index()].try_set_amount(position, amount)
     }
 
     pub fn prepare_slime_spread(&mut self) {

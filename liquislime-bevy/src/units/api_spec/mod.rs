@@ -1,3 +1,4 @@
+use bevy::ecs::world;
 use bevy::input::touch::Touch;
 use bevy::prelude::*;
 
@@ -5,6 +6,7 @@ use self::helpers::*;
 
 use super::{global_storage::*, UnitId};
 use crate::api::*;
+use crate::components::FactionComponent;
 use crate::helpers::set_mouse_position_from_window_position;
 use crate::{components::TilePositionComponent, helpers::ResultLogger};
 
@@ -22,12 +24,23 @@ pub fn get_own_position() -> TilePosition {
     let mut query = world.query::<(&UnitId, &TilePositionComponent)>();
     for (unit_id, tile_position) in query.iter(&world) {
         if *unit_id == get_current_unit() {
-            return tile_position.0.clone(); // TODO: make sure it is copied and not cloned
+            return tile_position.0;
         }
     }
-    // TODO: log as error and return 0,0 position instead?
     panic!("get_own_position did not find current unit")
 }
+
+pub fn get_own_faction() -> Faction {
+    let mut world = get_world();
+    let mut query = world.query::<(&UnitId, &FactionComponent)>();
+    for (unit_id, faction) in query.iter(&world) {
+        if *unit_id == get_current_unit() {
+            return faction.0;
+        }
+    }
+    panic!("get_own_faction did not find current unit")
+}
+
 // fn set_own_position(position: TilePosition) {
 //     let mut world = get_world();
 //     let mut query = world.query::<(&UnitId, &mut TilePositionComponent)>();
@@ -41,35 +54,23 @@ pub fn get_own_position() -> TilePosition {
 //     panic!("set_own_position did not find current unit")
 // }
 
-// fn get_slime_amount(position: TilePosition) -> SlimeAmount {
-//     let mut world = get_world();
-//     let slime_grid = get_slime_grid(&mut world);
-//     slime_grid
-//         .try_get_amount(position)
-//         .log_err_or(SlimeAmount::from_integer(0))
-// }
-// fn set_slime_amount(position: TilePosition, amount: SlimeAmount) {
-//     let mut world = get_world();
-//     let mut slime_grid = get_slime_grid(&mut world);
-//     slime_grid.try_set_amount(position, amount).log_err();
-// }
-pub fn add_slime_amount(
-    faction: Faction,
-    position: TilePosition,
-    amount: SlimeAmount,
-) -> SlimeAmount {
+pub fn get_slime_amount(faction: Faction, position: TilePosition) -> SlimeAmount {
+    let mut world = get_world();
+    let slime_grid = get_slime_grid(&mut world);
+    slime_grid.try_get_amount(faction, position).log_err_or(
+        &format!("Getting slime amount out of bounds: {position:?}."),
+        SlimeAmount::from_integer(0),
+    )
+}
+
+pub fn set_slime_amount(faction: Faction, position: TilePosition, amount: SlimeAmount) {
     let mut world = get_world();
     let mut slime_grid = get_slime_grid(&mut world);
-    let curr_amount = slime_grid.try_get_amount(faction.index(), position);
-    if let Some(curr) = curr_amount {
-        let new_amount = (curr + amount).non_negative();
-        slime_grid
-            .try_set_amount(faction.index(), position, new_amount)
-            .expect("We have checked if position is in range");
-        new_amount
-    } else {
-        SlimeAmount::from_integer(0)
-    }
+    slime_grid
+        .try_set_amount(faction, position, amount)
+        .log_err(&format!(
+            "Setting slime amount out of bounds: {position:?}."
+        ));
 }
 
 // fn is_mouse_pressed(mouse_button: MouseButton) -> bool {

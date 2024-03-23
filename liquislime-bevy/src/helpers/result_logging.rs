@@ -3,9 +3,9 @@ use std::fmt::Debug;
 pub trait ResultLogger<R> {
     fn log_err(self, msg: &str);
 
-    fn log_err_or(self, or: R, msg: &str) -> R;
+    fn log_err_or(self, msg: &str, or: R) -> R;
 
-    fn log_err_or_else(self, or_else: impl FnOnce() -> R, msg: &str) -> R;
+    fn log_err_or_else(self, msg: &str, or_else: impl FnOnce() -> R) -> R;
 }
 
 impl<R, E> ResultLogger<R> for Result<R, E>
@@ -18,11 +18,11 @@ where
         }
     }
 
-    fn log_err_or(self, or: R, msg: &str) -> R {
-        self.log_err_or_else(move || or, msg)
+    fn log_err_or(self, msg: &str, or: R) -> R {
+        self.log_err_or_else(msg, move || or)
     }
 
-    fn log_err_or_else(self, or_else: impl FnOnce() -> R, msg: &str) -> R {
+    fn log_err_or_else(self, msg: &str, or_else: impl FnOnce() -> R) -> R {
         match self {
             Ok(value) => value,
             Err(err) => {
@@ -40,11 +40,11 @@ impl<T> ResultLogger<T> for Option<T> {
         }
     }
 
-    fn log_err_or(self, or: T, msg: &str) -> T {
-        self.log_err_or_else(move || or, msg)
+    fn log_err_or(self, msg: &str, or: T) -> T {
+        self.log_err_or_else(msg, move || or)
     }
 
-    fn log_err_or_else(self, or_else: impl FnOnce() -> T, msg: &str) -> T {
+    fn log_err_or_else(self, msg: &str, or_else: impl FnOnce() -> T) -> T {
         match self {
             Some(value) => value,
             None => {

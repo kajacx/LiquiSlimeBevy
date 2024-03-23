@@ -7,15 +7,15 @@ pub struct Faction {
 }
 
 impl Faction {
-    pub const fn faction0() -> Self {
-        Self { id: 0 }
-    }
-
-    pub const fn faction1() -> Self {
-        Self { id: 1 }
+    pub fn get_own_faction() -> Self {
+        Self::from_protocol(crate::protocol::get_own_faction())
     }
 
     pub fn as_protocol(self) -> crate::protocol::Faction {
         crate::protocol::Faction { id: self.id }
+    }
+
+    pub fn from_protocol(faction: crate::protocol::Faction) -> Self {
+        Self { id: faction.id }
     }
 }
