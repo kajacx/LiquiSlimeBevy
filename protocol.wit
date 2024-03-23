@@ -27,6 +27,9 @@ world liquislime-unit {
     primary
   }
 
+  import level-width: func() -> s32;
+  import level-height: func() -> s32;
+
   import get-own-position: func() -> tile-position;
   import get-own-faction: func() -> faction;
 

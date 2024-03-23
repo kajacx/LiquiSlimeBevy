@@ -12,10 +12,11 @@ use crate::{components::TilePositionComponent, helpers::ResultLogger};
 
 mod helpers;
 
-fn level_width() -> i32 {
+pub fn level_width() -> i32 {
     get_level_info().width as i32 // TODO: why is level width an i32?
 }
-fn level_height() -> i32 {
+
+pub fn level_height() -> i32 {
     get_level_info().height as i32
 }
 

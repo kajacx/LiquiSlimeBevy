@@ -26,6 +26,14 @@ impl TilePosition {
         Self { x, y }
     }
 
+    pub fn own_position() -> Self {
+        Self::from_protocol(crate::protocol::get_own_position())
+    }
+
+    pub fn is_in_bounds(self) -> bool {
+        self.x >= 0 && self.y >= 0 && self.x < Level::width() && self.y < Level::height()
+    }
+
     pub fn get_own_slime_amount(self) -> SlimeAmount {
         self.get_slime_amount(Faction::get_own_faction())
     }

@@ -2,7 +2,7 @@
 
 A video game inspired by the Creeper World video games written in Bevy.
 
-## Customizable unit behaviour
+## Customizable unit behavior
 
 A core feature of the game is (or will be) the ability to program unit behavior in Rust, and then
 load and the resulting code at runtime using WASM.

@@ -39,8 +39,7 @@ impl Position {
     }
 
     pub fn is_in_bounds(self) -> bool {
-        //FIXME: implement this
-        true
+        self.to_tile_position().is_in_bounds()
     }
 
     pub fn as_protocol(self) -> crate::protocol::Position {

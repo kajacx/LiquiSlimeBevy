@@ -12,6 +12,14 @@ wasm_bridge::component::bindgen!({
 pub struct LiquislimeHost;
 
 impl LiquislimeUnitImports for LiquislimeHost {
+    fn level_width(&mut self) -> Result<i32> {
+        Ok(level_width())
+    }
+
+    fn level_height(&mut self) -> Result<i32> {
+        Ok(level_height())
+    }
+
     fn get_own_position(&mut self) -> Result<TilePosition> {
         Ok(get_own_position().into())
     }
