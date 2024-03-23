@@ -22,8 +22,9 @@ for plugin in */; do
   sed -E -i 's/name =.*/name = "'"$crate_name"'"/' "$plugin/Cargo.toml"
   sed -E -i 's/package =.*/package = "liquislime:'"$plugin"'"/' "$plugin/Cargo.toml"
 
-  rm -rf "$plugin/src/types"
+  rm -rf "$plugin/src/settings" "$plugin/src/types"
   cp -r plugin-template/src/types "$plugin/src"
+  cp -r plugin-template/src/settings "$plugin/src"
   cp plugin-template/src/lib.rs "$plugin/src/lib.rs"
   cp plugin-template/.gitignore_ "$plugin/.gitignore"
 done

@@ -106,7 +106,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         crate::api::TilePosition::new(7, 1),
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
-        "liquislime_slime_voider_plugin.wasm",
+        "liquislime_slime_clicker_plugin.wasm",
     );
 }
 

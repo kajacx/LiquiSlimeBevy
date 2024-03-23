@@ -36,7 +36,11 @@ impl LiquislimePlugin for LiquislimeUnit {
         }
     }
 
-    fn update(&mut self, _time_elapsed: TimeInterval) {
-        TilePosition::own_position().set_own_slime_amount_at_least(self.amount);
+    fn update(&mut self, time_elapsed: TimeInterval) {
+        if let Some(position) = Mouse::is_pressed_in_bounds_at() {
+            position
+                .to_tile_position()
+                .add_own_slime_amount(self.amount * time_elapsed.to_seconds());
+        }
     }
 }

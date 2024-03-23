@@ -1,3 +1,4 @@
 /.gitignore
+/src/settings
 /src/types
 /src/lib.rs

@@ -1,5 +1,5 @@
 [package]
-name = "liquislime-slime-voider-plugin"
+name = "liquislime-slime-clicker-plugin"
 version = "0.1.0"
 authors = ["kajacx"]
 edition = "2021"
@@ -8,7 +8,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [package.metadata.component]
-package = "liquislime:slime-voider"
+package = "liquislime:slime-clicker"
 
 [dependencies]
 wit-bindgen = { version = "0.15.0" }

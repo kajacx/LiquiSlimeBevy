@@ -2,4 +2,4 @@
 
 resolver = "2"
 
-members = ["plugin-template", "slime-spawner", "slime-voider"]
+members = ["plugin-template", "slime-spawner", "slime-clicker"]
