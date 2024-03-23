@@ -1,7 +1,7 @@
 use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 
 use crate::{
-    components::{ScriptComponent, SlimeGrid},
+    components::{ScriptComponent, ScriptsComponent, SlimeGrid},
     helpers::{CompileInput, Phase},
     units::UnitId,
 };
@@ -14,7 +14,7 @@ impl Plugin for CompileInputPlugin {
     }
 }
 
-fn compile_input(query: Query<(&UnitId, &ScriptComponent)>) {
+fn compile_input(query: Query<(&UnitId, &ScriptsComponent)>) {
     if cfg!(not(target_arch = "wasm32")) {
         return;
     }
@@ -31,7 +31,8 @@ fn compile_input(query: Query<(&UnitId, &ScriptComponent)>) {
             })
             .expect("Find unit with id 1");
 
-        start_compilation_task(unit, get_custom_unit_source());
+        // FIXME: fix this
+        // start_compilation_task(unit.0[1], get_custom_unit_source());
         set_status(Status::Compiling);
     }
 }
@@ -112,7 +113,7 @@ async fn compile_task(unit: ScriptComponent, source: String) {
     if bytes.is_empty() {
         set_status(Status::Error);
     } else {
-        unit.load_from_bytes(bytes.into());
+        unit.load_from_bytes(bytes.into(), todo!());
         set_status(Status::Success);
     }
 }

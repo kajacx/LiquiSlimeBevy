@@ -1,3 +1,5 @@
+use crate::{api::Settings, helpers::ResultLogger};
+
 use super::*;
 use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 
@@ -11,15 +13,21 @@ impl UnitInstance {
         Self { store, instance }
     }
 
+    pub fn init(&self, settings: Settings) {
+        self.instance
+            .call_init(&mut *self.store.store_mut(), &settings.into())
+            .log_err("Instance's call init function caused an error.");
+    }
+
     pub fn update(&self, time_elapsed: crate::api::TimeInterval) {
         let time_elapsed = bindgen::TimeInterval {
             fragments: time_elapsed.0,
         };
 
-        let future = self
-            .instance
+        self.instance
             .call_update(&mut *self.store.store_mut(), time_elapsed)
-            .expect("TODO: user error");
+            .log_err("Instance's call function caused an error.");
+        // TODO: add unit ID or something
     }
 }
 

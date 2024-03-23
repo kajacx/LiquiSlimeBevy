@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     assets::ScriptModule,
-    components::{ScriptComponent, SlimeGrid},
+    components::{ScriptsComponent, SlimeGrid},
     helpers::Phase,
 };
 
@@ -15,10 +15,13 @@ impl Plugin for AssetLoadPlugin {
 }
 
 fn load_assets(
-    mut components: Query<&mut ScriptComponent>,
+    mut components: Query<&mut ScriptsComponent>,
     mut asset_server: Res<Assets<ScriptModule>>,
 ) {
     for mut component in components.iter_mut() {
-        component.try_load(asset_server.as_ref());
+        component.0.iter_mut().for_each(|(script, settings)| {
+            script.try_load(asset_server.as_ref(), settings.clone())
+        });
+        // TODO: remove clone
     }
 }

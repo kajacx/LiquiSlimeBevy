@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::assets::ScriptModule;
-use crate::components::{FactionComponent, ScriptComponent, SlimeGrids};
+use crate::components::{FactionComponent, ScriptComponent, ScriptsComponent, SlimeGrids};
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
@@ -67,7 +67,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
                                 position: TilePosition,
                                 texture_file: &'static str,
                                 unit_id: UnitId,
-                                plugin_filename: &str| {
+                                plugins: &[(&str, Settings)]| {
         let sprite = SpriteBundle {
             texture: asset_server.load(texture_file),
             sprite: Sprite {
@@ -81,14 +81,20 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..Default::default()
         };
 
-        let script_component = get_plugin(plugin_filename, &asset_server);
+        let scripts_component = plugins
+            .iter()
+            .map(|(plugin_filename, settings)| {
+                (get_plugin(plugin_filename, &asset_server), settings.clone())
+                // TODO: remove clone
+            })
+            .collect::<Vec<_>>();
 
         commands.spawn((
             FactionComponent::from(faction),
             TilePositionComponent::from(position),
             sprite,
             Building,
-            script_component,
+            ScriptsComponent(scripts_component),
             unit_id,
         ));
     };
@@ -98,7 +104,20 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         crate::api::TilePosition::new(2, 5),
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
-        "liquislime_slime_spawner_plugin.wasm",
+        &[
+            (
+                "liquislime_slime_spawner_plugin.wasm",
+                Settings {
+                    amount: SlimeAmount::from_integer(100),
+                },
+            ),
+            (
+                "liquislime_slime_clicker_plugin.wasm",
+                Settings {
+                    amount: SlimeAmount::from_integer(2000),
+                },
+            ),
+        ],
     );
 
     create_unit(
@@ -106,7 +125,12 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         crate::api::TilePosition::new(7, 1),
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
-        "liquislime_slime_clicker_plugin.wasm",
+        &[(
+            "liquislime_slime_spawner_plugin.wasm",
+            Settings {
+                amount: SlimeAmount::from_integer(150),
+            },
+        )],
     );
 }
 

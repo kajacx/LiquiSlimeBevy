@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::api::TimeInterval;
-use crate::components::{ScriptComponent, TilePositionComponent};
+use crate::components::{ScriptComponent, ScriptsComponent, TilePositionComponent};
 use crate::units::global_storage::set_current_unit;
 use crate::units::UnitId;
 use crate::{helpers::Phase, units::global_storage::use_world_reference_in};
@@ -31,15 +31,16 @@ fn update_wasm_plugins(world: &mut World) {
     let mut units_and_ids = vec![];
     let mut all_ready = true;
 
-    let mut units = world.query::<(&ScriptComponent, &UnitId)>();
-    for (unit, id) in units.iter(world) {
-        // println!("HELLO {:?}", unit);
-        let instance = unit.instance();
-        if let Some(instance) = unit.instance() {
-            units_and_ids.push((id.clone(), instance.clone()));
-        } else {
-            all_ready = false;
-            break;
+    let mut units = world.query::<(&ScriptsComponent, &UnitId)>();
+    for (scripts, id) in units.iter(world) {
+        for (script, _settings) in &scripts.0 {
+            let instance = script.instance();
+            if let Some(instance) = script.instance() {
+                units_and_ids.push((id.clone(), instance.clone()));
+            } else {
+                all_ready = false;
+                break;
+            }
         }
     }
 
