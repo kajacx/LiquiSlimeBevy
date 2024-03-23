@@ -7,14 +7,8 @@ A video game inspired by the Creeper World video games written in Bevy.
 A core feature of the game is (or will be) the ability to program unit behavior in Rust, and then
 load and the resulting code at runtime using WASM.
 
-Currently I am using a [custom fork](https://github.com/kajacx/fp-bindgen) of [fp-bindgen](https://github.com/fiberplane/fp-bindgen),
-with a [custom fork](https://github.com/kajacx/wasmer) of [wasmer](https://github.com/wasmerio/wasmer) to make it work.
-
-## Problems
-
-The web build runs out of memory after ~5 seconds, thowing an error in the console and freezing. The desktop build also runs out of memory after ~30 seconds.
-
-There is also a horribly unsafe `impl Send` and `impl Sync` for a type that shouldn't have it, so run the code at your own risk.
+To run the WASM modules both on desktop and on the web, I am using [`wasm-bridge`](https://github.com/kajacx/wasm-bridge),
+which I created and maintain for this purpose.
 
 ## Project setup guide
 
