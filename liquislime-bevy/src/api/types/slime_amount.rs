@@ -78,3 +78,12 @@ impl Div<f64> for SlimeAmount {
         Self((self.0 as f64 / rhs).round() as i64)
     }
 }
+
+impl serde::Serialize for SlimeAmount {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        self.0.to_string().serialize(serializer)
+    }
+}
