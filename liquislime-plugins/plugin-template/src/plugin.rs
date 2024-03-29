@@ -1,23 +1,26 @@
 use super::*;
 
-pub struct Settings;
-
-impl FromSettings for Settings {
-    fn from_settings(_settings: protocol::SettingValues) -> Self {
-        Self
-    }
+#[derive(serde::Deserialize)]
+pub struct UnitSettings {
+    name: String,
 }
 
-pub struct LiquislimeUnit(Settings);
+pub struct LiquislimeUnit {
+    settings: UnitSettings,
+}
 
 impl LiquislimePlugin for LiquislimeUnit {
-    type Settings = Settings;
+    type Settings = UnitSettings;
 
     fn new(settings: Self::Settings) -> Self {
-        Self(settings)
+        Self { settings }
+    }
+
+    fn change_settings(&mut self, settings: Self::Settings) {
+        self.settings = settings
     }
 
     fn update(&mut self, time_elapsed: TimeInterval) {
-        println!("Time elapsed: {:?}", time_elapsed);
+        println!("[{}] Time elapsed: {:?}", self.settings.name, time_elapsed);
     }
 }

@@ -19,9 +19,9 @@ fn load_assets(
     mut asset_server: Res<Assets<ScriptModule>>,
 ) {
     for mut component in components.iter_mut() {
-        component.0.iter_mut().for_each(|(script, settings)| {
-            script.try_load(asset_server.as_ref(), settings.clone())
-        });
-        // TODO: remove clone
+        component
+            .0
+            .iter_mut()
+            .for_each(|(script, settings)| script.try_load(asset_server.as_ref(), settings));
     }
 }

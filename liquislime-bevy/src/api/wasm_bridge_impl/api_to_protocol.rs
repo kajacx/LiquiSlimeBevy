@@ -38,12 +38,3 @@ impl From<api::TimeInterval> for bindgen::TimeInterval {
         Self { fragments: value.0 }
     }
 }
-
-impl From<api::Settings> for bindgen::SettingValues {
-    fn from(value: api::Settings) -> Self {
-        vec![(
-            "amount".into(),
-            bindgen::SettingValue::SlimeAmount(value.amount.into()),
-        )]
-    }
-}

@@ -107,15 +107,17 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         &[
             (
                 "liquislime_slime_spawner_plugin.wasm",
-                Settings {
-                    amount: SlimeAmount::from_integer(100),
-                },
+                Settings(format!(
+                    "{{ \"amount\": \"{}\" }}",
+                    SlimeAmount::from_integer(100).0
+                )),
             ),
             (
                 "liquislime_slime_clicker_plugin.wasm",
-                Settings {
-                    amount: SlimeAmount::from_integer(2000),
-                },
+                Settings(format!(
+                    "{{ \"amount\": \"{}\" }}",
+                    SlimeAmount::from_integer(2000).0
+                )),
             ),
         ],
     );
@@ -127,9 +129,10 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         UnitId(2),
         &[(
             "liquislime_slime_spawner_plugin.wasm",
-            Settings {
-                amount: SlimeAmount::from_integer(150),
-            },
+            Settings(format!(
+                "{{ \"amount\": \"{}\" }}",
+                SlimeAmount::from_integer(150).0
+            )),
         )],
     );
 }

@@ -21,7 +21,7 @@ impl ScriptInstance {
         }
     }
 
-    pub fn init(&self, settings: Settings) {
+    pub fn init(&self, settings: &Settings) {
         self.instance.init(settings);
     }
 

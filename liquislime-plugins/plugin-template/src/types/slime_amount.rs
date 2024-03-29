@@ -86,3 +86,15 @@ impl Div<f64> for SlimeAmount {
         Self((self.0 as f64 / rhs).round() as i64)
     }
 }
+
+impl<'de> serde::Deserialize<'de> for SlimeAmount {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        // TODO: user error
+        let text = <String as serde::Deserialize>::deserialize(deserializer).unwrap();
+        let amount = text.parse::<i64>().unwrap();
+        Ok(Self(amount))
+    }
+}

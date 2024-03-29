@@ -13,9 +13,9 @@ impl UnitInstance {
         Self { store, instance }
     }
 
-    pub fn init(&self, settings: Settings) {
+    pub fn init(&self, settings: &Settings) {
         self.instance
-            .call_init(&mut *self.store.store_mut(), &settings.into())
+            .call_init(&mut *self.store.store_mut(), &settings.0)
             .log_err("Instance's call init function caused an error.");
     }
 

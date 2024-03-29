@@ -31,7 +31,7 @@ impl ScriptComponent {
         }
     }
 
-    pub fn try_load(&mut self, script_assets: &Assets<ScriptModule>, settings: Settings) {
+    pub fn try_load(&mut self, script_assets: &Assets<ScriptModule>, settings: &Settings) {
         use ScriptComponentInner::*;
 
         let mut lock = self.inner.lock().unwrap();
@@ -40,8 +40,7 @@ impl ScriptComponent {
             AssetLoading(handle) => {
                 let module = script_assets.get(*&handle);
                 if let Some(module) = module {
-                    // TODO: get rid of the clone
-                    Some(self.spawn_instantiate_task(module, settings.clone()))
+                    Some(self.spawn_instantiate_task(module, settings))
                 } else {
                     None
                 }
@@ -57,7 +56,7 @@ impl ScriptComponent {
     fn spawn_instantiate_task(
         &self,
         module: &ScriptModule,
-        settings: Settings,
+        settings: &Settings,
     ) -> ScriptComponentInner {
         let instance = module.instantiate();
         instance.init(settings);
@@ -74,18 +73,20 @@ impl ScriptComponent {
         }
     }
 
-    pub fn load_from_bytes(&self, bytes: Vec<u8>, settings: Settings) {
+    pub fn load_from_bytes(&self, bytes: Vec<u8>, settings: &Settings) {
         let thread_pool = AsyncComputeTaskPool::get();
 
         *self.inner.lock().unwrap() = ScriptComponentInner::OnlineCompiling;
 
         let self_clone = self.clone();
+        let settings = settings.clone();
+
         thread_pool.spawn_local(async move {
             let unit_module = UnitModule::from_bytes(&bytes).await;
             let script_module = ScriptModule::new("custom-unit".into(), unit_module);
 
             *self_clone.inner.lock().unwrap() =
-                self_clone.spawn_instantiate_task(&script_module, settings);
+                self_clone.spawn_instantiate_task(&script_module, &settings);
         });
     }
 }

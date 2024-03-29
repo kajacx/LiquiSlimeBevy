@@ -36,17 +36,3 @@ impl From<bindgen::TimeInterval> for api::TimeInterval {
         Self(value.fragments)
     }
 }
-
-impl From<bindgen::SettingValues> for api::Settings {
-    fn from(value: bindgen::SettingValues) -> Self {
-        Self {
-            amount: if let bindgen::SettingValue::SlimeAmount(amount) =
-                value.iter().find(|(name, _)| name == "amount").unwrap().1
-            {
-                amount.into()
-            } else {
-                panic!()
-            },
-        }
-    }
-}

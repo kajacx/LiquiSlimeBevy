@@ -27,18 +27,6 @@ world liquislime-unit {
     primary
   }
 
-  variant setting-value {
-    toggle(bool),
-    integer(s64),
-    float(float64),
-    text(string),
-    position(position),
-    tile-sposition(tile-position),
-    slime-amount(slime-amount),
-    // array(list<setting-value>), TODO: implement lists
-  }
-
-  type setting-values = list<tuple<string, setting-value>>;
 
   import level-width: func() -> s32;
   import level-height: func() -> s32;
@@ -52,6 +40,9 @@ world liquislime-unit {
   import get-mouse-position: func() -> option<position>;
   import is-mouse-pressed: func(input: mouse-input) -> bool;
 
-  export init: func(settings: setting-values);
+  export describe-settings: func() -> string;
+
+  export init: func(settings: string) -> result<_, string>;
+  export change-settings: func(settings: string) -> result<_, string>;
   export update: func(time-elapsed: time-interval);
 }

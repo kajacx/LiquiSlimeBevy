@@ -1,6 +1,4 @@
 use super::*;
 
 #[derive(Debug, Clone)]
-pub struct Settings {
-    pub amount: SlimeAmount,
-}
+pub struct Settings(pub String);
