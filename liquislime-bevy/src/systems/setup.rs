@@ -1,4 +1,6 @@
 use bevy::prelude::*;
+use bevy::winit::WinitWindows;
+use winit::window::Icon;
 
 use crate::assets::ScriptModule;
 use crate::components::{FactionComponent, ScriptComponent, ScriptsComponent, SlimeGrids};
@@ -15,6 +17,7 @@ impl Plugin for GameSetupPlugin {
         app.add_systems(Startup, setup_camera);
         app.add_systems(Startup, spawn_tiles(WORLD_WIDTH, WORLD_HEIGHT));
         app.add_systems(Startup, spawn_sources);
+        app.add_systems(Startup, set_window_icon);
     }
 }
 
@@ -85,7 +88,6 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
             .iter()
             .map(|(plugin_filename, settings)| {
                 (get_plugin(plugin_filename, &asset_server), settings.clone())
-                // TODO: remove clone
             })
             .collect::<Vec<_>>();
 
@@ -135,7 +137,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
             "liquislime_slime_spawner_plugin.wasm",
             Settings(
                 serde_json::json!({
-                    "amount": SlimeAmount::from_integer(140)
+                    "amount": SlimeAmount::from_integer(150)
                 })
                 .to_string(),
             ),
@@ -148,4 +150,31 @@ fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> ScriptC
     let handle: Handle<ScriptModule> = asset_server.load(path);
 
     ScriptComponent::new(handle)
+}
+
+// From https://bevy-cheatbook.github.io/window/icon.html
+fn set_window_icon(
+    // we have to use `NonSend` here
+    windows: NonSend<WinitWindows>,
+) {
+    if cfg!(target_arch = "wasm32") {
+        return;
+    }
+
+    // here we use the `image` crate to load our icon data from a png file
+    // this is not a very bevy-native solution, but it will do
+    let (icon_rgba, icon_width, icon_height) = {
+        let image = image::open("assets/icon.png")
+            .expect("failed to open icon path")
+            .into_rgba8();
+        let (width, height) = image.dimensions();
+        let rgba = image.into_raw();
+        (rgba, width, height)
+    };
+    let icon = Icon::from_rgba(icon_rgba, icon_width, icon_height).unwrap();
+
+    // do it for all windows
+    for window in windows.windows.values() {
+        window.set_window_icon(Some(icon.clone()));
+    }
 }
