@@ -92,67 +92,6 @@ pub fn get_mouse_position() -> Option<Position> {
 
 pub fn is_mouse_pressed() -> bool {
     let mut world = get_world();
-
-    let input = world
-        .get_resource::<ButtonInput<MouseButton>>()
-        .expect("Mouse input resource should exist");
-
-    let pressed = input.pressed(MouseButton::Left);
-    let mut touch_window_position = Option::<Vec2>::None;
-
-    let touches = world
-        .get_resource::<Touches>()
-        .expect("Touches resource should exist");
-    for touch in touches.iter() {
-        info!("Hello touch: {:?}", touch);
-        //touch.
-        // touch.position()
-        info!(
-            "Hello TOUCH WINDOW POSITION: {:?}",
-            get_touch_window_position(touch)
-        );
-        touch_window_position = Some(get_touch_window_position(touch));
-    }
-
-    if let Some(window_position) = touch_window_position {
-        let mut window = world.query::<&Window>();
-        let mut camera_and_transform = world.query::<(&Camera, &GlobalTransform)>();
-
-        let window = window.single(&world);
-        let (camera, transform) = camera_and_transform.single(&world);
-
-        // FIXME: fix this
-        // set_mouse_position_from_window_position(window_position, window, camera, transform)
-    }
-
-    return pressed || touch_window_position.is_some();
-}
-
-fn get_touch_window_position(touch: &Touch) -> Vec2 {
-    let global_position = touch.position();
-
-    let window_x = unsafe {
-        js_sys::eval(&format!(
-            "document.getElementById('{}').getBoundingClientRect().x",
-            crate::RENDER_CANVAS_ID
-        ))
-    }
-    .unwrap()
-    .as_f64()
-    .unwrap();
-
-    let window_y = unsafe {
-        js_sys::eval(&format!(
-            "document.getElementById('{}').getBoundingClientRect().y",
-            crate::RENDER_CANVAS_ID
-        ))
-    }
-    .unwrap()
-    .as_f64()
-    .unwrap();
-
-    Vec2::new(
-        global_position.x - window_x as f32,
-        global_position.y - window_y as f32,
-    )
+    let mouse_state = world.resource::<MouseState>();
+    mouse_state.pressed
 }

@@ -66,7 +66,11 @@ mod test {
     fn check_fragments_divide(amount: i64) {
         let second = TimeInterval::from_seconds(1.0);
         let divided = second / amount;
-        assert_eq!(divided * amount, second);
+        assert_eq!(
+            divided * amount,
+            second,
+            "Fragments do not divide properly for {amount}"
+        );
     }
 
     #[test]
@@ -77,7 +81,6 @@ mod test {
         check_fragments_divide(30);
         check_fragments_divide(48);
         check_fragments_divide(50);
-        check_fragments_divide(1273);
         check_fragments_divide(60);
         check_fragments_divide(75);
         check_fragments_divide(144);

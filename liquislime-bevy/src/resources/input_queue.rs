@@ -7,6 +7,8 @@ pub struct InputQueue(pub Vec<InputEvent>);
 
 #[derive(Clone, Debug)]
 pub enum InputEvent {
-    MouseMove(Option<Position>),
-    MouseClick,
+    MouseMove(Position),
+    MousePressed,
+    MouseJustPressed,
+    MouseJustReleased,
 }
