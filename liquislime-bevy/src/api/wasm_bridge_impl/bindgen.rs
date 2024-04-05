@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 
-use crate::units::{api_spec::*, global_storage::get_mouse_state};
+use crate::units::api_spec::*;
 
 use wasm_bridge::Result;
 
@@ -47,7 +47,7 @@ impl LiquislimeUnitImports for LiquislimeHost {
     }
 
     fn get_mouse_position(&mut self) -> Result<Option<Position>> {
-        Ok(get_mouse_state().position.map(Into::into))
+        Ok(get_mouse_position().map(Into::into))
     }
 
     fn is_mouse_pressed(&mut self, _button: MouseInput) -> Result<bool> {

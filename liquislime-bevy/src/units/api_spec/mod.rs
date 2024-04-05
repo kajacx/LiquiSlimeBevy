@@ -7,7 +7,7 @@ use self::helpers::*;
 use super::{global_storage::*, UnitId};
 use crate::api::*;
 use crate::components::FactionComponent;
-use crate::helpers::set_mouse_position_from_window_position;
+use crate::resources::MouseState;
 use crate::{components::TilePositionComponent, helpers::ResultLogger};
 
 mod helpers;
@@ -85,7 +85,9 @@ pub fn set_slime_amount(faction: Faction, position: TilePosition, amount: SlimeA
 // }
 
 pub fn get_mouse_position() -> Option<Position> {
-    get_mouse_state().position
+    let mut world = get_world();
+    let mouse_state = world.resource::<MouseState>();
+    mouse_state.position
 }
 
 pub fn is_mouse_pressed() -> bool {
@@ -119,7 +121,8 @@ pub fn is_mouse_pressed() -> bool {
         let window = window.single(&world);
         let (camera, transform) = camera_and_transform.single(&world);
 
-        set_mouse_position_from_window_position(window_position, window, camera, transform);
+        // FIXME: fix this
+        // set_mouse_position_from_window_position(window_position, window, camera, transform)
     }
 
     return pressed || touch_window_position.is_some();

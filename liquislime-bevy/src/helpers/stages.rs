@@ -4,6 +4,7 @@ use bevy::{ecs::schedule::ScheduleLabel, prelude::*};
 pub enum Phase {
     AssetLoad,
     InputRead,
+    InputProcess,
     WasmUpdate,
     GameUpdate,
     WasmRender,
@@ -21,6 +22,7 @@ impl Plugin for StagesPlugin {
             Update,
             (
                 Phase::InputRead,
+                Phase::InputProcess,
                 Phase::WasmUpdate,
                 Phase::GameUpdate,
                 Phase::WasmRender,

@@ -1,16 +1,13 @@
 use bevy::prelude::*;
 
-use crate::{
-    api::Position,
-    units::global_storage::{set_mouse_state, MouseState},
-};
+use crate::api::Position;
 
-pub fn set_mouse_position_from_window_position(
+pub fn window_position_to_world_position(
     window_position: Vec2,
     window: &Window,
     camera: &Camera,
     transform: &GlobalTransform,
-) {
+) -> Position {
     // get the size of the window
     let window_size = Vec2::new(window.width() as f32, window.height() as f32);
 
@@ -28,10 +25,8 @@ pub fn set_mouse_position_from_window_position(
     let world_pos: Vec2 = world_pos.truncate();
 
     // convert to Position
-    let position = Some(Position {
+    Position {
         x: world_pos.x,
         y: world_pos.y,
-    });
-
-    set_mouse_state(MouseState { position });
+    }
 }
