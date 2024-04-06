@@ -33,5 +33,16 @@ fn process_mouse_position(
         }
     }
 
-    // if mouse_state.
+    // Select a unit
+    if mouse_state.just_pressed {
+        selected_unit.0 = mouse_state.position.and_then(|position| {
+            units.iter().find_map(|(tile_position, id)| {
+                if position.is_in_tile(tile_position.0) {
+                    Some(*id)
+                } else {
+                    None
+                }
+            })
+        });
+    }
 }

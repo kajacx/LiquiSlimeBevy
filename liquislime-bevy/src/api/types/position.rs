@@ -25,6 +25,10 @@ impl Position {
         TilePosition::from_position(self)
     }
 
+    pub fn is_in_tile(self, tile_position: TilePosition) -> bool {
+        tile_position.contains(self)
+    }
+
     pub fn to_vec3(self, z: f32) -> Vec3 {
         Vec3::new(self.x, self.y, z)
     }

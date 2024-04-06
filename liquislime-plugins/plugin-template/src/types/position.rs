@@ -42,6 +42,10 @@ impl Position {
         self.to_tile_position().is_in_bounds()
     }
 
+    pub fn is_in_tile(self, tile_position: TilePosition) -> bool {
+        tile_position.contains(self)
+    }
+
     pub fn as_protocol(self) -> crate::protocol::Position {
         crate::protocol::Position {
             x: self.x,

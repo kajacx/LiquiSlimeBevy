@@ -109,6 +109,10 @@ impl TilePosition {
         Position::from_tile_bottom_left(self)
     }
 
+    pub fn contains(self, position: Position) -> bool {
+        position.to_tile_position() == self
+    }
+
     pub fn as_protocol(self) -> crate::protocol::TilePosition {
         crate::protocol::TilePosition {
             x: self.x,

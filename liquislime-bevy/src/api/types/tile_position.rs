@@ -37,4 +37,8 @@ impl TilePosition {
     pub fn to_position_bottom_left(self) -> Position {
         Position::from_tile_bottom_left(self)
     }
+
+    pub fn contains(self, position: Position) -> bool {
+        position.to_tile_position() == self
+    }
 }

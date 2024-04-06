@@ -4,6 +4,7 @@ use crate::{
     api::Faction,
     components::{Building, SlimeGrids, Tile, TilePositionComponent},
     helpers::Phase,
+    resources::SelectedUnit,
 };
 
 pub struct GameRenderingPlugin;
@@ -12,6 +13,7 @@ impl Plugin for GameRenderingPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, render_slime_color.in_set(Phase::GameRender));
         app.add_systems(Update, update_building_position.in_set(Phase::GameRender));
+        app.add_systems(Update, render_selected_unit.in_set(Phase::GameRender));
     }
 }
 
@@ -60,5 +62,11 @@ fn update_building_position(
     for (mut transform, position) in &mut building_query {
         let z = transform.translation.z;
         transform.translation = position.0.to_position_center().to_vec3(z);
+    }
+}
+
+fn render_selected_unit(selected_unit: Res<SelectedUnit>) {
+    if let Some(id) = selected_unit.0 {
+        println!("SELECTED UNIT: {:?}", id);
     }
 }
