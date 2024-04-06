@@ -28,9 +28,6 @@ impl Plugin for GameSetupPlugin {
         app.add_systems(Startup, spawn_sources);
         app.add_systems(Startup, set_window_icon);
         app.add_systems(Startup, setup_selector);
-
-        app.add_plugins(EguiPlugin);
-        app.add_systems(Update, setup_egui);
     }
 }
 
@@ -198,62 +195,4 @@ fn setup_selector(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
 
     commands.spawn((sprite, SelectorCursor::default()));
-}
-
-#[derive(PartialEq)]
-enum Enum {
-    First,
-    Second,
-    Third,
-}
-
-impl Default for Enum {
-    fn default() -> Self {
-        Enum::First
-    }
-}
-
-#[derive(Default)]
-struct MyState {
-    selection: Enum,
-    text: String,
-    number: f32,
-    flag: bool,
-}
-
-fn setup_egui(mut contexts: EguiContexts, mut local: Local<MyState>) {
-    // contexts
-    // egui::CentralPanel::default().show(contexts.ctx_mut(), |ui| {
-    //     ui.add(egui::Label::new("Hello World!"));
-    //     ui.label("A shorter and more convenient way to add a label.");
-    //     if ui.button("Click me").clicked() {
-    //         // take some action here
-    //     }
-    // });
-    egui::Window::new("Hello").show(contexts.ctx_mut(), |ui| {
-        ui.label("world");
-
-        ui.label("This is a label");
-        ui.hyperlink("https://github.com/emilk/egui");
-        ui.text_edit_singleline(&mut local.text);
-        if ui.button("Click me").clicked() {}
-        ui.add(egui::Slider::new(&mut local.number, 0.0..=100.0));
-        ui.add(egui::DragValue::new(&mut local.number));
-
-        ui.checkbox(&mut local.flag, "Checkbox");
-
-        ui.horizontal(|ui| {
-            ui.radio_value(&mut local.selection, Enum::First, "First");
-            ui.radio_value(&mut local.selection, Enum::Second, "Second");
-            ui.radio_value(&mut local.selection, Enum::Third, "Third");
-        });
-
-        ui.separator();
-
-        // ui.image((my_image, egui::Vec2::new(640.0, 480.0)));
-
-        ui.collapsing("Click to see what is hidden!", |ui| {
-            ui.label("Not much, as it turns out");
-        });
-    });
 }

@@ -5,6 +5,7 @@ use crate::helpers::StagesPlugin;
 
 mod asset_load;
 mod compile_input;
+mod gui;
 mod input_process;
 mod input_read;
 mod rendering;
@@ -20,6 +21,7 @@ impl PluginGroup for AllGamePlugins {
             .add(AssetsGamePlugins)
             .add(StagesPlugin)
             .add(setup::GameSetupPlugin)
+            .add(gui::GuiPlugin)
             .add(asset_load::AssetLoadPlugin)
             .add(input_read::InputReadPlugin)
             .add(input_process::InputProcessPlugin)
