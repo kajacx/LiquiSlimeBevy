@@ -41,6 +41,7 @@ world liquislime-unit {
   import is-mouse-pressed: func(input: mouse-input) -> bool;
 
   export describe-settings: func() -> string;
+  export default-settings: func() -> string;
 
   export init: func(settings: string) -> result<_, string>;
   export change-settings: func(settings: string) -> result<_, string>;

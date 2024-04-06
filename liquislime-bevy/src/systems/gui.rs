@@ -8,7 +8,7 @@ use crate::assets::ScriptModule;
 use crate::components::{
     FactionComponent, ScriptComponent, ScriptsComponent, SelectorCursor, SlimeGrids,
 };
-use crate::resources::GameWindowSpace;
+use crate::resources::{GameWindowSpace, SelectedUnit};
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
@@ -25,7 +25,12 @@ impl Plugin for GuiPlugin {
     }
 }
 
-fn display_gui(mut contexts: EguiContexts, mut game_window_space: ResMut<GameWindowSpace>) {
+fn display_gui(
+    mut contexts: EguiContexts,
+    mut game_window_space: ResMut<GameWindowSpace>,
+    selected_unit: Res<SelectedUnit>,
+    units: Query<(&UnitId, &ScriptsComponent)>,
+) {
     game_window_space.right = egui::SidePanel::right("right_panel")
         .resizable(true)
         .show(contexts.ctx_mut(), |ui| {

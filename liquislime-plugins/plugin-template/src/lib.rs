@@ -26,7 +26,11 @@ struct LiquislimeWorld;
 
 impl protocol::Guest for LiquislimeWorld {
     fn describe_settings() -> String {
-        "".into()
+        "TODO: describe settings ".into()
+    }
+
+    fn default_settings() -> String {
+        "TODO: default settings ".into()
     }
 
     fn init(settings: String) -> Result<(), String> {

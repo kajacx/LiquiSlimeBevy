@@ -12,11 +12,15 @@ pub struct ScriptStore {
 #[derive(Debug, Clone)]
 pub struct ScriptInstance {
     instance: Arc<UnitInstance>,
+    settings_value: serde_json::Value,
+    settings_description: SettingsDescription,
 }
 
 impl ScriptInstance {
     pub fn new(instance: UnitInstance) -> Self {
         Self {
+            settings_value: instance.default_settings(),
+            settings_description: instance.settings_description(),
             instance: Arc::new(instance),
         }
     }

@@ -1,7 +1,11 @@
-use crate::{api::Settings, helpers::ResultLogger};
+use crate::{
+    api::{Settings, SettingsDescription},
+    helpers::ResultLogger,
+};
 
 use super::*;
 use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
+use serde::Deserialize;
 
 pub struct UnitInstance {
     store: UnitStore,
@@ -11,6 +15,28 @@ pub struct UnitInstance {
 impl UnitInstance {
     pub fn new(store: UnitStore, instance: bindgen::LiquislimeUnit) -> Self {
         Self { store, instance }
+    }
+
+    pub fn settings_description(&self) -> SettingsDescription {
+        let settings_string = self
+            .instance
+            .call_describe_settings(&mut *self.store.store_mut())
+            .log_err_or_else("Instance's describe settings threw an error", || {
+                "{}".to_string()
+            });
+
+        serde_json::from_str(&settings_string).expect("TODO: user error")
+    }
+
+    pub fn default_settings(&self) -> serde_json::Value {
+        let settings_string = self
+            .instance
+            .call_default_settings(&mut *self.store.store_mut())
+            .log_err_or_else("Instance's default settings threw an error", || {
+                "{}".to_string()
+            });
+
+        serde_json::from_str(&settings_string).expect("TODO: user error")
     }
 
     pub fn init(&self, settings: &Settings) {

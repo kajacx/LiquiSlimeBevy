@@ -87,3 +87,15 @@ impl serde::Serialize for SlimeAmount {
         self.0.to_string().serialize(serializer)
     }
 }
+
+impl<'de> serde::Deserialize<'de> for SlimeAmount {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let string = String::deserialize(deserializer)?;
+        Ok(Self(
+            string.parse::<i64>().expect("TODO: handle user error"),
+        ))
+    }
+}
