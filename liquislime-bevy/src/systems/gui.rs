@@ -8,6 +8,7 @@ use crate::assets::ScriptModule;
 use crate::components::{
     FactionComponent, ScriptComponent, ScriptsComponent, SelectorCursor, SlimeGrids,
 };
+use crate::resources::GameWindowSpace;
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
@@ -24,14 +25,21 @@ impl Plugin for GuiPlugin {
     }
 }
 
-fn display_gui(mut contexts: EguiContexts) {
-    egui::SidePanel::right("right_panel")
+fn display_gui(mut contexts: EguiContexts, mut game_window_space: ResMut<GameWindowSpace>) {
+    game_window_space.right = egui::SidePanel::right("right_panel")
         .resizable(true)
         .show(contexts.ctx_mut(), |ui| {
             ui.add(egui::Label::new("Hello World!"));
-            ui.label("A shorter and more convenient way to add a label.");
+            ui.label(
+                "Veeeeery loooong wordsssssss tooooooooo illustrateeeee aaaaaaaan exampleeeee.",
+            );
             if ui.button("Click me").clicked() {
-                println!("button clicked")
+                println!("button clicked");
             }
-        });
+        })
+        .response
+        .rect
+        .width();
+
+    println!("Width: {}", game_window_space.right);
 }

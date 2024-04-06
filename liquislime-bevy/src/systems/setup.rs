@@ -22,6 +22,7 @@ impl Plugin for GameSetupPlugin {
         app.init_resource::<resources::InputQueue>();
         app.init_resource::<resources::SelectedUnit>();
         app.init_resource::<resources::MouseState>();
+        app.init_resource::<resources::GameWindowSpace>();
 
         app.add_systems(Startup, setup_camera);
         app.add_systems(Startup, spawn_tiles);

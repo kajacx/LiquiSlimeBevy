@@ -4,7 +4,7 @@ use crate::{
     api::Faction,
     components::{Building, SelectorCursor, SlimeGrids, Tile, TilePositionComponent},
     helpers::Phase,
-    resources::SelectedUnit,
+    resources::{GameWindowSpace, SelectedUnit},
     units::UnitId,
 };
 
@@ -15,6 +15,7 @@ impl Plugin for GameRenderingPlugin {
         app.add_systems(Update, render_slime_color.in_set(Phase::GameRender));
         app.add_systems(Update, update_building_position.in_set(Phase::GameRender));
         app.add_systems(Update, render_selector_cursor.in_set(Phase::GameRender));
+        app.add_systems(Update, update_camera_transform_system);
     }
 }
 
@@ -96,4 +97,15 @@ fn render_selector_cursor(
     } else {
         *visibility = Visibility::Hidden;
     }
+}
+
+fn update_camera_transform_system(
+    occupied_screen_space: Res<GameWindowSpace>,
+    windows: Query<&Window>,
+    mut camera_query: Query<(&mut OrthographicProjection, &mut Transform)>,
+) {
+    let (mut projection, mut transform) = camera_query.single_mut();
+    let window = windows.single();
+
+    projection.viewport_origin.x = 0.5 - occupied_screen_space.right / window.width() / 2.0;
 }
