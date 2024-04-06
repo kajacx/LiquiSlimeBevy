@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = { version = "0.13.1", default-features = false, features = ["bevy_asset", "bevy_sprite", "bevy_winit", "bevy_ui", "png", "webgl2"]}
+bevy = { version = "0.13.1", default-features = false, features = ["bevy_asset", "bevy_sprite", "bevy_winit", "png", "webgl2"]}
 bevy_egui = { version = "0.26.0",  default-features = true }
 image = { version = "0.24.9", default-features = false }
 winit = { version = "0.29.15", default-features = false }

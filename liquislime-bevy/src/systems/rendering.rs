@@ -2,9 +2,10 @@ use bevy::prelude::*;
 
 use crate::{
     api::Faction,
-    components::{Building, SlimeGrids, Tile, TilePositionComponent},
+    components::{Building, SelectorCursor, SlimeGrids, Tile, TilePositionComponent},
     helpers::Phase,
     resources::SelectedUnit,
+    units::UnitId,
 };
 
 pub struct GameRenderingPlugin;
@@ -13,7 +14,7 @@ impl Plugin for GameRenderingPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, render_slime_color.in_set(Phase::GameRender));
         app.add_systems(Update, update_building_position.in_set(Phase::GameRender));
-        app.add_systems(Update, render_selected_unit.in_set(Phase::GameRender));
+        app.add_systems(Update, render_selector_cursor.in_set(Phase::GameRender));
     }
 }
 
@@ -65,8 +66,30 @@ fn update_building_position(
     }
 }
 
-fn render_selected_unit(selected_unit: Res<SelectedUnit>) {
+fn render_selector_cursor(
+    selected_unit: Res<SelectedUnit>,
+    mut selector_cursor: Query<(&mut SelectorCursor, &mut Transform)>,
+    units: Query<(&UnitId, &TilePositionComponent)>,
+) {
+    let (mut selector_cursor, mut selector_transform) = selector_cursor.single_mut();
+
     if let Some(id) = selected_unit.0 {
-        println!("SELECTED UNIT: {:?}", id);
+        let position = units
+            .iter()
+            .find_map(|(unit_id, tile_position)| {
+                if *unit_id == id {
+                    Some(tile_position.0)
+                } else {
+                    None
+                }
+            })
+            .expect("find unit by id")
+            .to_position_center();
+
+        selector_transform.translation.x = position.x;
+        selector_transform.translation.y = position.y;
+    } else {
+        selector_transform.translation.x = 0.0;
+        selector_transform.translation.y = 0.0;
     }
 }

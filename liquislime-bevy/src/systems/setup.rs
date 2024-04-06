@@ -1,10 +1,13 @@
+use bevy::math::vec3;
 use bevy::prelude::*;
 use bevy::winit::WinitWindows;
 use bevy_egui::{egui, EguiContexts, EguiPlugin};
 use winit::window::Icon;
 
 use crate::assets::ScriptModule;
-use crate::components::{FactionComponent, ScriptComponent, ScriptsComponent, SlimeGrids};
+use crate::components::{
+    FactionComponent, ScriptComponent, ScriptsComponent, SelectorCursor, SlimeGrids,
+};
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
@@ -24,9 +27,7 @@ impl Plugin for GameSetupPlugin {
         app.add_systems(Startup, spawn_tiles);
         app.add_systems(Startup, spawn_sources);
         app.add_systems(Startup, set_window_icon);
-
-        app.add_systems(Startup, setup_button);
-        app.add_systems(Update, button_system);
+        app.add_systems(Startup, setup_selector);
 
         app.add_plugins(EguiPlugin);
         app.add_systems(Update, setup_egui);
@@ -182,88 +183,23 @@ fn set_window_icon(windows: NonSend<WinitWindows>) {
     }
 }
 
-const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
-const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
-const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
+fn setup_selector(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let sprite = SpriteBundle {
+        texture: asset_server.load("icons/selector.png"),
+        sprite: Sprite {
+            custom_size: Some(Vec2 {
+                x: 1.25f32,
+                y: 1.25f32,
+            }),
+            ..Default::default()
+        },
+        transform: Transform::from_translation(vec3(0.0, 0.0, 2.0)),
+        ..Default::default()
+    };
 
-fn setup_button(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands
-        .spawn(NodeBundle {
-            style: Style {
-                width: Val::Percent(100.0),
-                height: Val::Percent(100.0),
-                align_items: AlignItems::Center,
-                justify_content: JustifyContent::Center,
-                ..default()
-            },
-            ..default()
-        })
-        .with_children(|parent| {
-            parent
-                .spawn(ButtonBundle {
-                    style: Style {
-                        width: Val::Px(150.0),
-                        height: Val::Px(65.0),
-                        border: UiRect::all(Val::Px(5.0)),
-                        // horizontally center child text
-                        justify_content: JustifyContent::Center,
-                        // vertically center child text
-                        align_items: AlignItems::Center,
-                        ..default()
-                    },
-                    border_color: BorderColor(Color::BLACK),
-                    background_color: NORMAL_BUTTON.into(),
-                    ..default()
-                })
-                .with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        "Button",
-                        TextStyle {
-                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                            font_size: 40.0,
-                            color: Color::rgb(0.9, 0.9, 0.9),
-                        },
-                    ));
-                });
-        });
+    commands.spawn((sprite, SelectorCursor::default()));
 }
 
-fn button_system(
-    mut interaction_query: Query<
-        (
-            &Interaction,
-            &mut BackgroundColor,
-            &mut BorderColor,
-            &Children,
-        ),
-        (Changed<Interaction>, With<Button>),
-    >,
-    mut text_query: Query<&mut Text>,
-) {
-    for (interaction, mut color, mut border_color, children) in &mut interaction_query {
-        let mut text = text_query.get_mut(children[0]).unwrap();
-        match *interaction {
-            Interaction::Pressed => {
-                println!("PRESSED");
-                text.sections[0].value = "Press".to_string();
-                *color = PRESSED_BUTTON.into();
-                border_color.0 = Color::RED;
-            }
-            Interaction::Hovered => {
-                println!("HOVER");
-                text.sections[0].value = "Hover".to_string();
-                *color = HOVERED_BUTTON.into();
-                border_color.0 = Color::WHITE;
-            }
-            Interaction::None => {
-                println!("NONE");
-                text.sections[0].value = "Button".to_string();
-                *color = NORMAL_BUTTON.into();
-                border_color.0 = Color::BLACK;
-            }
-        }
-    }
-}
 #[derive(PartialEq)]
 enum Enum {
     First,
