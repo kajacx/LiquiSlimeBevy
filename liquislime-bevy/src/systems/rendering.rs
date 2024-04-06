@@ -88,6 +88,9 @@ fn render_selector_cursor(
 
         selector_transform.translation.x = position.x;
         selector_transform.translation.y = position.y;
+
+        // TODO: proper time delta
+        selector_transform.rotate_z(-0.01);
     } else {
         selector_transform.translation.x = 0.0;
         selector_transform.translation.y = 0.0;
