@@ -29,6 +29,7 @@ fn display_gui(mut contexts: EguiContexts, mut game_window_space: ResMut<GameWin
     game_window_space.right = egui::SidePanel::right("right_panel")
         .resizable(true)
         .show(contexts.ctx_mut(), |ui| {
+            ui.set_min_size(ui.available_size_before_wrap());
             ui.add(egui::Label::new("Hello World!"));
             ui.label(
                 "Veeeeery loooong wordsssssss tooooooooo illustrateeeee aaaaaaaan exampleeeee.",
@@ -40,6 +41,4 @@ fn display_gui(mut contexts: EguiContexts, mut game_window_space: ResMut<GameWin
         .response
         .rect
         .width();
-
-    println!("Width: {}", game_window_space.right);
 }
