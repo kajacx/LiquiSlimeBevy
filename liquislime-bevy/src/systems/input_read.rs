@@ -1,5 +1,5 @@
 use crate::helpers::*;
-use crate::resources::{InputEvent, InputQueue};
+use crate::resources::{GameWindowSpace, InputEvent, InputQueue};
 use bevy::input::touch::Touch;
 use bevy::prelude::*;
 
@@ -19,13 +19,15 @@ fn update_mouse_position(
     primary_window: Query<&Window>,
     camera_query: Query<(&Camera, &GlobalTransform)>,
     touches: Res<Touches>,
+    game_window_space: Res<GameWindowSpace>,
 ) {
     let (camera, transform) = camera_query.single();
     let window = primary_window.single();
 
     let window_position = window
         .cursor_position()
-        .or_else(|| touches.iter().next().map(Touch::position));
+        .or_else(|| touches.iter().next().map(Touch::position))
+        .filter(|position| position.x < window.width() - game_window_space.right - 5.0);
 
     let position = window_position.map(|window_position| {
         window_position_to_world_position(window_position, window, camera, transform)
