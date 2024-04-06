@@ -68,10 +68,10 @@ fn update_building_position(
 
 fn render_selector_cursor(
     selected_unit: Res<SelectedUnit>,
-    mut selector_cursor: Query<(&mut SelectorCursor, &mut Transform)>,
+    mut selector_cursor: Query<(&mut Transform, &mut Visibility), With<SelectorCursor>>,
     units: Query<(&UnitId, &TilePositionComponent)>,
 ) {
-    let (mut selector_cursor, mut selector_transform) = selector_cursor.single_mut();
+    let (mut selector_transform, mut visibility) = selector_cursor.single_mut();
 
     if let Some(id) = selected_unit.0 {
         let position = units
@@ -91,8 +91,9 @@ fn render_selector_cursor(
 
         // TODO: proper time delta
         selector_transform.rotate_z(-0.01);
+
+        *visibility = Visibility::Visible;
     } else {
-        selector_transform.translation.x = 0.0;
-        selector_transform.translation.y = 0.0;
+        *visibility = Visibility::Hidden;
     }
 }
