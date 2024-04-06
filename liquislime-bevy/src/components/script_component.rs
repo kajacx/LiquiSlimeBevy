@@ -53,6 +53,11 @@ impl ScriptHolder {
         }
     }
 
+    pub fn get_settings(&self) -> SettingsValue {
+        // TODO: ugly clone, refactor
+        self.inner.try_lock().unwrap().get_settings().clone()
+    }
+
     fn spawn_instantiate_task(
         &self,
         module: &ScriptModule,
@@ -88,5 +93,15 @@ impl ScriptHolder {
             *self_clone.inner.lock().unwrap() =
                 self_clone.spawn_instantiate_task(&script_module, &settings);
         });
+    }
+}
+
+impl ScriptInner {
+    pub fn get_settings(&self) -> &SettingsValue {
+        match self {
+            Self::AssetLoading(_, settings) => settings,
+            Self::Loaded(instance) => &instance.settings_value,
+            Self::OnlineCompiling => todo!("Get settings when online compiling"),
+        }
     }
 }

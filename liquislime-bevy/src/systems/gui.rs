@@ -1,6 +1,7 @@
 use bevy::math::vec3;
 use bevy::prelude::*;
 use bevy::winit::WinitWindows;
+use bevy_egui::egui::Ui;
 use bevy_egui::{egui, EguiContexts, EguiPlugin};
 use winit::window::Icon;
 
@@ -35,15 +36,31 @@ fn display_gui(
         .resizable(true)
         .show(contexts.ctx_mut(), |ui| {
             ui.set_min_size(ui.available_size_before_wrap());
-            ui.add(egui::Label::new("Hello World!"));
-            ui.label(
-                "Veeeeery loooong wordsssssss tooooooooo illustrateeeee aaaaaaaan exampleeeee.",
-            );
-            if ui.button("Click me").clicked() {
-                println!("button clicked");
+
+            let selected_unit_id = selected_unit.0;
+            if let Some(selected_unit_id) = selected_unit_id {
+                let scripts = units
+                    .iter()
+                    .find_map(|(unit_id, scripts)| {
+                        if *unit_id == selected_unit_id {
+                            Some(scripts)
+                        } else {
+                            None
+                        }
+                    })
+                    .expect("find unit by id");
+                for script in scripts.0.iter() {
+                    display_script_settings(ui, script);
+                }
+            } else {
+                ui.label("No unit selected.");
             }
         })
         .response
         .rect
         .width();
+}
+
+fn display_script_settings(ui: &mut Ui, script: &ScriptHolder) {
+    ui.label(&script.get_settings().0.to_string());
 }

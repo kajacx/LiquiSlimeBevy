@@ -12,8 +12,8 @@ pub struct ScriptStore {
 #[derive(Debug, Clone)]
 pub struct ScriptInstance {
     instance: Arc<UnitInstance>,
-    settings_value: SettingsValue,
-    settings_description: SettingsDescription,
+    pub settings_value: SettingsValue,
+    pub settings_description: SettingsDescription,
 }
 
 impl ScriptInstance {
