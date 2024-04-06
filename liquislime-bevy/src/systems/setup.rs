@@ -6,7 +6,7 @@ use winit::window::Icon;
 
 use crate::assets::ScriptModule;
 use crate::components::{
-    FactionComponent, ScriptComponent, ScriptsComponent, SelectorCursor, SlimeGrids,
+    FactionComponent, ScriptHolder, ScriptsComponent, SelectorCursor, SlimeGrids,
 };
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
@@ -75,7 +75,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
                                 position: TilePosition,
                                 texture_file: &'static str,
                                 unit_id: UnitId,
-                                plugins: &[(&str, Settings)]| {
+                                plugins: &[(&str, SettingsValue)]| {
         let sprite = SpriteBundle {
             texture: asset_server.load(texture_file),
             sprite: Sprite {
@@ -89,10 +89,12 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..Default::default()
         };
 
-        let scripts_component = plugins
+        let scripts = plugins
             .iter()
             .map(|(plugin_filename, settings)| {
-                (get_plugin(plugin_filename, &asset_server), settings.clone())
+                let path = format!("plugins/{plugin_filename}");
+                let handle: Handle<ScriptModule> = asset_server.load(path);
+                ScriptHolder::new(handle, settings.clone())
             })
             .collect::<Vec<_>>();
 
@@ -101,7 +103,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
             TilePositionComponent::from(position),
             sprite,
             Building,
-            ScriptsComponent(scripts_component),
+            ScriptsComponent(scripts),
             unit_id,
         ));
     };
@@ -114,21 +116,15 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         &[
             (
                 "liquislime_slime_spawner_plugin.wasm",
-                Settings(
-                    serde_json::json!({
-                        "amount": SlimeAmount::from_integer(100)
-                    })
-                    .to_string(),
-                ),
+                SettingsValue(serde_json::json!({
+                    "amount": SlimeAmount::from_integer(100)
+                })),
             ),
             (
                 "liquislime_slime_clicker_plugin.wasm",
-                Settings(
-                    serde_json::json!({
-                        "amount": SlimeAmount::from_integer(2000)
-                    })
-                    .to_string(),
-                ),
+                SettingsValue(serde_json::json!({
+                    "amount": SlimeAmount::from_integer(2000)
+                })),
             ),
         ],
     );
@@ -140,21 +136,11 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         UnitId(2),
         &[(
             "liquislime_slime_spawner_plugin.wasm",
-            Settings(
-                serde_json::json!({
-                    "amount": SlimeAmount::from_integer(150)
-                })
-                .to_string(),
-            ),
+            SettingsValue(serde_json::json!({
+                "amount": SlimeAmount::from_integer(150)
+            })),
         )],
     );
-}
-
-fn get_plugin(plugin_filename: &str, asset_server: &Res<AssetServer>) -> ScriptComponent {
-    let path = format!("plugins/{plugin_filename}");
-    let handle: Handle<ScriptModule> = asset_server.load(path);
-
-    ScriptComponent::new(handle)
 }
 
 // From https://bevy-cheatbook.github.io/window/icon.html

@@ -4,40 +4,40 @@ use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 use wasm_bridge::Engine;
 
 use crate::{
-    api::{Settings, UnitModule},
+    api::{SettingsValue, UnitModule},
     assets::ScriptModule,
     units::ScriptInstance,
 };
 
 #[derive(Clone, Debug, Component)]
-pub struct ScriptsComponent(pub Vec<(ScriptComponent, Settings)>);
+pub struct ScriptsComponent(pub Vec<ScriptHolder>);
 
 #[derive(Clone, Debug)]
-pub struct ScriptComponent {
-    inner: Arc<Mutex<ScriptComponentInner>>,
+pub struct ScriptHolder {
+    inner: Arc<Mutex<ScriptInner>>,
 }
 
 #[derive(Debug)]
-enum ScriptComponentInner {
+enum ScriptInner {
     Loaded(ScriptInstance),
-    AssetLoading(Handle<ScriptModule>),
+    AssetLoading(Handle<ScriptModule>, SettingsValue),
     OnlineCompiling, // Compiling source from text field
 }
 
-impl ScriptComponent {
-    pub fn new(handle: Handle<ScriptModule>) -> Self {
+impl ScriptHolder {
+    pub fn new(handle: Handle<ScriptModule>, settings: SettingsValue) -> Self {
         Self {
-            inner: Arc::new(Mutex::new(ScriptComponentInner::AssetLoading(handle))),
+            inner: Arc::new(Mutex::new(ScriptInner::AssetLoading(handle, settings))),
         }
     }
 
-    pub fn try_load(&mut self, script_assets: &Assets<ScriptModule>, settings: &Settings) {
-        use ScriptComponentInner::*;
+    pub fn try_load(&mut self, script_assets: &Assets<ScriptModule>) {
+        use ScriptInner::*;
 
         let mut lock = self.inner.lock().unwrap();
 
         let new = match &*lock {
-            AssetLoading(handle) => {
+            AssetLoading(handle, settings) => {
                 let module = script_assets.get(*&handle);
                 if let Some(module) = module {
                     Some(self.spawn_instantiate_task(module, settings))
@@ -56,16 +56,16 @@ impl ScriptComponent {
     fn spawn_instantiate_task(
         &self,
         module: &ScriptModule,
-        settings: &Settings,
-    ) -> ScriptComponentInner {
+        settings: &SettingsValue,
+    ) -> ScriptInner {
         let instance = module.instantiate();
         instance.init(settings);
-        ScriptComponentInner::Loaded(instance)
+        ScriptInner::Loaded(instance)
     }
 
     pub fn instance(&self) -> Option<ScriptInstance> {
         let mut lock = self.inner.lock().unwrap();
-        use ScriptComponentInner::*;
+        use ScriptInner::*;
 
         match &mut *lock {
             Loaded(instance) => Some(instance.clone()),
@@ -73,10 +73,10 @@ impl ScriptComponent {
         }
     }
 
-    pub fn load_from_bytes(&self, bytes: Vec<u8>, settings: &Settings) {
+    pub fn load_from_bytes(&self, bytes: Vec<u8>, settings: &SettingsValue) {
         let thread_pool = AsyncComputeTaskPool::get();
 
-        *self.inner.lock().unwrap() = ScriptComponentInner::OnlineCompiling;
+        *self.inner.lock().unwrap() = ScriptInner::OnlineCompiling;
 
         let self_clone = self.clone();
         let settings = settings.clone();

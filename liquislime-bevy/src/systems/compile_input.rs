@@ -1,7 +1,7 @@
 use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 
 use crate::{
-    components::{ScriptComponent, ScriptsComponent, SlimeGrid},
+    components::{ScriptHolder, ScriptsComponent, SlimeGrid},
     helpers::{CompileInput, Phase},
     units::UnitId,
 };
@@ -90,13 +90,13 @@ fn get_custom_unit_source() -> String {
         .unwrap()
 }
 
-fn start_compilation_task(unit: ScriptComponent, source: String) {
+fn start_compilation_task(unit: ScriptHolder, source: String) {
     info!("Starting compilation task");
     let thread_pool = AsyncComputeTaskPool::get();
     thread_pool.spawn_local(compile_task(unit, source));
 }
 
-async fn compile_task(unit: ScriptComponent, source: String) {
+async fn compile_task(unit: ScriptHolder, source: String) {
     info!("Started compilation task");
 
     let resp = reqwest::Client::new()

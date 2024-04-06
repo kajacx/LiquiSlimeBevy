@@ -1,5 +1,5 @@
 use crate::{
-    api::{Settings, SettingsDescription},
+    api::{SettingsDescription, SettingsValue},
     helpers::ResultLogger,
 };
 
@@ -28,20 +28,9 @@ impl UnitInstance {
         serde_json::from_str(&settings_string).expect("TODO: user error")
     }
 
-    pub fn default_settings(&self) -> serde_json::Value {
-        let settings_string = self
-            .instance
-            .call_default_settings(&mut *self.store.store_mut())
-            .log_err_or_else("Instance's default settings threw an error", || {
-                "{}".to_string()
-            });
-
-        serde_json::from_str(&settings_string).expect("TODO: user error")
-    }
-
-    pub fn init(&self, settings: &Settings) {
+    pub fn init(&self, settings: &SettingsValue) {
         self.instance
-            .call_init(&mut *self.store.store_mut(), &settings.0)
+            .call_init(&mut *self.store.store_mut(), &settings.0.to_string())
             .log_err("Instance's call init function caused an error.");
     }
 

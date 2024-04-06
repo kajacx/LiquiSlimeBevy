@@ -6,7 +6,7 @@ use winit::window::Icon;
 
 use crate::assets::ScriptModule;
 use crate::components::{
-    FactionComponent, ScriptComponent, ScriptsComponent, SelectorCursor, SlimeGrids,
+    FactionComponent, ScriptHolder, ScriptsComponent, SelectorCursor, SlimeGrids,
 };
 use crate::resources::{GameWindowSpace, SelectedUnit};
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};

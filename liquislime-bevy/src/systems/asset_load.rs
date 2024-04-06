@@ -22,6 +22,6 @@ fn load_assets(
         component
             .0
             .iter_mut()
-            .for_each(|(script, settings)| script.try_load(asset_server.as_ref(), settings));
+            .for_each(|script| script.try_load(asset_server.as_ref()));
     }
 }
