@@ -34,7 +34,9 @@ fn process_mouse_position(
     }
 
     // Select a unit
-    if mouse_state.just_pressed {
+    // TODO: checking for position here is kind of bad.
+    // The "just_pressed" event should not even fire when the mouse isn't in game area.
+    if mouse_state.position.is_some() && mouse_state.just_pressed {
         selected_unit.0 = mouse_state.position.and_then(|position| {
             units.iter().find_map(|(tile_position, id)| {
                 if position.is_in_tile(tile_position.0) {
