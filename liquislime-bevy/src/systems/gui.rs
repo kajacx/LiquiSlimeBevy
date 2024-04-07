@@ -39,6 +39,10 @@ fn display_gui(
 
             let selected_unit_id = selected_unit.0;
             if let Some(selected_unit_id) = selected_unit_id {
+                // TODO: heap allocation on every frame?
+                ui.label(format!("Selected unit: {}", selected_unit_id));
+                ui.separator();
+
                 let scripts = units
                     .iter()
                     .find_map(|(unit_id, scripts)| {
@@ -49,6 +53,7 @@ fn display_gui(
                         }
                     })
                     .expect("find unit by id");
+
                 for script in scripts.0.iter() {
                     display_script_settings(ui, script);
                 }
@@ -62,5 +67,7 @@ fn display_gui(
 }
 
 fn display_script_settings(ui: &mut Ui, script: &ScriptHolder) {
+    ui.label(script.name);
     ui.label(&script.get_settings().0.to_string());
+    ui.separator();
 }

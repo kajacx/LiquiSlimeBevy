@@ -71,42 +71,43 @@ fn spawn_tiles(mut commands: Commands) {
 }
 
 fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let mut create_unit = move |faction: Faction,
-                                position: TilePosition,
-                                texture_file: &'static str,
-                                unit_id: UnitId,
-                                plugins: &[(&str, SettingsValue)]| {
-        let sprite = SpriteBundle {
-            texture: asset_server.load(texture_file),
-            sprite: Sprite {
-                custom_size: Some(Vec2 {
-                    x: 0.75f32,
-                    y: 0.75f32,
-                }),
+    let mut create_unit =
+        move |faction: Faction,
+              position: TilePosition,
+              texture_file: &'static str,
+              unit_id: UnitId,
+              plugins: &[(&'static str, SettingsValue)]| {
+            let sprite = SpriteBundle {
+                texture: asset_server.load(texture_file),
+                sprite: Sprite {
+                    custom_size: Some(Vec2 {
+                        x: 0.75f32,
+                        y: 0.75f32,
+                    }),
+                    ..Default::default()
+                },
+                transform: Transform::from_translation(position.to_position_center().to_vec3(1.0)),
                 ..Default::default()
-            },
-            transform: Transform::from_translation(position.to_position_center().to_vec3(1.0)),
-            ..Default::default()
+            };
+
+            let scripts = plugins
+                .iter()
+                .map(|(plugin_filename, settings)| {
+                    let path = format!("plugins/{plugin_filename}");
+                    let handle: Handle<ScriptModule> = asset_server.load(path);
+                    ScriptHolder::new(plugin_filename, handle, settings.clone())
+                })
+                .collect::<Vec<_>>();
+
+            commands.spawn((
+                FactionComponent::from(faction),
+                TilePositionComponent::from(position),
+                sprite,
+                Building,
+                ScriptsComponent(scripts),
+                unit_id,
+            ));
         };
-
-        let scripts = plugins
-            .iter()
-            .map(|(plugin_filename, settings)| {
-                let path = format!("plugins/{plugin_filename}");
-                let handle: Handle<ScriptModule> = asset_server.load(path);
-                ScriptHolder::new(handle, settings.clone())
-            })
-            .collect::<Vec<_>>();
-
-        commands.spawn((
-            FactionComponent::from(faction),
-            TilePositionComponent::from(position),
-            sprite,
-            Building,
-            ScriptsComponent(scripts),
-            unit_id,
-        ));
-    };
 
     create_unit(
         Faction::new(0),

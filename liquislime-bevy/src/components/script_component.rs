@@ -14,6 +14,7 @@ pub struct ScriptsComponent(pub Vec<ScriptHolder>);
 
 #[derive(Clone, Debug)]
 pub struct ScriptHolder {
+    pub name: &'static str, // TODO: this is kind of hacky, refactor
     inner: Arc<Mutex<ScriptInner>>,
 }
 
@@ -25,8 +26,9 @@ enum ScriptInner {
 }
 
 impl ScriptHolder {
-    pub fn new(handle: Handle<ScriptModule>, settings: SettingsValue) -> Self {
+    pub fn new(name: &'static str, handle: Handle<ScriptModule>, settings: SettingsValue) -> Self {
         Self {
+            name,
             inner: Arc::new(Mutex::new(ScriptInner::AssetLoading(handle, settings))),
         }
     }
