@@ -4,7 +4,7 @@ use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 use wasm_bridge::Engine;
 
 use crate::{
-    api::{SettingsDescription, SettingsValue, UnitModule},
+    api::{SettingsDescription, SettingsTempValue, SettingsValue, UnitModule},
     assets::ScriptModule,
     units::ScriptInstance,
 };
@@ -59,7 +59,13 @@ impl ScriptHolder {
 
     pub fn with_settings(
         &self,
-        callback: impl FnOnce(Option<(&SettingsDescription, &mut SettingsValue)>),
+        callback: impl FnOnce(
+            Option<(
+                &SettingsDescription,
+                &mut SettingsValue,
+                &mut SettingsTempValue,
+            )>,
+        ),
     ) {
         let mut lock = self.inner.try_lock().unwrap();
         callback(lock.settings());
@@ -95,11 +101,19 @@ impl ScriptHolder {
 }
 
 impl ScriptInner {
-    pub fn settings(&mut self) -> Option<(&SettingsDescription, &mut SettingsValue)> {
+    pub fn settings(
+        &mut self,
+    ) -> Option<(
+        &SettingsDescription,
+        &mut SettingsValue,
+        &mut SettingsTempValue,
+    )> {
         match self {
-            Self::Loaded(instance) => {
-                Some((&instance.settings_description, &mut instance.settings_value))
-            }
+            Self::Loaded(instance) => Some((
+                &instance.settings_description,
+                &mut instance.settings_value,
+                &mut instance.settings_temp_value,
+            )),
             _ => None,
         }
     }
