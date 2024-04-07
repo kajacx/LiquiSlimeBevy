@@ -1,6 +1,9 @@
 use bevy::prelude::*;
 
-use crate::{api::UnitModule, units::ScriptInstance};
+use crate::{
+    api::{SettingsValue, UnitModule},
+    units::ScriptInstance,
+};
 
 #[derive(Debug, Asset, TypePath)]
 pub struct ScriptModule {
@@ -13,7 +16,7 @@ impl ScriptModule {
         Self { name, module }
     }
 
-    pub fn instantiate(&self) -> ScriptInstance {
-        ScriptInstance::new(self.module.instantiate())
+    pub fn instantiate(&self, settings: Option<SettingsValue>) -> ScriptInstance {
+        ScriptInstance::new(self.module.instantiate(), settings)
     }
 }

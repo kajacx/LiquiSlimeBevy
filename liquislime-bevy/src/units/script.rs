@@ -17,17 +17,17 @@ pub struct ScriptInstance {
 }
 
 impl ScriptInstance {
-    pub fn new(instance: UnitInstance) -> Self {
+    pub fn new(instance: UnitInstance, settings: Option<SettingsValue>) -> Self {
         let settings_description = instance.settings_description();
         Self {
             instance: Arc::new(instance),
-            settings_value: settings_description.default_value(),
+            settings_value: settings.unwrap_or_else(|| settings_description.default_value()),
             settings_description,
         }
     }
 
-    pub fn init(&self, settings: &SettingsValue) {
-        self.instance.init(settings);
+    pub fn init(&self) {
+        self.instance.init(&self.settings_value);
     }
 
     pub fn update(&self, time_elapsed: TimeInterval) {

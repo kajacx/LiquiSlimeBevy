@@ -40,7 +40,9 @@ impl ScriptHolder {
             AssetLoading(handle, settings) => {
                 let module = script_assets.get(*&handle);
                 if let Some(module) = module {
-                    Some(self.spawn_instantiate_task(module, settings))
+                    let instance = module.instantiate(Some(settings.clone()));
+                    instance.init();
+                    Some(ScriptInner::Loaded(instance))
                 } else {
                     None
                 }
@@ -56,16 +58,6 @@ impl ScriptHolder {
     pub fn get_settings(&self) -> SettingsValue {
         // TODO: ugly clone, refactor
         self.inner.try_lock().unwrap().get_settings().clone()
-    }
-
-    fn spawn_instantiate_task(
-        &self,
-        module: &ScriptModule,
-        settings: &SettingsValue,
-    ) -> ScriptInner {
-        let instance = module.instantiate();
-        instance.init(settings);
-        ScriptInner::Loaded(instance)
     }
 
     pub fn instance(&self) -> Option<ScriptInstance> {
@@ -90,8 +82,9 @@ impl ScriptHolder {
             let unit_module = UnitModule::from_bytes(&bytes).await;
             let script_module = ScriptModule::new("custom-unit".into(), unit_module);
 
-            *self_clone.inner.lock().unwrap() =
-                self_clone.spawn_instantiate_task(&script_module, &settings);
+            // FIXME: repair this
+            // *self_clone.inner.lock().unwrap() =
+            //     self_clone.spawn_instantiate_task(&script_module, &settings);
         });
     }
 }
