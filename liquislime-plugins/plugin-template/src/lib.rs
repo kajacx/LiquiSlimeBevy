@@ -27,8 +27,13 @@ struct LiquislimeWorld;
 impl protocol::Guest for LiquislimeWorld {
     fn describe_settings() -> String {
         r#"{
-            "type": "SlimeAmount",
-            "value": {} 
+            "type": "Object",
+            "value": [
+                ["amount", {
+                    "type": "SlimeAmount",
+                    "value": {}
+                }]
+            ] 
         }"#
         .into()
     }
