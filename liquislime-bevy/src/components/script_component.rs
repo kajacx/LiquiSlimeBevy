@@ -57,13 +57,12 @@ impl ScriptHolder {
         }
     }
 
-    pub fn settings_description(&self) -> Option<SettingsDescription> {
-        self.inner.try_lock().unwrap().settings_description()
-    }
-
-    pub fn settings_value(&self) -> SettingsValue {
-        // TODO: ugly clone, refactor
-        self.inner.try_lock().unwrap().settings_value().clone()
+    pub fn with_settings(
+        &self,
+        callback: impl FnOnce(Option<(&SettingsDescription, &mut SettingsValue)>),
+    ) {
+        let mut lock = self.inner.try_lock().unwrap();
+        callback(lock.settings());
     }
 
     pub fn instance(&self) -> Option<ScriptInstance> {
@@ -96,18 +95,11 @@ impl ScriptHolder {
 }
 
 impl ScriptInner {
-    pub fn settings_value(&self) -> &SettingsValue {
+    pub fn settings(&mut self) -> Option<(&SettingsDescription, &mut SettingsValue)> {
         match self {
-            Self::AssetLoading(_, settings) => settings,
-            Self::Loaded(instance) => &instance.settings_value,
-            Self::OnlineCompiling => todo!("Get settings when online compiling"),
-        }
-    }
-
-    pub fn settings_description(&self) -> Option<SettingsDescription> {
-        match self {
-            // TODO: remove clone
-            Self::Loaded(instance) => Some(instance.settings_description.clone()),
+            Self::Loaded(instance) => {
+                Some((&instance.settings_description, &mut instance.settings_value))
+            }
             _ => None,
         }
     }
