@@ -34,6 +34,12 @@ impl UnitInstance {
             .log_err("Instance's call init function caused an error.");
     }
 
+    pub fn change_settings(&self, settings: &SettingsValue) {
+        self.instance
+            .call_change_settings(&mut *self.store.store_mut(), &settings.0.to_string())
+            .log_err("Instance's change settings function caused an error"); // TODO: log "inner" error
+    }
+
     pub fn update(&self, time_elapsed: crate::api::TimeInterval) {
         let time_elapsed = bindgen::TimeInterval {
             fragments: time_elapsed.0,

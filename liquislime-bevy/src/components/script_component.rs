@@ -81,6 +81,16 @@ impl ScriptHolder {
         }
     }
 
+    pub fn change_settings(&self) {
+        let mut lock = self.inner.lock().unwrap();
+        use ScriptInner::*;
+
+        match &mut *lock {
+            Loaded(instance) => instance.change_settings(),
+            _ => println!("TODO: print a warning"),
+        }
+    }
+
     pub fn load_from_bytes(&self, bytes: Vec<u8>, settings: &SettingsValue) {
         let thread_pool = AsyncComputeTaskPool::get();
 

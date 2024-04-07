@@ -68,6 +68,8 @@ fn display_gui(
 
 fn display_script_settings(ui: &mut Ui, script: &ScriptHolder) {
     ui.label(script.name);
+
+    let mut settings_saved = false;
     script.with_settings(|settings| {
         if let Some((description, value, tmp_value)) = settings {
             description.display_ui_element(ui, tmp_value);
@@ -76,11 +78,17 @@ fn display_script_settings(ui: &mut Ui, script: &ScriptHolder) {
             }
             if ui.button("Save").clicked() {
                 description.save_settings(tmp_value, value);
+                settings_saved = true;
             }
         } else {
             ui.label("Script is loading...");
         }
     });
+
+    if (settings_saved) {
+        script.change_settings();
+    }
+
     ui.separator();
 }
 

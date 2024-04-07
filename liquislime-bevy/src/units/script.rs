@@ -37,6 +37,10 @@ impl ScriptInstance {
         self.instance.init(&self.settings_value);
     }
 
+    pub fn change_settings(&self) {
+        self.instance.change_settings(&self.settings_value);
+    }
+
     pub fn update(&self, time_elapsed: TimeInterval) {
         self.instance.update(time_elapsed);
     }
