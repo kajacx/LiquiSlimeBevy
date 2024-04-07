@@ -69,8 +69,14 @@ fn display_gui(
 fn display_script_settings(ui: &mut Ui, script: &ScriptHolder) {
     ui.label(script.name);
     script.with_settings(|settings| {
-        if let Some((description, _, tmp_value)) = settings {
+        if let Some((description, value, tmp_value)) = settings {
             description.display_ui_element(ui, tmp_value);
+            if ui.button("Reset").clicked() {
+                description.reset_settings(value, tmp_value);
+            }
+            if ui.button("Save").clicked() {
+                description.save_settings(tmp_value, value);
+            }
         } else {
             ui.label("Script is loading...");
         }
