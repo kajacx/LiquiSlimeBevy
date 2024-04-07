@@ -4,7 +4,7 @@ use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 use wasm_bridge::Engine;
 
 use crate::{
-    api::{SettingsValue, UnitModule},
+    api::{SettingsDescription, SettingsValue, UnitModule},
     assets::ScriptModule,
     units::ScriptInstance,
 };
@@ -57,9 +57,13 @@ impl ScriptHolder {
         }
     }
 
-    pub fn get_settings(&self) -> SettingsValue {
+    pub fn settings_description(&self) -> Option<SettingsDescription> {
+        self.inner.try_lock().unwrap().settings_description()
+    }
+
+    pub fn settings_value(&self) -> SettingsValue {
         // TODO: ugly clone, refactor
-        self.inner.try_lock().unwrap().get_settings().clone()
+        self.inner.try_lock().unwrap().settings_value().clone()
     }
 
     pub fn instance(&self) -> Option<ScriptInstance> {
@@ -92,11 +96,19 @@ impl ScriptHolder {
 }
 
 impl ScriptInner {
-    pub fn get_settings(&self) -> &SettingsValue {
+    pub fn settings_value(&self) -> &SettingsValue {
         match self {
             Self::AssetLoading(_, settings) => settings,
             Self::Loaded(instance) => &instance.settings_value,
             Self::OnlineCompiling => todo!("Get settings when online compiling"),
+        }
+    }
+
+    pub fn settings_description(&self) -> Option<SettingsDescription> {
+        match self {
+            // TODO: remove clone
+            Self::Loaded(instance) => Some(instance.settings_description.clone()),
+            _ => None,
         }
     }
 }

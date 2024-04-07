@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use crate::{helpers::ResultLogger, systems::gui::SettingsUiDisplay};
+
 use super::*;
 
 #[derive(Debug, Clone)]
@@ -50,5 +52,44 @@ impl SettingsDescription {
                 json
             }
         })
+    }
+}
+
+impl SettingsUiDisplay for StringSetting {
+    fn display_ui_element(&self, ui: &mut bevy_egui::egui::Ui, value: SettingsValue) {
+        ui.label(
+            value
+                .0
+                .as_str()
+                .log_err_or("settings value is not string", ""),
+        );
+    }
+}
+
+impl SettingsUiDisplay for NumberSetting<SlimeAmount> {
+    fn display_ui_element(&self, ui: &mut bevy_egui::egui::Ui, value: SettingsValue) {
+        ui.label(
+            serde_json::from_value::<SlimeAmount>(value.0)
+                .log_err_or("settings value is not slime amount", SlimeAmount::new())
+                .as_float()
+                .to_string(),
+        );
+    }
+}
+
+impl SettingsUiDisplay for SettingsDescription {
+    fn display_ui_element(&self, ui: &mut bevy_egui::egui::Ui, value: SettingsValue) {
+        match self {
+            Self::SlimeAmount(amount) => amount.display_ui_element(ui, value),
+            Self::String(string) => string.display_ui_element(ui, value),
+            Self::Object(object) => {
+                for (name, val) in object {
+                    ui.label(name);
+                    // TODO: clone
+                    val.display_ui_element(ui, SettingsValue(value.0[name].clone()));
+                }
+            }
+            _ => todo!(),
+        }
     }
 }

@@ -5,7 +5,7 @@ use crate::helpers::StagesPlugin;
 
 mod asset_load;
 mod compile_input;
-mod gui;
+pub mod gui;
 mod input_process;
 mod input_read;
 mod rendering;

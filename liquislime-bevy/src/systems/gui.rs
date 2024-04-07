@@ -68,6 +68,14 @@ fn display_gui(
 
 fn display_script_settings(ui: &mut Ui, script: &ScriptHolder) {
     ui.label(script.name);
-    ui.label(&script.get_settings().0.to_string());
+    if let Some(settings_description) = script.settings_description() {
+        settings_description.display_ui_element(ui, script.settings_value());
+    } else {
+        ui.label("Script is loading...");
+    }
     ui.separator();
+}
+
+pub trait SettingsUiDisplay {
+    fn display_ui_element(&self, ui: &mut Ui, value: SettingsValue);
 }
