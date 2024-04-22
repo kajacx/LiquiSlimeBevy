@@ -24,7 +24,7 @@ for plugin in */; do
 
   rm -rf "$plugin/src/settings" "$plugin/src/types"
   cp -r plugin-template/src/types "$plugin/src"
-  cp -r plugin-template/src/settings "$plugin/src"
+  # cp -r plugin-template/src/settings "$plugin/src"
   cp plugin-template/src/lib.rs "$plugin/src/lib.rs"
   cp plugin-template/.gitignore_ "$plugin/.gitignore"
 done

@@ -45,18 +45,4 @@ impl Position {
     pub fn is_in_tile(self, tile_position: TilePosition) -> bool {
         tile_position.contains(self)
     }
-
-    pub fn as_protocol(self) -> crate::protocol::Position {
-        crate::protocol::Position {
-            x: self.x,
-            y: self.y,
-        }
-    }
-
-    pub fn from_protocol(position: crate::protocol::Position) -> Self {
-        Self {
-            x: position.x,
-            y: position.y,
-        }
-    }
 }

@@ -1,48 +1,53 @@
 package liquislime:protocol;
 
-world liquislime-unit {
-  record time-interval {
-    fragments: s64
-  }
-  
-  record slime-amount {
-    amount: s64,
-  }
-  
-  record tile-position {
-    x: s32,
-    y: s32,
-  }
+interface types {
+    record time-interval {
+        fragments: s64
+    }
+    
+    record slime-amount {
+        amount: s64,
+    }
+    
+    record tile-position {
+        x: s32,
+        y: s32,
+    }
 
-  record position {
-    x: float32,
-    y: float32,
-  }
+    record position {
+        x: float32,
+        y: float32,
+    }
 
-  record faction {
-    id: u8,
-  }
+    record faction {
+        id: u8,
+    }
  
-  enum mouse-input {
-    primary
-  }
+    enum mouse-input {
+        primary
+    }
+}
 
+world liquislime-unit {
+    import types;
+    //use liquislime:protocol/types.{time-interval, slime-amount, tile-position, position, faction, mouse-input};
+    use types.{time-interval, slime-amount, tile-position, position, faction, mouse-input};
 
-  import level-width: func() -> s32;
-  import level-height: func() -> s32;
+    import level-width: func() -> s32;
+    import level-height: func() -> s32;
 
-  import get-own-position: func() -> tile-position;
-  import get-own-faction: func() -> faction;
+    import get-own-position: func() -> tile-position;
+    import get-own-faction: func() -> faction;
 
-  import get-slime-amount: func(faction: faction, position: tile-position) -> slime-amount;
-  import set-slime-amount: func(faction: faction, position: tile-position, amount: slime-amount);
+    import get-slime-amount: func(faction: faction, position: tile-position) -> slime-amount;
+    import set-slime-amount: func(faction: faction, position: tile-position, amount: slime-amount);
 
-  import get-mouse-position: func() -> option<position>;
-  import is-mouse-pressed: func(input: mouse-input) -> bool;
+    import get-mouse-position: func() -> option<position>;
+    import is-mouse-pressed: func(input: mouse-input) -> bool;
 
-  export describe-settings: func() -> string;
+    export describe-settings: func() -> string;
 
-  export init: func(settings: string) -> result<_, string>;
-  export change-settings: func(settings: string) -> result<_, string>;
-  export update: func(time-elapsed: time-interval);
+    export init: func(settings: string) -> result<_, string>;
+    export change-settings: func(settings: string) -> result<_, string>;
+    export update: func(time-elapsed: time-interval);
 }

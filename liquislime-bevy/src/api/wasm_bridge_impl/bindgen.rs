@@ -55,6 +55,8 @@ impl LiquislimeUnitImports for LiquislimeHost {
     }
 }
 
+impl liquislime::protocol::types::Host for LiquislimeHost {}
+
 impl Debug for LiquislimeHost {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "LiquislimeHost cannot derive Debug")

@@ -1,30 +1,25 @@
-mod protocol {
-    use super::*;
-
-    wit_bindgen::generate!({
-        path: "../../protocol.wit",
-        world: "liquislime-unit",
-        exports: {
-           world: LiquislimeWorld
-        }
-    });
-}
-
-mod plugin;
-#[allow(unused)]
-mod types;
-
-mod settings;
-
 use std::sync::Mutex;
 
+wit_bindgen::generate!({
+    path: "../../protocol.wit",
+    world: "liquislime-unit",
+    with: {
+        "liquislime:protocol/types": types,
+    }
+});
+
+#[allow(unused)]
+mod types;
+#[allow(unused)]
 use types::*;
+
+mod plugin;
 
 static UNIT: Mutex<Option<plugin::LiquislimeUnit>> = Mutex::new(Option::None);
 
 struct LiquislimeWorld;
 
-impl protocol::Guest for LiquislimeWorld {
+impl Guest for LiquislimeWorld {
     fn describe_settings() -> String {
         r#"{
             "type": "Object",
@@ -56,12 +51,8 @@ impl protocol::Guest for LiquislimeWorld {
         Ok(())
     }
 
-    fn update(time_elapsed: protocol::TimeInterval) {
-        UNIT.lock()
-            .unwrap()
-            .as_mut()
-            .unwrap()
-            .update(TimeInterval::from_protocol(time_elapsed));
+    fn update(time_elapsed: TimeInterval) {
+        UNIT.lock().unwrap().as_mut().unwrap().update(time_elapsed);
     }
 }
 
@@ -74,3 +65,5 @@ trait LiquislimePlugin {
 
     fn update(&mut self, time_elapsed: TimeInterval);
 }
+
+export!(LiquislimeWorld);

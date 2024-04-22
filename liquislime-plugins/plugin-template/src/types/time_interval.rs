@@ -19,35 +19,33 @@ const FRAGMENTS_IN_SECOND: i64 = 18_000;
     PartialOrd,
     Ord,
 )]
-pub struct TimeInterval(i64);
+pub struct TimeInterval {
+    pub fragments: i64,
+}
 
 impl TimeInterval {
     pub const fn new() -> Self {
-        Self(0)
+        Self { fragments: 0 }
     }
 
     pub fn from_seconds(seconds: f64) -> Self {
-        Self((seconds * FRAGMENTS_IN_SECOND as f64).round() as i64)
+        Self {
+            fragments: (seconds * FRAGMENTS_IN_SECOND as f64).round() as i64,
+        }
     }
 
     pub fn from_milliseconds(milliseconds: f64) -> Self {
-        Self((milliseconds * (FRAGMENTS_IN_SECOND / 1000) as f64).round() as i64)
+        Self {
+            fragments: (milliseconds * (FRAGMENTS_IN_SECOND / 1000) as f64).round() as i64,
+        }
     }
 
     pub fn to_seconds(self) -> f64 {
-        (self.0 as f64) / (FRAGMENTS_IN_SECOND as f64)
+        (self.fragments as f64) / (FRAGMENTS_IN_SECOND as f64)
     }
 
     pub fn to_milliseconds(self) -> f64 {
-        (self.0 as f64) / ((FRAGMENTS_IN_SECOND * 1000) as f64)
-    }
-
-    pub fn as_protocol(self) -> crate::protocol::TimeInterval {
-        crate::protocol::TimeInterval { fragments: self.0 }
-    }
-
-    pub fn from_protocol(interval: crate::protocol::TimeInterval) -> Self {
-        Self(interval.fragments)
+        (self.fragments as f64) / ((FRAGMENTS_IN_SECOND * 1000) as f64)
     }
 }
 
@@ -55,7 +53,9 @@ impl Mul<i64> for TimeInterval {
     type Output = TimeInterval;
 
     fn mul(self, rhs: i64) -> Self::Output {
-        Self(self.0 * rhs)
+        Self {
+            fragments: self.fragments * rhs,
+        }
     }
 }
 
@@ -63,7 +63,9 @@ impl Div<i64> for TimeInterval {
     type Output = TimeInterval;
 
     fn div(self, rhs: i64) -> Self::Output {
-        Self(self.0 / rhs)
+        Self {
+            fragments: self.fragments / rhs,
+        }
     }
 }
 

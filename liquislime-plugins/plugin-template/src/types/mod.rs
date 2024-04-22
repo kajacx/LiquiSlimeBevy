@@ -13,3 +13,8 @@ pub use position::*;
 pub use slime_amount::*;
 pub use tile_position::*;
 pub use time_interval::*;
+
+#[derive(Debug, Clone, Copy)]
+pub enum MouseInput {
+    Primary,
+}

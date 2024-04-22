@@ -13,7 +13,7 @@ impl UnitModule {
         let store = UnitStore::new();
         let engine = store.store_mut().engine().clone();
 
-        let component = new_component_async(&engine, &bytes).await.unwrap();
+        let component = Component::new_safe(&engine, &bytes).await.unwrap();
 
         let mut linker = Linker::new(&engine);
         LiquislimeUnit::add_to_linker(&mut linker, |state| state).unwrap();

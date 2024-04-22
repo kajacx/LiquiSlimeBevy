@@ -19,39 +19,39 @@ const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
     PartialOrd,
     Ord,
 )]
-pub struct SlimeAmount(i64);
+pub struct SlimeAmount {
+    pub amount: i64,
+}
 
 impl SlimeAmount {
     pub const fn new() -> Self {
-        Self(0)
+        Self { amount: 0 }
     }
 
     pub const fn from_integer(amount: i64) -> Self {
-        Self(amount * ONE_SLIME_AMOUNT)
+        Self {
+            amount: amount * ONE_SLIME_AMOUNT,
+        }
     }
 
     pub fn from_float(amount: f64) -> Self {
-        Self((amount * (ONE_SLIME_AMOUNT as f64)) as i64)
+        Self {
+            amount: (amount * (ONE_SLIME_AMOUNT as f64)) as i64,
+        }
     }
 
     pub fn non_negative(self) -> Self {
-        Self(self.0.max(0))
+        Self {
+            amount: self.amount.max(0),
+        }
     }
 
     pub fn as_integer(self) -> i64 {
-        self.0 / ONE_SLIME_AMOUNT
+        self.amount / ONE_SLIME_AMOUNT
     }
 
     pub fn as_float(self) -> f64 {
-        (self.0 as f64) / (ONE_SLIME_AMOUNT as f64)
-    }
-
-    pub fn as_protocol(self) -> crate::protocol::SlimeAmount {
-        crate::protocol::SlimeAmount { amount: self.0 }
-    }
-
-    pub fn from_protocol(amount: crate::protocol::SlimeAmount) -> Self {
-        Self(amount.amount)
+        (self.amount as f64) / (ONE_SLIME_AMOUNT as f64)
     }
 }
 
@@ -59,7 +59,9 @@ impl Mul<i64> for SlimeAmount {
     type Output = SlimeAmount;
 
     fn mul(self, rhs: i64) -> Self::Output {
-        Self(self.0 * rhs)
+        Self {
+            amount: self.amount * rhs,
+        }
     }
 }
 
@@ -67,7 +69,9 @@ impl Div<i64> for SlimeAmount {
     type Output = SlimeAmount;
 
     fn div(self, rhs: i64) -> Self::Output {
-        Self(self.0 / rhs)
+        Self {
+            amount: self.amount / rhs,
+        }
     }
 }
 
@@ -75,7 +79,9 @@ impl Mul<f64> for SlimeAmount {
     type Output = SlimeAmount;
 
     fn mul(self, rhs: f64) -> Self::Output {
-        Self((self.0 as f64 * rhs).round() as i64)
+        Self {
+            amount: (self.amount as f64 * rhs).round() as i64,
+        }
     }
 }
 
@@ -83,7 +89,9 @@ impl Div<f64> for SlimeAmount {
     type Output = SlimeAmount;
 
     fn div(self, rhs: f64) -> Self::Output {
-        Self((self.0 as f64 / rhs).round() as i64)
+        Self {
+            amount: (self.amount as f64 / rhs).round() as i64,
+        }
     }
 }
 
@@ -93,8 +101,8 @@ impl<'de> serde::Deserialize<'de> for SlimeAmount {
         D: serde::Deserializer<'de>,
     {
         // TODO: user error
-        let text = <String as serde::Deserialize>::deserialize(deserializer).unwrap();
+        let text = <String as serde::Deserialize>::deserialize(deserializer)?;
         let amount = text.parse::<i64>().unwrap();
-        Ok(Self(amount))
+        Ok(Self { amount })
     }
 }

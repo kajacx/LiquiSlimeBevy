@@ -9,7 +9,7 @@ impl Mouse {
     }
 
     pub fn try_get_position() -> Option<Position> {
-        crate::protocol::get_mouse_position().map(Position::from_protocol)
+        crate::get_mouse_position()
     }
 
     pub fn try_get_position_in_bounds() -> Option<Position> {
@@ -17,7 +17,7 @@ impl Mouse {
     }
 
     pub fn is_pressed() -> bool {
-        crate::protocol::is_mouse_pressed(crate::protocol::MouseInput::Primary)
+        crate::is_mouse_pressed(crate::MouseInput::Primary)
     }
 
     pub fn is_pressed_at() -> Option<Position> {

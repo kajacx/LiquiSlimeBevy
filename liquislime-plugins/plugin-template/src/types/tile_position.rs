@@ -27,7 +27,7 @@ impl TilePosition {
     }
 
     pub fn own_position() -> Self {
-        Self::from_protocol(crate::protocol::get_own_position())
+        crate::get_own_position()
     }
 
     pub fn is_in_bounds(self) -> bool {
@@ -39,10 +39,7 @@ impl TilePosition {
     }
 
     pub fn get_slime_amount(self, faction: Faction) -> SlimeAmount {
-        SlimeAmount::from_protocol(crate::protocol::get_slime_amount(
-            faction.as_protocol(),
-            self.as_protocol(),
-        ))
+        crate::get_slime_amount(faction, self)
     }
 
     pub fn set_own_slime_amount(self, amount: SlimeAmount) {
@@ -50,11 +47,7 @@ impl TilePosition {
     }
 
     pub fn set_slime_amount(self, faction: Faction, amount: SlimeAmount) {
-        crate::protocol::set_slime_amount(
-            faction.as_protocol(),
-            self.as_protocol(),
-            amount.as_protocol(),
-        )
+        crate::set_slime_amount(faction, self, amount)
     }
 
     pub fn set_own_slime_amount_at_least(self, amount: SlimeAmount) {
@@ -63,11 +56,7 @@ impl TilePosition {
 
     pub fn set_slime_amount_at_least(self, faction: Faction, amount: SlimeAmount) {
         let amount = SlimeAmount::max(self.get_slime_amount(faction), amount);
-        crate::protocol::set_slime_amount(
-            faction.as_protocol(),
-            self.as_protocol(),
-            amount.as_protocol(),
-        )
+        crate::set_slime_amount(faction, self, amount)
     }
 
     pub fn add_own_slime_amount(self, amount: SlimeAmount) {
@@ -76,11 +65,7 @@ impl TilePosition {
 
     pub fn add_slime_amount(self, faction: Faction, amount: SlimeAmount) {
         let amount = self.get_slime_amount(faction) + amount;
-        crate::protocol::set_slime_amount(
-            faction.as_protocol(),
-            self.as_protocol(),
-            amount.as_protocol(),
-        );
+        crate::set_slime_amount(faction, self, amount);
     }
 
     pub const fn add_x(self, x_add: i32) -> Self {
@@ -111,19 +96,5 @@ impl TilePosition {
 
     pub fn contains(self, position: Position) -> bool {
         position.to_tile_position() == self
-    }
-
-    pub fn as_protocol(self) -> crate::protocol::TilePosition {
-        crate::protocol::TilePosition {
-            x: self.x,
-            y: self.y,
-        }
-    }
-
-    pub fn from_protocol(position: crate::protocol::TilePosition) -> Self {
-        Self {
-            x: position.x,
-            y: position.y,
-        }
     }
 }
