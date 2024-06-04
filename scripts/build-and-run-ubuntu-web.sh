@@ -3,7 +3,7 @@ set -e
 
 # Run from the parent folder
 
-./liquislime-plugins/build-plugins.sh
+./liquislime-scripts/build-scripts.sh
 ./scripts/run-web.sh --release
 
 echo "Restarting webserver"

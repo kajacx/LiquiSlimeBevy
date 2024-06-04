@@ -1,15 +1,12 @@
-// use bevy::render::render_resource::encase::internal::Reader;
+use super::ScriptAsset;
+use crate::api::{LoadedScript, Script};
 use bevy::utils::thiserror::Error;
-
 use bevy::{
     asset::io::Reader,
     asset::{AssetLoader, AsyncReadExt, LoadedAsset},
     prelude::*,
 };
-
-use crate::api::UnitModule;
-
-use super::ScriptModule;
+use try_lock::TryLock;
 
 #[derive(Clone, Debug, Default)]
 pub struct ScriptLoader;
@@ -24,12 +21,12 @@ impl std::fmt::Display for CustomError {
 }
 
 impl AssetLoader for ScriptLoader {
-    type Asset = ScriptModule;
+    type Asset = ScriptAsset;
     type Settings = ();
     type Error = CustomError;
 
     fn extensions(&self) -> &[&str] {
-        &["wasm", "zip"]
+        &["wasm"]
     }
 
     fn load<'a>(
@@ -41,19 +38,16 @@ impl AssetLoader for ScriptLoader {
         Box::pin(async move {
             let mut bytes = Vec::new();
             reader.read_to_end(&mut bytes).await.unwrap();
-            let unit_module = UnitModule::from_bytes(&bytes).await;
-            let asset = ScriptModule::new("TODO: module name".into(), unit_module);
-            // load_context.set_default_asset(LoadedAsset::new(asset));
-            Ok(asset)
+            Ok(ScriptAsset { bytes })
         })
     }
 }
 
-pub struct AssetsGamePlugins;
+pub struct AssetsGamePlugin;
 
-impl Plugin for AssetsGamePlugins {
+impl Plugin for AssetsGamePlugin {
     fn build(&self, app: &mut App) {
-        app.init_asset::<ScriptModule>()
+        app.init_asset::<ScriptAsset>()
             .init_asset_loader::<ScriptLoader>();
     }
 }

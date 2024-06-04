@@ -3,7 +3,7 @@ use bevy::{prelude::*, tasks::AsyncComputeTaskPool};
 use crate::{
     components::{ScriptHolder, ScriptsComponent, SlimeGrid},
     helpers::{CompileInput, Phase},
-    units::UnitId,
+    components::UnitId,
 };
 
 pub struct CompileInputPlugin;

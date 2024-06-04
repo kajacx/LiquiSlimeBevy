@@ -19,9 +19,9 @@ const FRAGMENTS_IN_SECOND: i64 = 18_000;
     PartialOrd,
     Ord,
 )]
-pub struct TimeInterval(pub i64);
+pub struct ApiTimeInterval(pub i64);
 
-impl TimeInterval {
+impl ApiTimeInterval {
     pub fn new() -> Self {
         Self(0)
     }
@@ -43,16 +43,16 @@ impl TimeInterval {
     }
 }
 
-impl Mul<i64> for TimeInterval {
-    type Output = TimeInterval;
+impl Mul<i64> for ApiTimeInterval {
+    type Output = ApiTimeInterval;
 
     fn mul(self, rhs: i64) -> Self::Output {
         Self(self.0 * rhs)
     }
 }
 
-impl Div<i64> for TimeInterval {
-    type Output = TimeInterval;
+impl Div<i64> for ApiTimeInterval {
+    type Output = ApiTimeInterval;
 
     fn div(self, rhs: i64) -> Self::Output {
         Self(self.0 / rhs)
@@ -61,10 +61,10 @@ impl Div<i64> for TimeInterval {
 
 #[cfg(test)]
 mod test {
-    use super::TimeInterval;
+    use super::ApiTimeInterval;
 
     fn check_fragments_divide(amount: i64) {
-        let second = TimeInterval::from_seconds(1.0);
+        let second = ApiTimeInterval::from_seconds(1.0);
         let divided = second / amount;
         assert_eq!(
             divided * amount,
@@ -89,8 +89,8 @@ mod test {
         // Make sure it can represent 1 millisecond accurately as well
         check_fragments_divide(1000);
         assert_eq!(
-            TimeInterval::from_seconds(1.0),
-            TimeInterval::from_milliseconds(1000.0)
+            ApiTimeInterval::from_seconds(1.0),
+            ApiTimeInterval::from_milliseconds(1000.0)
         );
     }
 }

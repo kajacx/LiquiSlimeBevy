@@ -17,10 +17,10 @@ echo "Copying liquislime assets"
 rm -rf liquislime-web/liquislime-webserver/assets
 cp -r liquislime-bevy/assets liquislime-web/liquislime-webserver/
 
-echo "Running bevy game in web browser"
+echo "Compiling bevy game for wasm32 target"
 cd liquislime-web
-
 cargo build $mode --target=wasm32-unknown-unknown
+
 if [ "$mode" = "--release" ]; then
   echo "Copying RELEASE wasm file"
   wasm-bindgen --out-dir ./liquislime-webserver/ --target web ./target/wasm32-unknown-unknown/release/liquislime-bevy.wasm

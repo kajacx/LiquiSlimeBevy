@@ -3,5 +3,5 @@ set -e
 
 # Run from parent folder
 
-./liquislime-plugins/build-plugins.sh
+./liquislime-scripts/build-scripts.sh
 ./scripts/run-sys.sh

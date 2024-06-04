@@ -1,17 +1,12 @@
-use super::*;
-use derive_more::{Add, AddAssign, Sub, SubAssign};
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub struct Faction {
-    id: u8,
-}
+pub struct ApiFaction(pub u8);
 
-impl Faction {
+impl ApiFaction {
     pub fn new(id: u8) -> Self {
-        Self { id }
+        Self(id)
     }
 
     pub fn index(self) -> usize {
-        self.id as _
+        self.0 as _
     }
 }

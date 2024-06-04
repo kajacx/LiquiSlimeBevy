@@ -1,7 +1,5 @@
 use wasm_bridge::component::*;
 
-use super::*;
-
 pub struct UnitModule {
     store: UnitStore,
     linker: Linker<LiquislimeHost>,

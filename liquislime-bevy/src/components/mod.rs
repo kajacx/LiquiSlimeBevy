@@ -1,17 +1,21 @@
 mod building;
 mod faction;
 mod script_component;
+mod script_instances;
 mod selector_cursor;
 mod slime_grid;
 mod slime_grids;
 mod tile;
 mod tile_position;
+mod unit_id;
 
 pub use building::*;
 pub use faction::*;
 pub use script_component::*;
+pub use script_instances::*;
 pub use selector_cursor::*;
 pub use slime_grid::*;
 pub use slime_grids::*;
 pub use tile::*;
 pub use tile_position::*;
+pub use unit_id::*;

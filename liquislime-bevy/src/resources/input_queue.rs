@@ -1,13 +1,13 @@
 use bevy::prelude::*;
 
-use crate::api::Position;
+use crate::api::ApiPosition;
 
 #[derive(Clone, Debug, Default, Resource)]
 pub struct InputQueue(pub Vec<InputEvent>);
 
 #[derive(Clone, Debug)]
 pub enum InputEvent {
-    MouseMove(Position),
+    MouseMove(ApiPosition),
     MousePressed,
     MouseJustPressed,
     MouseJustReleased,

@@ -1,7 +1,5 @@
 use std::fmt::Debug;
 
-use crate::units::api_spec::*;
-
 use wasm_bridge::Result;
 
 wasm_bridge::component::bindgen!({

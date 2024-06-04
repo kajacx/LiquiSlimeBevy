@@ -1,19 +1,18 @@
+use crate::components::{
+    FactionComponent, ScriptComponent, ScriptInstances, SelectorCursor, SlimeGrids,
+};
+use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
+use crate::{
+    components::UnitId,
+    components::{Building, SlimeGrid, Tile, TilePositionComponent},
+    resources,
+};
 use bevy::math::vec3;
 use bevy::prelude::*;
 use bevy::winit::WinitWindows;
 use bevy_egui::{egui, EguiContexts, EguiPlugin};
+use std::sync::Arc;
 use winit::window::Icon;
-
-use crate::assets::ScriptModule;
-use crate::components::{
-    FactionComponent, ScriptHolder, ScriptsComponent, SelectorCursor, SlimeGrids,
-};
-use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
-use crate::{
-    components::{Building, SlimeGrid, Tile, TilePositionComponent},
-    resources,
-    units::UnitId,
-};
 
 pub struct GameSetupPlugin;
 
@@ -52,7 +51,7 @@ fn spawn_tiles(mut commands: Commands) {
 
     for x in 0..WORLD_WIDTH {
         for y in 0..WORLD_HEIGHT {
-            let position = TilePosition {
+            let position = ApiTilePosition {
                 x: x as i32,
                 y: y as i32,
             };
@@ -71,76 +70,71 @@ fn spawn_tiles(mut commands: Commands) {
 }
 
 fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let mut create_unit =
-        move |faction: Faction,
-              position: TilePosition,
-              texture_file: &'static str,
-              unit_id: UnitId,
-              plugins: &[(&'static str, SettingsValue)]| {
-            let sprite = SpriteBundle {
-                texture: asset_server.load(texture_file),
-                sprite: Sprite {
-                    custom_size: Some(Vec2 {
-                        x: 0.75f32,
-                        y: 0.75f32,
-                    }),
-                    ..Default::default()
-                },
-                transform: Transform::from_translation(position.to_position_center().to_vec3(1.0)),
+    let spawner_script = Script::from_handle(
+        "Slime spawner".to_owned(),
+        asset_server.load("scripts/slime_spawner.wasm"),
+    );
+
+    let clicker_script = Script::from_handle(
+        "Mouse clicker".to_owned(),
+        asset_server.load("scripts/slime_clicker.wasm"),
+    );
+
+    commands.spawn(ScriptComponent(spawner_script.clone()));
+    commands.spawn(ScriptComponent(clicker_script.clone()));
+
+    let mut create_unit = move |faction: ApiFaction,
+                                position: ApiTilePosition,
+                                texture_file: &'static str,
+                                unit_id: UnitId,
+                                scripts: &[(&Script, SettingsValue)]| {
+        let sprite = SpriteBundle {
+            texture: asset_server.load(texture_file),
+            sprite: Sprite {
+                custom_size: Some(Vec2 {
+                    x: 0.75f32,
+                    y: 0.75f32,
+                }),
                 ..Default::default()
-            };
-
-            let scripts = plugins
-                .iter()
-                .map(|(plugin_filename, settings)| {
-                    let path = format!("plugins/{plugin_filename}");
-                    let handle: Handle<ScriptModule> = asset_server.load(path);
-                    ScriptHolder::new(plugin_filename, handle, settings.clone())
-                })
-                .collect::<Vec<_>>();
-
-            commands.spawn((
-                FactionComponent::from(faction),
-                TilePositionComponent::from(position),
-                sprite,
-                Building,
-                ScriptsComponent(scripts),
-                unit_id,
-            ));
+            },
+            transform: Transform::from_translation(position.to_position_center().to_vec3(1.0)),
+            ..Default::default()
         };
 
+        let scripts = scripts
+            .iter()
+            .map(|(script, settings)| {
+                Arc::new(ScriptInstance::new((*script).clone(), settings.clone()))
+            })
+            .collect::<Vec<_>>();
+
+        commands.spawn((
+            FactionComponent::from(faction),
+            TilePositionComponent::from(position),
+            sprite,
+            Building,
+            ScriptInstances(scripts),
+            unit_id,
+        ));
+    };
+
     create_unit(
-        Faction::new(0),
-        crate::api::TilePosition::new(2, 5),
+        ApiFaction::new(0),
+        crate::api::ApiTilePosition::new(2, 5),
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         &[
-            (
-                "liquislime_slime_spawner_plugin.wasm",
-                SettingsValue(serde_json::json!({
-                    "amount": SlimeAmount::from_integer(100)
-                })),
-            ),
-            (
-                "liquislime_slime_clicker_plugin.wasm",
-                SettingsValue(serde_json::json!({
-                    "amount": SlimeAmount::from_integer(2000)
-                })),
-            ),
+            (&spawner_script, SettingsValue(rmpv::Value::from(100_i64))),
+            (&clicker_script, SettingsValue(rmpv::Value::from(1000_i64))),
         ],
     );
 
     create_unit(
-        Faction::new(1),
-        crate::api::TilePosition::new(7, 1),
+        ApiFaction::new(1),
+        crate::api::ApiTilePosition::new(7, 1),
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
-        &[(
-            "liquislime_slime_spawner_plugin.wasm",
-            SettingsValue(serde_json::json!({
-                "amount": SlimeAmount::from_integer(150)
-            })),
-        )],
+        &[(&spawner_script, SettingsValue(rmpv::Value::from(120_i64)))],
     );
 }
 

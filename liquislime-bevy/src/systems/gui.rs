@@ -14,7 +14,7 @@ use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
     components::{Building, SlimeGrid, Tile, TilePositionComponent},
     resources,
-    units::UnitId,
+    components::UnitId,
 };
 
 pub struct GuiPlugin;

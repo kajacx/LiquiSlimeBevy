@@ -1,13 +1,13 @@
 use bevy::prelude::*;
 
-use crate::api::Position;
+use crate::api::ApiPosition;
 
 pub fn window_position_to_world_position(
     window_position: Vec2,
     window: &Window,
     camera: &Camera,
     transform: &GlobalTransform,
-) -> Position {
+) -> ApiPosition {
     // get the size of the window
     let window_size = Vec2::new(window.width() as f32, window.height() as f32);
 
@@ -25,7 +25,7 @@ pub fn window_position_to_world_position(
     let world_pos: Vec2 = world_pos.truncate();
 
     // convert to Position
-    Position {
+    ApiPosition {
         x: world_pos.x,
         y: world_pos.y,
     }

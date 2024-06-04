@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    api::{Faction, Position, SlimeAmount, TilePosition},
+    api::{ApiFaction, ApiPosition, ApiSlimeAmount, ApiTilePosition},
     WORLD_HEIGHT, WORLD_WIDTH,
 };
 
@@ -20,23 +20,27 @@ impl SlimeGrids {
         }
     }
 
-    pub fn get_amount(&self, faction: Faction, position: TilePosition) -> SlimeAmount {
+    pub fn get_amount(&self, faction: ApiFaction, position: ApiTilePosition) -> ApiSlimeAmount {
         self.grids[faction.index()].get_amount(position)
     }
 
-    pub fn try_get_amount(&self, faction: Faction, position: TilePosition) -> Option<SlimeAmount> {
+    pub fn try_get_amount(
+        &self,
+        faction: ApiFaction,
+        position: ApiTilePosition,
+    ) -> Option<ApiSlimeAmount> {
         self.grids[faction.index()].try_get_amount(position)
     }
 
-    pub fn set_amount(&mut self, faction: Faction, position: TilePosition, amount: SlimeAmount) {
+    pub fn set_amount(&mut self, faction: ApiFaction, position: ApiTilePosition, amount: ApiSlimeAmount) {
         self.grids[faction.index()].set_amount(position, amount);
     }
 
     pub fn try_set_amount(
         &mut self,
-        faction: Faction,
-        position: TilePosition,
-        amount: SlimeAmount,
+        faction: ApiFaction,
+        position: ApiTilePosition,
+        amount: ApiSlimeAmount,
     ) -> Result<(), ()> {
         self.grids[faction.index()].try_set_amount(position, amount)
     }
@@ -56,7 +60,7 @@ impl SlimeGrids {
     pub fn annihilate_slime(&mut self) {
         for x in 0..WORLD_WIDTH {
             for y in 0..WORLD_HEIGHT {
-                let position = TilePosition::new(x as _, y as _);
+                let position = ApiTilePosition::new(x as _, y as _);
                 let amount = self.grids[0]
                     .get_amount(position)
                     .min(self.grids[1].get_amount(position));

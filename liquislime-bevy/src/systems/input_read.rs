@@ -3,7 +3,7 @@ use crate::resources::{GameWindowSpace, InputEvent, InputQueue};
 use bevy::input::touch::Touch;
 use bevy::prelude::*;
 
-use crate::api::Position;
+use crate::api::ApiPosition;
 
 pub struct InputReadPlugin;
 

@@ -3,7 +3,6 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use super::*;
 use wasm_bridge::{Config, Engine, Store};
 
 #[derive(Clone)]
@@ -26,7 +25,7 @@ impl UnitStore {
         let store = Store::new(&engine, LiquislimeHost);
 
         Self {
-            store: Arc::new(Mutex::new(store)),
+            store: Arc::new(Mutex::new(context)),
         }
     }
 

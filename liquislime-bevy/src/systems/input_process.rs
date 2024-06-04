@@ -1,10 +1,10 @@
 use crate::components::TilePositionComponent;
+use crate::components::UnitId;
 use crate::helpers::*;
 use crate::resources::{InputEvent, InputQueue, MouseState, SelectedUnit};
-use crate::units::UnitId;
 use bevy::prelude::*;
 
-use crate::api::{Position, TilePosition};
+use crate::api::{ApiPosition, ApiTilePosition};
 
 pub struct InputProcessPlugin;
 

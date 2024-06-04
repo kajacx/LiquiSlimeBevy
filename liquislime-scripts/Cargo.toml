@@ -1,0 +1,5 @@
+[workspace]
+
+resolver = "2"
+
+members = ["script-template", "slime-spawner", "slime-clicker"]

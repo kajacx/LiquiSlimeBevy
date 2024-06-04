@@ -1,4 +1,5 @@
-use crate::units::UnitId;
+use crate::api::ApiInstance;
+use crate::components::UnitId;
 use std::sync::Mutex;
 
 // TODO: This could be an atomic cell or something?
@@ -11,4 +12,8 @@ pub fn set_current_unit(unit: UnitId) {
 pub fn get_current_unit() -> UnitId {
     (*CURRENT_UNIT.lock().expect("Get current unit mutex lock"))
         .expect("Current unit should have been set")
+}
+
+pub fn get_current_instance() -> ApiInstance {
+    todo!()
 }

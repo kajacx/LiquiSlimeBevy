@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::units::UnitId;
+use crate::components::UnitId;
 
 #[derive(Clone, Debug, Default, Resource)]
 pub struct SelectedUnit(pub Option<UnitId>);

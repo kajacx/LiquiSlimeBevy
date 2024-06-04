@@ -1,0 +1,5 @@
+/.gitignore
+/src/types
+/src/api
+/src/lib.rs
+/src/bindings.rs

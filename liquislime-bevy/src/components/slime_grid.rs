@@ -1,14 +1,14 @@
 use bevy::prelude::*;
 
-use crate::api::{SlimeAmount, TilePosition};
+use crate::api::{ApiSlimeAmount, ApiTilePosition};
 
 #[derive(Debug)]
 pub struct SlimeGrid {
     width: usize,
     height: usize,
 
-    slime_amounts: Vec<SlimeAmount>,   // row major (y * height + x)
-    slime_additions: Vec<SlimeAmount>, // used for spreading the slime
+    slime_amounts: Vec<ApiSlimeAmount>,   // row major (y * height + x)
+    slime_additions: Vec<ApiSlimeAmount>, // used for spreading the slime
 }
 
 #[allow(unused)]
@@ -18,16 +18,16 @@ impl SlimeGrid {
             width,
             height,
 
-            slime_amounts: vec![SlimeAmount::new(); width * height],
-            slime_additions: vec![SlimeAmount::new(); width * height],
+            slime_amounts: vec![ApiSlimeAmount::new(); width * height],
+            slime_additions: vec![ApiSlimeAmount::new(); width * height],
         }
     }
 
-    pub fn get_amount(&self, position: TilePosition) -> SlimeAmount {
+    pub fn get_amount(&self, position: ApiTilePosition) -> ApiSlimeAmount {
         self.slime_amounts[self.get_index(position)]
     }
 
-    pub fn try_get_amount(&self, position: TilePosition) -> Option<SlimeAmount> {
+    pub fn try_get_amount(&self, position: ApiTilePosition) -> Option<ApiSlimeAmount> {
         if self.in_range(position) {
             Some(self.get_amount(position))
         } else {
@@ -35,15 +35,15 @@ impl SlimeGrid {
         }
     }
 
-    pub fn set_amount(&mut self, position: TilePosition, amount: SlimeAmount) {
+    pub fn set_amount(&mut self, position: ApiTilePosition, amount: ApiSlimeAmount) {
         let index = self.get_index(position);
         self.slime_amounts[index] = amount.non_negative();
     }
 
     pub fn try_set_amount(
         &mut self,
-        position: TilePosition,
-        amount: SlimeAmount,
+        position: ApiTilePosition,
+        amount: ApiSlimeAmount,
     ) -> Result<(), ()> {
         if self.in_range(position) {
             self.set_amount(position, amount);
@@ -53,7 +53,7 @@ impl SlimeGrid {
         }
     }
 
-    pub fn add_amount(&mut self, position: TilePosition, amount: SlimeAmount) {
+    pub fn add_amount(&mut self, position: ApiTilePosition, amount: ApiSlimeAmount) {
         let index = self.get_index(position);
         let amount = self.slime_amounts[index] + amount;
         self.slime_amounts[index] = amount.non_negative();
@@ -61,8 +61,8 @@ impl SlimeGrid {
 
     pub fn try_add_amount(
         &mut self,
-        position: TilePosition,
-        amount: SlimeAmount,
+        position: ApiTilePosition,
+        amount: ApiSlimeAmount,
     ) -> Result<(), ()> {
         if self.in_range(position) {
             self.add_amount(position, amount);
@@ -72,11 +72,11 @@ impl SlimeGrid {
         }
     }
 
-    pub fn in_range(&self, position: TilePosition) -> bool {
+    pub fn in_range(&self, position: ApiTilePosition) -> bool {
         (position.x as usize) < self.width && (position.y as usize) < self.height
     }
 
-    fn get_index(&self, position: TilePosition) -> usize {
+    fn get_index(&self, position: ApiTilePosition) -> usize {
         position.x as usize + position.y as usize * self.width
     }
 
@@ -84,8 +84,8 @@ impl SlimeGrid {
         for y in 0..(self.height - 1) {
             for x in 0..self.width {
                 self.prepare_spread_between(
-                    self.get_index(TilePosition::new(x as _, y as _)),
-                    self.get_index(TilePosition::new(x as _, (y + 1) as _)),
+                    self.get_index(ApiTilePosition::new(x as _, y as _)),
+                    self.get_index(ApiTilePosition::new(x as _, (y + 1) as _)),
                 );
             }
         }
@@ -93,8 +93,8 @@ impl SlimeGrid {
         for y in 0..self.height {
             for x in 0..(self.width - 1) {
                 self.prepare_spread_between(
-                    self.get_index(TilePosition::new((x + 1) as _, y as _)),
-                    self.get_index(TilePosition::new(x as _, y as _)),
+                    self.get_index(ApiTilePosition::new((x + 1) as _, y as _)),
+                    self.get_index(ApiTilePosition::new(x as _, y as _)),
                 );
             }
         }
@@ -114,7 +114,7 @@ impl SlimeGrid {
     pub fn spread_slime(&mut self) {
         for index in 0..self.slime_additions.len() {
             self.slime_amounts[index] += self.slime_additions[index];
-            self.slime_additions[index] = SlimeAmount::from_integer(0);
+            self.slime_additions[index] = ApiSlimeAmount::from_integer(0);
         }
     }
 }

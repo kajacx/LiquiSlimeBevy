@@ -57,23 +57,16 @@ impl DerefMut for WorldRef<'_> {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
-pub struct WorldRefToken {
-    _private: PhantomData<()>, // Disable public constructor
-}
-
-pub fn use_world_reference_in(reference: &mut World, use_in: impl FnOnce(&WorldRefToken)) {
+pub fn use_world_reference_in(reference: &mut World, callback: impl FnOnce()) {
     let lock = THREAD_LOCK
         .try_lock()
         .expect("You should only call this method once at a time");
 
+    assert!(GLOBAL_WORLD.try_lock().unwrap().0.is_null());
+
     set_world(reference as *mut _);
 
-    let ref_token = WorldRefToken {
-        _private: PhantomData,
-    };
-
-    use_in(&ref_token);
+    callback();
 
     set_world(std::ptr::null_mut());
 

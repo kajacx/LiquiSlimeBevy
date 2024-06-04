@@ -1,11 +1,11 @@
 use bevy::prelude::*;
 
 use crate::{
-    api::Faction,
+    api::ApiFaction,
     components::{Building, SelectorCursor, SlimeGrids, Tile, TilePositionComponent},
     helpers::Phase,
     resources::{GameWindowSpace, SelectedUnit},
-    units::UnitId,
+    components::UnitId,
 };
 
 pub struct GameRenderingPlugin;
@@ -29,10 +29,10 @@ fn render_slime_color(
 
     for (mut sprite, position) in &mut tile_query {
         let amount0 = slime_grid
-            .get_amount(Faction::new(0), position.0)
+            .get_amount(ApiFaction::new(0), position.0)
             .as_float() as f32;
         let amount1 = slime_grid
-            .get_amount(Faction::new(1), position.0)
+            .get_amount(ApiFaction::new(1), position.0)
             .as_float() as f32;
 
         let background = Color::rgb(0.6, 0.6, 0.6);
