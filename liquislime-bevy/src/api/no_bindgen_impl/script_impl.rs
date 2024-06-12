@@ -102,7 +102,7 @@ impl ScriptData {
         #[allow(deprecated)]
         let instance = get_linker().instantiate(&mut *store, &module)?;
 
-        let exports = Exports::new(&mut *store, &instance)?;
+        let exports = Exports::new(&mut store, &instance)?;
 
         let memory = instance.get_memory(&mut *store, "memory").unwrap();
 

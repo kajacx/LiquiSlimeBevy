@@ -31,7 +31,7 @@ fn main() {
             ..Default::default()
         }))
         .add_plugins(LogDiagnosticsPlugin::default())
-        .add_plugins(FrameTimeDiagnosticsPlugin::default())
+        .add_plugins(FrameTimeDiagnosticsPlugin)
         .add_plugins(AllGamePlugins)
         .run();
 }

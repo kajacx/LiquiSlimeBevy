@@ -176,5 +176,5 @@ fn setup_selector(mut commands: Commands, asset_server: Res<AssetServer>) {
         ..Default::default()
     };
 
-    commands.spawn((sprite, SelectorCursor::default()));
+    commands.spawn((sprite, SelectorCursor));
 }

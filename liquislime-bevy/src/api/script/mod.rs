@@ -1,5 +1,6 @@
 mod imports;
 mod loaded_script;
+#[allow(clippy::module_inception)]
 mod script;
 mod script_instance;
 

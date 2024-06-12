@@ -7,3 +7,8 @@
 cd liquislime-scripts
 cargo clippy
 cd ..
+
+cd liquislime-bevy
+cargo check
+cargo clippy
+cd ..

@@ -31,13 +31,13 @@ impl Deref for NamedDeref {
     type Target = Store<StoreData>;
 
     fn deref(&self) -> &Self::Target {
-        &*self.1
+        &self.1
     }
 }
 
 impl DerefMut for NamedDeref {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut *self.1
+        &mut self.1
     }
 }
 

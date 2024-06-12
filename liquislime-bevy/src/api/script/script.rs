@@ -36,7 +36,7 @@ impl Script {
 
         let (new, status) = match &*lock {
             ScriptState::AssetLoading(handle) => {
-                if let Some(asset) = script_assets.get(*&handle) {
+                if let Some(asset) = script_assets.get(handle) {
                     (
                         Some(ScriptState::Loaded(
                             LoadedScript::from_bytes(&asset.bytes).expect("TODO: user error"),

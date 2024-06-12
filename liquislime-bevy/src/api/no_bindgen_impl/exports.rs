@@ -36,6 +36,7 @@ pub struct Exports {
 }
 
 impl Exports {
+    #[allow(clippy::needless_borrows_for_generic_args)]
     pub fn new(
         mut context: &mut Store<StoreData>,
         instance: &wasm_bridge::Instance,

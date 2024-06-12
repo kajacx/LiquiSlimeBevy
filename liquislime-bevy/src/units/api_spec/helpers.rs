@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 use crate::{components::SlimeGrids, units::global_storage::get_world};
 
-pub fn get_slime_grid<'a>(world: &'a mut World) -> impl DerefMut<Target = SlimeGrids> + 'a {
+pub fn get_slime_grid(world: &mut World) -> impl DerefMut<Target = SlimeGrids> + '_ {
     world
         .query::<&mut SlimeGrids>()
         .get_single_mut(world)

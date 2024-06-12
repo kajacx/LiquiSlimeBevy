@@ -9,7 +9,7 @@ pub fn window_position_to_world_position(
     transform: &GlobalTransform,
 ) -> ApiPosition {
     // get the size of the window
-    let window_size = Vec2::new(window.width() as f32, window.height() as f32);
+    let window_size = Vec2::new(window.width(), window.height());
 
     // convert screen position [0..resolution] to ndc [-1..1] (gpu coordinates)
     let mut ndc = (window_position / window_size) * 2.0 - Vec2::ONE;

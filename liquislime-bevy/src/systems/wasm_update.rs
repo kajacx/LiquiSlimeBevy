@@ -36,7 +36,7 @@ fn update_wasm_scripts(world: &mut World) {
 
         for (id, instances) in world.query::<(&UnitId, &ScriptInstances)>().iter(world) {
             for instance in &instances.0 {
-                units_and_ids.push((id.clone(), instance.clone()));
+                units_and_ids.push((*id, instance.clone()));
             }
         }
 

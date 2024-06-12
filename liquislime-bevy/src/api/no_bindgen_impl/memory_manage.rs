@@ -60,5 +60,5 @@ pub fn read_bytes(mut context: &mut WasmAccess, ptr: FatPtr) -> Result<Vec<u8>> 
         .script()
         .with_exports(|exports| exports.free_bytes(context, ptr))?;
 
-    Ok((bytes))
+    Ok(bytes)
 }

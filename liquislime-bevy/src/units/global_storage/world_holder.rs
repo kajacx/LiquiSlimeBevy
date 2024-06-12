@@ -9,7 +9,7 @@ static GLOBAL_WORLD: Mutex<InnerWorldRef> = Mutex::new(InnerWorldRef(std::ptr::n
 static THREAD_LOCK: Mutex<()> = Mutex::new(());
 
 fn set_world(world: *mut World) {
-    (*GLOBAL_WORLD.try_lock().expect("Set world mutex lock")).0 = world;
+    GLOBAL_WORLD.try_lock().expect("Set world mutex lock").0 = world;
 }
 
 pub fn get_world() -> impl DerefMut<Target = World> {
@@ -25,7 +25,7 @@ struct WorldRef<'a>(MutexGuard<'a, InnerWorldRef>);
 impl Deref for WorldRef<'_> {
     type Target = World;
 
-    fn deref<'a>(&'a self) -> &'a Self::Target {
+    fn deref(&self) -> &Self::Target {
         let inner_pointer = self.0 .0;
 
         if inner_pointer.is_null() {
@@ -39,7 +39,7 @@ impl Deref for WorldRef<'_> {
 }
 
 impl DerefMut for WorldRef<'_> {
-    fn deref_mut<'a>(&'a mut self) -> &'a mut Self::Target {
+    fn deref_mut(&mut self) -> &mut Self::Target {
         let inner_pointer = self.0 .0;
 
         if inner_pointer.is_null() {
