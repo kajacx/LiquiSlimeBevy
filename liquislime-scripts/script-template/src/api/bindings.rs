@@ -1,13 +1,11 @@
-use std::collections::HashMap;
-
-use crate::{
-    Faction, Instance, LiquislimeScript, Position, SlimeAmount, TilePosition, TimeInterval, Unit,
-};
-
 use super::{
     allocate_bytes_impl, free_bytes_impl, FatPtr, FromWasmAbi, SettingsDescription, SettingsValue,
     ToWasmAbi,
 };
+use crate::{
+    Faction, Instance, LiquislimeScript, Position, SlimeAmount, TilePosition, TimeInterval, Unit,
+};
+use std::collections::HashMap;
 
 #[no_mangle]
 pub fn init() {

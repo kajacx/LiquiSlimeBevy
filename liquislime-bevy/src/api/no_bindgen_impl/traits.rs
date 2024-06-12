@@ -107,11 +107,7 @@ impl FromWasmAbiSimple for bool {
     type Abi = u32;
 
     fn from_wasm_abi_simple(abi: Self::Abi) -> Self {
-        match abi {
-            0 => false,
-            _ => true,
-            // n => bail!("Invalid bool variant: {n}"),
-        }
+        !matches!(abi, 0)
     }
 }
 

@@ -63,10 +63,7 @@ impl FromWasmAbi for bool {
     type Abi = u32;
 
     fn from_wasm_abi(abi: Self::Abi) -> Self {
-        match abi {
-            0 => false,
-            _ => true,
-        }
+        !matches!(abi, 0)
     }
 }
 
@@ -125,7 +122,7 @@ impl FromWasmAbi for rmpv::Value {
         let bytes = Vec::<u8>::from_wasm_abi(abi);
         let mut bytes = bytes.as_slice();
         crate::log("About to decode rmpv value");
-        crate::log(&format!("{bytes:?}"));
+        crate::log(format!("{bytes:?}"));
         let res = rmpv::decode::read_value(&mut bytes).expect("TODO: decoding error");
         crate::log("Decoded rmpv value");
         res
