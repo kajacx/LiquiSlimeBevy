@@ -11,4 +11,5 @@ cd ..
 cd liquislime-bevy
 cargo check
 cargo clippy
+cargo test
 cd ..

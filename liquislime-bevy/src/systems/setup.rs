@@ -104,7 +104,8 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         let scripts = scripts
             .iter()
             .map(|(script, settings)| {
-                Arc::new(ScriptInstance::new((*script).clone(), settings.clone()))
+                // Arc::new(ScriptInstance::new((*script).clone(), settings.clone())) // FIXME:
+                todo!()
             })
             .collect::<Vec<_>>();
 

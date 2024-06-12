@@ -1,23 +1,13 @@
 use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
-use std::ops::{Div, Mul};
+use std::{
+    fmt::Debug,
+    ops::{Div, Mul},
+};
 
 const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
 
 #[derive(
-    Debug,
-    Clone,
-    Copy,
-    Default,
-    Add,
-    Sub,
-    Neg,
-    AddAssign,
-    SubAssign,
-    PartialEq,
-    Eq,
-    Hash,
-    PartialOrd,
-    Ord,
+    Clone, Copy, Default, Add, Sub, Neg, AddAssign, SubAssign, PartialEq, Eq, Hash, PartialOrd, Ord,
 )]
 pub struct ApiSlimeAmount(pub i64);
 
@@ -76,5 +66,11 @@ impl Div<f64> for ApiSlimeAmount {
 
     fn div(self, rhs: f64) -> Self::Output {
         Self((self.0 as f64 / rhs).round() as i64)
+    }
+}
+
+impl Debug for ApiSlimeAmount {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ApiSlimeAmount({})", self.as_float())
     }
 }

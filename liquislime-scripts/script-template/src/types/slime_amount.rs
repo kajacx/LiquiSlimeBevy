@@ -1,4 +1,5 @@
 use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
+use std::fmt::Debug;
 use std::ops::{Div, Mul};
 
 use crate::api::{pack_u32s, FromWasmAbi, ToWasmAbi};
@@ -6,20 +7,7 @@ use crate::api::{pack_u32s, FromWasmAbi, ToWasmAbi};
 const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
 
 #[derive(
-    Debug,
-    Clone,
-    Copy,
-    Default,
-    Add,
-    Sub,
-    Neg,
-    AddAssign,
-    SubAssign,
-    PartialEq,
-    Eq,
-    Hash,
-    PartialOrd,
-    Ord,
+    Clone, Copy, Default, Add, Sub, Neg, AddAssign, SubAssign, PartialEq, Eq, Hash, PartialOrd, Ord,
 )]
 pub struct SlimeAmount(i64);
 
@@ -94,5 +82,11 @@ impl FromWasmAbi for SlimeAmount {
 
     fn from_wasm_abi(abi: Self::Abi) -> Self {
         Self(abi)
+    }
+}
+
+impl Debug for SlimeAmount {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "SlimeAmount({})", self.as_float())
     }
 }

@@ -1,5 +1,7 @@
-use super::{get_engine, get_linker, get_store, Exports, FromWasmAbi, StoreData, WasmAccess};
-use crate::api::{script, ApiTimeInterval, LoadedScript, SettingsDescription, SettingsValue};
+use super::{create_linker, get_engine, get_store, Exports, FromWasmAbi, StoreData, WasmAccess};
+use crate::api::{
+    script, ApiTimeInterval, LiquislimeImports, LoadedScript, SettingsDescription, SettingsValue,
+};
 use atomic_refcell::AtomicRefCell;
 use bevy::ecs::schedule::Dag;
 use slab::Slab;
@@ -29,8 +31,8 @@ impl ScriptImpl {
         Self(usize::MAX)
     }
 
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
-        let data = ScriptData::from_bytes(bytes)?;
+    pub fn from_bytes(bytes: &[u8], imports: impl LiquislimeImports) -> Result<Self> {
+        let data = ScriptData::from_bytes(bytes, imports)?;
 
         let script = Self(SCRIPTS.borrow_mut().insert(data));
 
@@ -93,14 +95,16 @@ impl ScriptImpl {
 }
 
 impl ScriptData {
-    fn from_bytes(bytes: &[u8]) -> Result<Self> {
+    fn from_bytes(bytes: &[u8], imports: impl LiquislimeImports) -> Result<Self> {
         #[allow(deprecated)]
         let module = Module::new(get_engine(), bytes)?;
 
         let mut store = get_store("ScriptData::from_bytes");
 
+        let linker = create_linker(imports)?;
+
         #[allow(deprecated)]
-        let instance = get_linker().instantiate(&mut *store, &module)?;
+        let instance = linker.instantiate(&mut *store, &module)?;
 
         let exports = Exports::new(&mut store, &instance)?;
 

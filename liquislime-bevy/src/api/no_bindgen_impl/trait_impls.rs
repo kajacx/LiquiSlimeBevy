@@ -1,17 +1,15 @@
-use crate::{
-    api::{
-        ApiFaction, ApiInstance, ApiPosition, ApiSlimeAmount, ApiTilePosition, SettingsDescription,
-        SettingsValue, ApiTimeInterval,
-    },
-    components::UnitId,
-};
-use bevy_egui::egui::ahash::AHashMap;
-use wasm_bridge::{Result, StoreContextMut};
-
 use super::{
     helpers::{pack_f32s, pack_u32s, unpack_f32s, unpack_u32s},
     FromWasmAbi, FromWasmAbiSimple, ScriptImpl, StoreData, ToWasmAbi, ToWasmAbiSimple, WasmAccess,
 };
+use crate::{
+    api::{
+        ApiFaction, ApiInstance, ApiPosition, ApiSlimeAmount, ApiTilePosition, ApiTimeInterval,
+        ApiUnit, SettingsDescription, SettingsValue,
+    },
+    components::UnitId,
+};
+use wasm_bridge::{Result, StoreContextMut};
 
 impl ToWasmAbiSimple for ApiFaction {
     type Abi = u32;
@@ -29,19 +27,19 @@ impl FromWasmAbiSimple for ApiFaction {
     }
 }
 
-impl ToWasmAbiSimple for UnitId {
+impl ToWasmAbiSimple for ApiUnit {
     type Abi = u32;
 
     fn to_wasm_abi_simple(&self) -> Self::Abi {
-        self.0
+        self.0 .0
     }
 }
 
-impl FromWasmAbiSimple for UnitId {
+impl FromWasmAbiSimple for ApiUnit {
     type Abi = u32;
 
     fn from_wasm_abi_simple(abi: Self::Abi) -> Self {
-        Self(abi)
+        Self(UnitId(abi))
     }
 }
 

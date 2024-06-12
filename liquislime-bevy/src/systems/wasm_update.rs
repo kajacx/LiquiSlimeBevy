@@ -43,7 +43,7 @@ fn update_wasm_scripts(world: &mut World) {
         use_world_reference_in(world, move || {
             for (unit_id, script) in units_and_ids {
                 set_current_unit(unit_id);
-                script.try_initialize().expect("TODO: user error");
+                // script.try_initialize().expect("TODO: user error"); // FIXME:
                 script.update(time_elapsed).expect("TODO: user error");
             }
         });

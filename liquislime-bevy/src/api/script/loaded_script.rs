@@ -1,4 +1,4 @@
-use super::{Script, ScriptInstance};
+use super::{LiquislimeImports, Script, ScriptInstance, INSTANCES};
 use crate::{
     api::{ScriptImpl, SettingsDescription, SettingsValue},
     assets::ScriptAsset,
@@ -8,7 +8,7 @@ use std::sync::Arc;
 use try_lock::TryLock;
 use wasm_bridge::Result;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct LoadedScript(Arc<LoadedScriptInner>); // TODO: asset now can use this
 
 #[derive(Debug)]
@@ -18,8 +18,8 @@ struct LoadedScriptInner {
 }
 
 impl LoadedScript {
-    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
-        let script_impl = ScriptImpl::from_bytes(bytes)?;
+    pub fn from_bytes(bytes: &[u8], imports: impl LiquislimeImports) -> Result<Self> {
+        let script_impl = ScriptImpl::from_bytes(bytes, imports)?;
         let settings_description = script_impl.describe_settings()?;
 
         Ok(Self(Arc::new(LoadedScriptInner {
@@ -28,8 +28,14 @@ impl LoadedScript {
         })))
     }
 
-    pub fn new_instance(&self, id: u32, settings: &SettingsValue) -> Result<()> {
-        self.0.script_impl.new_instance(id, settings)
+    pub fn new_instance(&self, settings: SettingsValue) -> Result<ScriptInstance> {
+        let id = INSTANCES.try_lock().unwrap().insert(()) as u32;
+        self.new_instance_with_id(id, settings)
+    }
+
+    pub fn new_instance_with_id(&self, id: u32, settings: SettingsValue) -> Result<ScriptInstance> {
+        self.0.script_impl.new_instance(id, &settings)?;
+        Ok(ScriptInstance::new(self.clone(), id, settings))
     }
 
     pub fn settings_description(&self) -> &SettingsDescription {
