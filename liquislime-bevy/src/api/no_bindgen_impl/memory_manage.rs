@@ -15,11 +15,6 @@ impl ToWasmAbiSimple for FatPtr {
     type Abi = u64;
 
     fn to_wasm_abi_simple(&self) -> Self::Abi {
-        println!(
-            "Packing {:?}, {:?}",
-            self,
-            unpack_u32s(pack_u32s(self.addr, self.len))
-        );
         pack_u32s(self.addr, self.len)
     }
 }

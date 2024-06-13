@@ -78,8 +78,6 @@ pub fn update(
     instance_id: <Instance as FromWasmAbi>::Abi,
     time_elapsed: <TimeInterval as FromWasmAbi>::Abi,
 ) {
-    crate::log("Entering update");
-
     crate::INSTANCES
         .try_lock()
         .unwrap()
@@ -88,8 +86,6 @@ pub fn update(
         .get_mut(&Instance::from_wasm_abi(instance_id))
         .expect("TODO: user error, but it shouldn't really happen")
         .update(TimeInterval::from_wasm_abi(time_elapsed));
-
-    crate::log("Exiting update");
 }
 
 #[link(wasm_import_module = "liquislime_api")]

@@ -1,5 +1,5 @@
 use crate::components::{
-    FactionComponent, ScriptComponent, ScriptInstances, SelectorCursor, SlimeGrids,
+    FactionComponent, ScriptComponent, ScriptInstances, ScriptRequests, SelectorCursor, SlimeGrids,
 };
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
@@ -101,12 +101,9 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..Default::default()
         };
 
-        let scripts = scripts
+        let requests = scripts
             .iter()
-            .map(|(script, settings)| {
-                // Arc::new(ScriptInstance::new((*script).clone(), settings.clone())) // FIXME:
-                todo!()
-            })
+            .map(|(script, settings)| ScriptRequest::new((*script).clone(), settings.clone()))
             .collect::<Vec<_>>();
 
         commands.spawn((
@@ -114,7 +111,8 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
             TilePositionComponent::from(position),
             sprite,
             Building,
-            ScriptInstances(scripts),
+            ScriptRequests(requests),
+            ScriptInstances(vec![]),
             unit_id,
         ));
     };

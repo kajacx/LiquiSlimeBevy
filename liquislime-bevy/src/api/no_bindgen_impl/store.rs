@@ -14,9 +14,9 @@ static STORE: Lazy<TryLock<Store<StoreData>>> = Lazy::new(|| {
 });
 
 pub fn get_store(name: &'static str) -> impl DerefMut<Target = Store<StoreData>> {
-    println!("LOCKING {}", name);
+    // println!("LOCKING {}", name);
     let lock = STORE.try_lock().unwrap();
-    println!("LOCKED {}", name);
+    // println!("LOCKED {}", name);
     NamedDeref(name, lock)
 }
 
@@ -43,6 +43,6 @@ impl DerefMut for NamedDeref {
 
 impl Drop for NamedDeref {
     fn drop(&mut self) {
-        println!("UNLOCKING {}", self.0);
+        // println!("UNLOCKING {}", self.0);
     }
 }

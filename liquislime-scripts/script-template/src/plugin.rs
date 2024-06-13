@@ -36,6 +36,9 @@ impl LiquislimeScript for ScriptInstance {
     }
 
     fn update(&mut self, time_elapsed: TimeInterval) {
-        println!("[{}] Time elapsed: {:?}", self.settings.name, time_elapsed);
+        log(format!(
+            "[{}] Time elapsed: {:?}",
+            self.settings.name, time_elapsed
+        ));
     }
 }

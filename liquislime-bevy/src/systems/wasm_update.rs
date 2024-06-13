@@ -1,9 +1,12 @@
 use crate::api::{ApiTimeInterval, ScriptStatus};
 use crate::assets::ScriptAsset;
-use crate::components::{ScriptComponent, ScriptInstances, TilePositionComponent, UnitId};
+use crate::components::{
+    ScriptComponent, ScriptInstances, ScriptRequests, TilePositionComponent, UnitId,
+};
 use crate::units::global_storage::set_current_unit;
 use crate::{helpers::Phase, units::global_storage::use_world_reference_in};
 use bevy::prelude::*;
+use std::sync::Arc;
 
 pub struct WasmUpdatePlugin;
 
@@ -23,12 +26,30 @@ fn update_wasm_scripts(world: &mut World) {
 
     // "Ready check" to see if all scripts are loaded
     let mut all_ready = true;
-    for script in world.query::<(&ScriptComponent)>().iter(world) {
+    for script in world.query::<&ScriptComponent>().iter(world) {
         // TODO: load asset server lazily
         let asset_server = world.resource::<Assets<ScriptAsset>>();
         if script.0.try_load(asset_server) == ScriptStatus::NotLoaded {
             all_ready = false;
         }
+    }
+
+    // Try to initialize scripts
+    for (mut instances, mut requests) in world
+        .query::<(&mut ScriptInstances, &mut ScriptRequests)>()
+        .iter_mut(world)
+    {
+        requests.0.retain(|request| {
+            let resolved = request.try_initialize().expect("TODO: user error");
+            let keep = if let Some(instance) = resolved {
+                instances.0.push(Arc::new(instance));
+                false
+            } else {
+                all_ready = false;
+                true
+            };
+            keep
+        });
     }
 
     if all_ready {
@@ -43,7 +64,6 @@ fn update_wasm_scripts(world: &mut World) {
         use_world_reference_in(world, move || {
             for (unit_id, script) in units_and_ids {
                 set_current_unit(unit_id);
-                // script.try_initialize().expect("TODO: user error"); // FIXME:
                 script.update(time_elapsed).expect("TODO: user error");
             }
         });

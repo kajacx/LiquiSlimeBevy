@@ -117,7 +117,6 @@ impl ToWasmAbi for &[u8] {
     fn to_wasm_abi(&self, context: &mut WasmAccess) -> Result<Self::Abi> {
         let ptr = write_bytes(context, self)?;
         let abi = ptr.to_wasm_abi_simple();
-        println!("ENCODING BYTES: {:?}, {:?}, {:?}", self, ptr, abi);
         Ok(abi)
     }
 }
@@ -152,7 +151,7 @@ impl ToWasmAbi for rmpv::Value {
     fn to_wasm_abi(&self, context: &mut WasmAccess) -> Result<Self::Abi> {
         let mut bytes = Vec::new();
         rmpv::encode::write_value(&mut bytes, self)?;
-        println!("Encoded: {:?}, {:?}", self, bytes);
+        println!("Encoded rmpv value: {:?}, {:?}", self, bytes);
         bytes.as_slice().to_wasm_abi(context)
     }
 }
