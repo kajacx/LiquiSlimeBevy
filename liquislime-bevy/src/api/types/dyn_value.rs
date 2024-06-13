@@ -38,7 +38,7 @@ impl DynValue {
         }
     }
 
-    pub fn serialize(&self) -> rmpv::Value {
+    pub fn serialize(&self) -> DynValue {
         match self {
             // TODO: isn't self-describing ...
             Self::SlimeAmount(amount) => amount.0.into(),
@@ -46,7 +46,7 @@ impl DynValue {
         }
     }
 
-    pub fn deserialize(value: rmpv::Value) -> Result<Self> {
+    pub fn deserialize(value: DynValue) -> Result<Self> {
         //FIXME:
         Ok(if let Some(amount) = value.as_i64() {
             ApiSlimeAmount(amount).into()

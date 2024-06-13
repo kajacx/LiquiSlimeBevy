@@ -1,29 +1,34 @@
 use super::*;
+use anyhow::bail;
+use settings::SdSlimeAmount;
 
-pub struct ScriptSettings {
+pub struct Settings {
     amount: SlimeAmount,
 }
 
-pub struct ScriptInstance {
-    settings: ScriptSettings,
+pub struct UserScript {
+    settings: Settings,
 }
 
-impl TryFrom<SettingsValue> for ScriptSettings {
-    type Error = ();
+impl SettingsTemplate for Settings {
+    fn describe_settings() -> SettingsDescription {
+        SettingsDescription::SlimeAmount(SdSlimeAmount)
+    }
 
-    fn try_from(value: SettingsValue) -> Result<Self, Self::Error> {
-        Ok(Self {
-            amount: value.0.into(),
-        })
+    fn default_value() -> SettingsValue {
+        SettingsValue("My first script".to_owned().into())
+    }
+
+    fn parse(value: SettingsValue) -> Result<Self> {
+        match value.0.as_slime_amount() {
+            Some(amount) => Ok(Self { amount }),
+            None => bail!("Expected SlimeAmount, got {value:?}"),
+        }
     }
 }
 
-impl LiquislimeScript for ScriptInstance {
-    type Settings = ScriptSettings;
-
-    fn describe_settings() -> rmpv::Value {
-        "SlimeAmount".into()
-    }
+impl ScriptTemplate for UserScript {
+    type Settings = Settings;
 
     fn new_instance(settings: Self::Settings) -> Self {
         Self { settings }

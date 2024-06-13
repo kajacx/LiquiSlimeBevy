@@ -1,5 +1,6 @@
-use super::*;
+use super::{Faction, Level, Position, SlimeAmount};
 use crate::api::{pack_u32s, unpack_u32s, FromWasmAbi, ToWasmAbi};
+use anyhow::Result;
 use derive_more::{Add, AddAssign, Sub, SubAssign};
 
 #[derive(
@@ -28,7 +29,7 @@ impl TilePosition {
     }
 
     pub fn own_position() -> Self {
-        unsafe { Self::from_wasm_abi(crate::api::get_own_position()) }
+        Self::from_wasm_abi(unsafe { crate::api::get_own_position() }).unwrap()
     }
 
     pub fn is_in_bounds(self) -> bool {
@@ -40,12 +41,10 @@ impl TilePosition {
     }
 
     pub fn get_slime_amount(self, faction: Faction) -> SlimeAmount {
-        unsafe {
-            SlimeAmount::from_wasm_abi(crate::api::get_slime_amount(
-                faction.to_wasm_abi(),
-                self.to_wasm_abi(),
-            ))
-        }
+        SlimeAmount::from_wasm_abi(unsafe {
+            crate::api::get_slime_amount(faction.to_wasm_abi(), self.to_wasm_abi())
+        })
+        .unwrap()
     }
 
     pub fn set_own_slime_amount(self, amount: SlimeAmount) {
@@ -109,6 +108,18 @@ impl TilePosition {
     pub fn contains(self, position: Position) -> bool {
         position.to_tile_position() == self
     }
+
+    pub fn serialize(self, writer: &mut impl std::io::Write) -> Result<()> {
+        rmp::encode::write_i32(writer, self.x)?;
+        rmp::encode::write_i32(writer, self.y)?;
+        Ok(())
+    }
+
+    pub fn deserialize(reader: &mut impl std::io::Read) -> Result<Self> {
+        let x = rmp::decode::read_i32(reader)?;
+        let y = rmp::decode::read_i32(reader)?;
+        Ok(Self::new(x, y))
+    }
 }
 
 impl ToWasmAbi for TilePosition {
@@ -122,12 +133,12 @@ impl ToWasmAbi for TilePosition {
 impl FromWasmAbi for TilePosition {
     type Abi = u64;
 
-    fn from_wasm_abi(abi: Self::Abi) -> Self {
+    fn from_wasm_abi(abi: Self::Abi) -> Result<Self> {
         let unpacked = unpack_u32s(abi);
 
-        Self {
+        Ok(Self {
             x: unpacked.0 as i32,
             y: unpacked.1 as i32,
-        }
+        })
     }
 }

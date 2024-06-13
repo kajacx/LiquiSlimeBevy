@@ -1,7 +1,7 @@
+use crate::api::{FromWasmAbi, ToWasmAbi};
+use anyhow::Result;
 use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
 use std::ops::{Div, Mul};
-
-use crate::api::{FromWasmAbi, ToWasmAbi};
 
 const FRAGMENTS_IN_SECOND: i64 = 18_000;
 
@@ -21,33 +21,35 @@ const FRAGMENTS_IN_SECOND: i64 = 18_000;
     PartialOrd,
     Ord,
 )]
-pub struct TimeInterval {
-    fragments: i64,
-}
+pub struct TimeInterval(i64);
 
 impl TimeInterval {
     pub const fn new() -> Self {
-        Self { fragments: 0 }
+        Self(0)
     }
 
     pub fn from_seconds(seconds: f64) -> Self {
-        Self {
-            fragments: (seconds * FRAGMENTS_IN_SECOND as f64).round() as i64,
-        }
+        Self((seconds * FRAGMENTS_IN_SECOND as f64).round() as i64)
     }
 
     pub fn from_milliseconds(milliseconds: f64) -> Self {
-        Self {
-            fragments: (milliseconds * (FRAGMENTS_IN_SECOND / 1000) as f64).round() as i64,
-        }
+        Self((milliseconds * (FRAGMENTS_IN_SECOND / 1000) as f64).round() as i64)
     }
 
     pub fn to_seconds(self) -> f64 {
-        (self.fragments as f64) / (FRAGMENTS_IN_SECOND as f64)
+        (self.0 as f64) / (FRAGMENTS_IN_SECOND as f64)
     }
 
     pub fn to_milliseconds(self) -> f64 {
-        (self.fragments as f64) / ((FRAGMENTS_IN_SECOND * 1000) as f64)
+        (self.0 as f64) / ((FRAGMENTS_IN_SECOND * 1000) as f64)
+    }
+
+    pub fn serialize(self, writer: &mut impl std::io::Write) -> Result<()> {
+        Ok(rmp::encode::write_i64(writer, self.0)?)
+    }
+
+    pub fn deserialize(reader: &mut impl std::io::Read) -> Result<Self> {
+        Ok(Self(rmp::decode::read_i64(reader)?))
     }
 }
 
@@ -55,9 +57,7 @@ impl Mul<i64> for TimeInterval {
     type Output = TimeInterval;
 
     fn mul(self, rhs: i64) -> Self::Output {
-        Self {
-            fragments: self.fragments * rhs,
-        }
+        Self(self.0 * rhs)
     }
 }
 
@@ -65,9 +65,7 @@ impl Div<i64> for TimeInterval {
     type Output = TimeInterval;
 
     fn div(self, rhs: i64) -> Self::Output {
-        Self {
-            fragments: self.fragments / rhs,
-        }
+        Self(self.0 / rhs)
     }
 }
 
@@ -75,15 +73,15 @@ impl ToWasmAbi for TimeInterval {
     type Abi = i64;
 
     fn to_wasm_abi(&self) -> Self::Abi {
-        self.fragments
+        self.0
     }
 }
 
 impl FromWasmAbi for TimeInterval {
     type Abi = i64;
 
-    fn from_wasm_abi(abi: Self::Abi) -> Self {
-        Self { fragments: abi }
+    fn from_wasm_abi(abi: Self::Abi) -> Result<Self> {
+        Ok(Self(abi))
     }
 }
 

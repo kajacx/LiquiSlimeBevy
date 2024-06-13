@@ -11,7 +11,7 @@ rm -f liquislime-bevy/assets/scripts/*.wasm
 cd liquislime-scripts
 for script in */; do
   script=`echo $script | sed -E s#/##`
-  if [ "$script" = "target" ] || [ "$script" = "script-template" ]; then
+  if [ "$script" = "target" ] || [ "$script" = "script-template" ] || [ "$script" = "liquislime-settings" ]; then
     continue
   fi
 
@@ -22,8 +22,9 @@ for script in */; do
   sed -E -i 's/name =.*/name = "'"$crate_name"'"/' "$script/Cargo.toml"
   sed -E -i 's/package =.*/package = "liquislime:'"$script"'"/' "$script/Cargo.toml"
 
-  rm -rf "$script/src/types" "$script/src/api"
+  rm -rf "$script/src/types" "$script/src/settings" "$script/src/api"
   cp -r script-template/src/types "$script/src"
+  cp -r script-template/src/settings "$script/src"
   cp -r script-template/src/api "$script/src"
   cp script-template/src/lib.rs "$script/src/lib.rs"
   cp script-template/.gitignore_ "$script/.gitignore"

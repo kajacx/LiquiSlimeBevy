@@ -1,8 +1,10 @@
+use crate::api::{FromWasmAbi, ToWasmAbi};
+use crate::DynValue;
+use anyhow::Result;
 use derive_more::{Add, AddAssign, Neg, Sub, SubAssign};
 use std::fmt::Debug;
-use std::ops::{Div, Mul};
 
-use crate::api::{pack_u32s, FromWasmAbi, ToWasmAbi};
+use std::ops::{Div, Mul};
 
 const ONE_SLIME_AMOUNT: i64 = u32::MAX as i64;
 
@@ -34,6 +36,14 @@ impl SlimeAmount {
 
     pub fn as_float(self) -> f64 {
         (self.0 as f64) / (ONE_SLIME_AMOUNT as f64)
+    }
+
+    pub fn serialize(self, writer: &mut impl std::io::Write) -> Result<()> {
+        Ok(rmp::encode::write_i64(writer, self.0)?)
+    }
+
+    pub fn deserialize(reader: &mut impl std::io::Read) -> Result<Self> {
+        Ok(Self(rmp::decode::read_i64(reader)?))
     }
 }
 
@@ -80,14 +90,14 @@ impl ToWasmAbi for SlimeAmount {
 impl FromWasmAbi for SlimeAmount {
     type Abi = i64;
 
-    fn from_wasm_abi(abi: Self::Abi) -> Self {
-        Self(abi)
+    fn from_wasm_abi(abi: Self::Abi) -> Result<Self> {
+        Ok(Self(abi))
     }
 }
 
-impl From<rmpv::Value> for SlimeAmount {
-    fn from(value: rmpv::Value) -> Self {
-        Self(value.as_i64().expect("TODO: user error"))
+impl From<SlimeAmount> for DynValue {
+    fn from(value: SlimeAmount) -> Self {
+        Self::SlimeAmount(value)
     }
 }
 

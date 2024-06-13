@@ -1,5 +1,5 @@
 [package]
-name = "script-template"
+name = "liquislime-settings"
 version = "0.1.0"
 authors = ["kajacx"]
 edition = "2021"
@@ -8,7 +8,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [package.metadata.component]
-package = "liquislime:script"
+package = "liquislime:liquislime-settings"
 
 [dependencies]
 derive_more = { version = "0.99.17", default-features = false, features = ["add", "add_assign", "not", "from", "into"] }

@@ -145,7 +145,7 @@ impl FromWasmAbi for String {
     }
 }
 
-impl ToWasmAbi for rmpv::Value {
+impl ToWasmAbi for DynValue {
     type Abi = <&'static [u8] as ToWasmAbi>::Abi;
 
     fn to_wasm_abi(&self, context: &mut WasmAccess) -> Result<Self::Abi> {
@@ -156,7 +156,7 @@ impl ToWasmAbi for rmpv::Value {
     }
 }
 
-impl FromWasmAbi for rmpv::Value {
+impl FromWasmAbi for DynValue {
     type Abi = <Vec<u8> as FromWasmAbi>::Abi;
 
     fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {

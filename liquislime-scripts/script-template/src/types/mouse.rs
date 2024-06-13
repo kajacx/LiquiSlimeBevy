@@ -1,4 +1,4 @@
-use super::*;
+use super::Position;
 use crate::api::FromWasmAbi;
 
 pub struct Mouse;
@@ -10,7 +10,7 @@ impl Mouse {
     }
 
     pub fn try_get_position() -> Option<Position> {
-        unsafe { Option::<Position>::from_wasm_abi(crate::api::get_mouse_position()) }
+        Option::<Position>::from_wasm_abi(unsafe { crate::api::get_mouse_position() }).unwrap()
     }
 
     pub fn try_get_position_in_bounds() -> Option<Position> {
@@ -18,7 +18,7 @@ impl Mouse {
     }
 
     pub fn is_pressed() -> bool {
-        unsafe { bool::from_wasm_abi(crate::api::is_mouse_pressed()) }
+        bool::from_wasm_abi(unsafe { crate::api::is_mouse_pressed() }).unwrap()
     }
 
     pub fn is_pressed_at() -> Option<Position> {

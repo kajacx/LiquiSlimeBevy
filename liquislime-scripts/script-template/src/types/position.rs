@@ -1,6 +1,6 @@
+use super::TilePosition;
 use crate::api::{pack_f32s, unpack_f32s, FromWasmAbi, ToWasmAbi};
-
-use super::*;
+use anyhow::Result;
 use derive_more::{Add, AddAssign, Sub, SubAssign};
 
 #[derive(Debug, Clone, Copy, Default, Add, Sub, AddAssign, SubAssign, PartialEq, PartialOrd)]
@@ -47,6 +47,18 @@ impl Position {
     pub fn is_in_tile(self, tile_position: TilePosition) -> bool {
         tile_position.contains(self)
     }
+
+    pub fn serialize(self, writer: &mut impl std::io::Write) -> Result<()> {
+        rmp::encode::write_f32(writer, self.x)?;
+        rmp::encode::write_f32(writer, self.y)?;
+        Ok(())
+    }
+
+    pub fn deserialize(reader: &mut impl std::io::Read) -> Result<Self> {
+        let x = rmp::decode::read_f32(reader)?;
+        let y = rmp::decode::read_f32(reader)?;
+        Ok(Self::new(x, y))
+    }
 }
 
 impl ToWasmAbi for Position {
@@ -60,13 +72,13 @@ impl ToWasmAbi for Position {
 impl FromWasmAbi for Position {
     type Abi = u64;
 
-    fn from_wasm_abi(abi: Self::Abi) -> Self {
+    fn from_wasm_abi(abi: Self::Abi) -> Result<Self> {
         let unpacked = unpack_f32s(abi);
 
-        Self {
+        Ok(Self {
             x: unpacked.0,
             y: unpacked.1,
-        }
+        })
     }
 }
 
@@ -84,15 +96,15 @@ impl ToWasmAbi for Option<Position> {
 impl FromWasmAbi for Option<Position> {
     type Abi = u64;
 
-    fn from_wasm_abi(abi: Self::Abi) -> Self {
+    fn from_wasm_abi(abi: Self::Abi) -> Result<Self> {
         let unpacked = unpack_f32s(abi);
-        if unpacked.0.is_nan() {
+        Ok(if unpacked.0.is_nan() {
             None
         } else {
             Some(Position {
                 x: unpacked.0,
                 y: unpacked.1,
             })
-        }
+        })
     }
 }

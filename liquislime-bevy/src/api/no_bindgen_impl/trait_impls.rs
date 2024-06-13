@@ -161,7 +161,7 @@ impl FromWasmAbiSimple for ApiTimeInterval {
 }
 
 impl ToWasmAbi for DynValue {
-    type Abi = <rmpv::Value as ToWasmAbi>::Abi;
+    type Abi = <DynValue as ToWasmAbi>::Abi;
 
     fn to_wasm_abi(&self, context: &mut WasmAccess) -> Result<Self::Abi> {
         self.serialize().to_wasm_abi(context)
@@ -169,10 +169,10 @@ impl ToWasmAbi for DynValue {
 }
 
 impl FromWasmAbi for DynValue {
-    type Abi = <rmpv::Value as ToWasmAbi>::Abi;
+    type Abi = <DynValue as ToWasmAbi>::Abi;
 
     fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {
-        Self::deserialize(rmpv::Value::from_wasm_abi(context, abi)?)
+        Self::deserialize(DynValue::from_wasm_abi(context, abi)?)
     }
 }
 

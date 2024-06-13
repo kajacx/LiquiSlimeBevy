@@ -1,29 +1,34 @@
 use super::*;
+use anyhow::bail;
+use settings::SdText;
 
-pub struct ScriptSettings {
+pub struct Settings {
     name: String,
 }
 
-pub struct ScriptInstance {
-    settings: ScriptSettings,
+pub struct UserScript {
+    settings: Settings,
 }
 
-impl TryFrom<SettingsValue> for ScriptSettings {
-    type Error = ();
+impl SettingsTemplate for Settings {
+    fn describe_settings() -> SettingsDescription {
+        SettingsDescription::Text(SdText)
+    }
 
-    fn try_from(value: SettingsValue) -> Result<Self, Self::Error> {
-        Ok(Self {
-            name: value.0.to_string(),
-        })
+    fn default_value() -> SettingsValue {
+        SettingsValue("My first script".to_owned().into())
+    }
+
+    fn parse(value: SettingsValue) -> Result<Self> {
+        match value.0.into_string() {
+            Ok(text) => Ok(Self { name: text.into() }),
+            Err(value) => bail!("Expected string, got {value:?}"),
+        }
     }
 }
 
-impl LiquislimeScript for ScriptInstance {
-    type Settings = ScriptSettings;
-
-    fn describe_settings() -> rmpv::Value {
-        "SlimeAmount".into()
-    }
+impl ScriptTemplate for UserScript {
+    type Settings = Settings;
 
     fn new_instance(settings: Self::Settings) -> Self {
         Self { settings }
