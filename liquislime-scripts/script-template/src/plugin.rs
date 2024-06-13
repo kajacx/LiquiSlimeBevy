@@ -1,5 +1,3 @@
-use rmpv::Utf8String;
-
 use super::*;
 
 pub struct ScriptSettings {
@@ -24,7 +22,7 @@ impl LiquislimeScript for ScriptInstance {
     type Settings = ScriptSettings;
 
     fn describe_settings() -> rmpv::Value {
-        rmpv::Value::String(Utf8String::from("String"))
+        "TODO: describe".into()
     }
 
     fn new_instance(settings: Self::Settings) -> Self {

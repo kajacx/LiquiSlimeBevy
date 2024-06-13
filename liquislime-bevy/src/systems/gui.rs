@@ -68,14 +68,14 @@ fn display_script_settings(ui: &mut Ui, instance: &mut ScriptInstance) {
     });
 
     let mut settings_saved = false;
-    instance.with_settings(|description, value, tmp_value| {
-        description.display_ui_element(ui, tmp_value);
+    instance.with_settings(|description, value, temp_value| {
+        description.display_ui_element(ui, temp_value);
 
         if ui.button("Reset").clicked() {
-            description.reset_settings(value, tmp_value);
+            description.reset_settings(value, temp_value);
         }
         if ui.button("Save").clicked() {
-            description.save_settings(tmp_value, value);
+            description.save_settings(temp_value, value);
             settings_saved = true;
         }
     });
@@ -90,7 +90,7 @@ fn display_script_settings(ui: &mut Ui, instance: &mut ScriptInstance) {
 pub trait SettingsUiDisplay {
     fn display_ui_element(&self, ui: &mut Ui, value: &mut SettingsTempValue);
 
-    fn save_settings(&self, tmp_value: &SettingsTempValue, value: &mut SettingsValue);
+    fn save_settings(&self, temp_value: &SettingsTempValue, value: &mut SettingsValue);
 
-    fn reset_settings(&self, value: &SettingsValue, tmp_value: &mut SettingsTempValue);
+    fn reset_settings(&self, value: &SettingsValue, temp_value: &mut SettingsTempValue);
 }

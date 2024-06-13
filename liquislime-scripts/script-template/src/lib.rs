@@ -18,6 +18,7 @@ static INSTANCES: TryLock<Option<HashMap<Instance, ScriptInstance>>> = TryLock::
 trait LiquislimeScript {
     type Settings: TryFrom<SettingsValue>;
 
+    // TODO: this should be removed and obtained from the Settings type instead
     fn describe_settings() -> rmpv::Value;
 
     fn new_instance(settings: Self::Settings) -> Self;

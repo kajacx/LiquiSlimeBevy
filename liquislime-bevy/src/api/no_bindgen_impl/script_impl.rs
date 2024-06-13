@@ -57,7 +57,7 @@ impl ScriptImpl {
 
     pub fn change_settings(&self, id: u32, settings: &SettingsValue) -> Result<()> {
         self.with_store("ScriptImpl::change_settings", |context, script| {
-            script.exports.new_instance(context, id, settings)
+            script.exports.change_settings(context, id, settings)
         })
     }
 

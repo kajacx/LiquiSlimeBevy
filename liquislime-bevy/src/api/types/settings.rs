@@ -23,9 +23,9 @@ impl SettingsUiDisplay for SettingsDescription {
         ui.text_edit_singleline(value.0.as_string_mut().expect("TODO: user error"));
     }
 
-    fn save_settings(&self, tmp_value: &SettingsTempValue, value: &mut SettingsValue) {
+    fn save_settings(&self, temp_value: &SettingsTempValue, value: &mut SettingsValue) {
         value.0 = ApiSlimeAmount::from_float(
-            value
+            temp_value
                 .0
                 .as_str()
                 .expect("TODO: user error")
@@ -35,8 +35,8 @@ impl SettingsUiDisplay for SettingsDescription {
         .into();
     }
 
-    fn reset_settings(&self, value: &SettingsValue, tmp_value: &mut SettingsTempValue) {
-        tmp_value.0 = DynValue::from(format!(
+    fn reset_settings(&self, value: &SettingsValue, temp_value: &mut SettingsTempValue) {
+        temp_value.0 = DynValue::from(format!(
             "{}",
             value
                 .0
@@ -79,12 +79,12 @@ impl SettingsUiDisplay for SettingsDescription {
 //         };
 //     }
 
-//     fn save_settings(&self, tmp_value: &SettingsTempValue, value: &mut SettingsValue) {
-//         value.0 = tmp_value.0.clone();
+//     fn save_settings(&self, temp_value: &SettingsTempValue, value: &mut SettingsValue) {
+//         value.0 = temp_value.0.clone();
 //     }
 
-//     fn reset_settings(&self, value: &SettingsValue, tmp_value: &mut SettingsTempValue) {
-//         tmp_value.0 = value.0.clone();
+//     fn reset_settings(&self, value: &SettingsValue, temp_value: &mut SettingsTempValue) {
+//         temp_value.0 = value.0.clone();
 //     }
 // }
 
@@ -97,9 +97,9 @@ impl SettingsUiDisplay for SettingsDescription {
 //         };
 //     }
 
-//     fn save_settings(&self, tmp_value: &SettingsTempValue, value: &mut SettingsValue) {
+//     fn save_settings(&self, temp_value: &SettingsTempValue, value: &mut SettingsValue) {
 //         value.0 = json!(SlimeAmount::from_float(
-//             tmp_value
+//             temp_value
 //                 .0
 //                 .as_str()
 //                 .expect("TODO: user error")
@@ -108,8 +108,8 @@ impl SettingsUiDisplay for SettingsDescription {
 //         ));
 //     }
 
-//     fn reset_settings(&self, value: &SettingsValue, tmp_value: &mut SettingsTempValue) {
-//         tmp_value.0 = json!(format!(
+//     fn reset_settings(&self, value: &SettingsValue, temp_value: &mut SettingsTempValue) {
+//         temp_value.0 = json!(format!(
 //             "{}",
 //             serde_json::from_value::<SlimeAmount>(value.0.clone())
 //                 .expect("TODO: user error")
@@ -143,17 +143,17 @@ impl SettingsUiDisplay for SettingsDescription {
 //         }
 //     }
 
-//     fn save_settings(&self, tmp_value: &SettingsTempValue, value: &mut SettingsValue) {
+//     fn save_settings(&self, temp_value: &SettingsTempValue, value: &mut SettingsValue) {
 //         match self {
-//             Self::SlimeAmount(amount) => amount.save_settings(tmp_value, value),
-//             Self::String(string) => string.save_settings(tmp_value, value),
+//             Self::SlimeAmount(amount) => amount.save_settings(temp_value, value),
+//             Self::String(string) => string.save_settings(temp_value, value),
 //             Self::Object(object) => {
 //                 value.0 = json!({});
 //                 for (name, val) in object {
 //                     value.0[name] = json!(null);
 //                     val.save_settings(
 //                         SettingsTempValue::ref_cast(
-//                             tmp_value.0.get(name).expect("TODO: User error"),
+//                             temp_value.0.get(name).expect("TODO: User error"),
 //                         ),
 //                         SettingsValue::ref_cast_mut(value.0.get_mut(name).unwrap()),
 //                     )
@@ -163,17 +163,17 @@ impl SettingsUiDisplay for SettingsDescription {
 //         }
 //     }
 
-//     fn reset_settings(&self, value: &SettingsValue, tmp_value: &mut SettingsTempValue) {
+//     fn reset_settings(&self, value: &SettingsValue, temp_value: &mut SettingsTempValue) {
 //         match self {
-//             Self::SlimeAmount(amount) => amount.reset_settings(value, tmp_value),
-//             Self::String(string) => string.reset_settings(value, tmp_value),
+//             Self::SlimeAmount(amount) => amount.reset_settings(value, temp_value),
+//             Self::String(string) => string.reset_settings(value, temp_value),
 //             Self::Object(object) => {
-//                 tmp_value.0 = json!({});
+//                 temp_value.0 = json!({});
 //                 for (name, val) in object {
-//                     tmp_value.0[name] = json!(null);
+//                     temp_value.0[name] = json!(null);
 //                     val.reset_settings(
 //                         SettingsValue::ref_cast(value.0.get(name).expect("TODO: user error")),
-//                         SettingsTempValue::ref_cast_mut(tmp_value.0.get_mut(name).unwrap()),
+//                         SettingsTempValue::ref_cast_mut(temp_value.0.get_mut(name).unwrap()),
 //                     )
 //                 }
 //             }

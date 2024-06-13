@@ -1,5 +1,3 @@
-use rmpv::Utf8String;
-
 use super::*;
 
 pub struct ScriptSettings {
@@ -15,7 +13,7 @@ impl TryFrom<SettingsValue> for ScriptSettings {
 
     fn try_from(value: SettingsValue) -> Result<Self, Self::Error> {
         Ok(Self {
-            amount: SlimeAmount::from_float(value.0.as_f64().unwrap()),
+            amount: value.0.into(),
         })
     }
 }
@@ -28,7 +26,7 @@ impl LiquislimeScript for ScriptInstance {
     }
 
     fn describe_settings() -> rmpv::Value {
-        rmpv::Value::String(Utf8String::from("SlimeAmount"))
+        "TODO: describe".into()
     }
 
     fn change_settings(&mut self, settings: Self::Settings) {

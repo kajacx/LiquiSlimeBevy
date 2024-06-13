@@ -129,7 +129,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
             ),
             (
                 &clicker_script,
-                SettingsValue(ApiSlimeAmount::from_integer(1000).into()),
+                SettingsValue(ApiSlimeAmount::from_integer(2000).into()),
             ),
         ],
     );

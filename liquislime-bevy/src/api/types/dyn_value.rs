@@ -41,7 +41,7 @@ impl DynValue {
 
     pub fn deserialize(value: rmpv::Value) -> Result<Self> {
         Ok(Self::SlimeAmount(ApiSlimeAmount(
-            value.as_u64().expect("TODO: rework completely") as i64,
+            value.as_i64().expect("TODO: rework completely"),
         )))
     }
 }

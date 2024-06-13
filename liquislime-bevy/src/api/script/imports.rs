@@ -1,3 +1,4 @@
+use super::LiquislimeImports;
 use crate::api::{ApiFaction, ApiPosition, ApiSlimeAmount, ApiTilePosition, ApiUnit};
 use crate::components::{FactionComponent, UnitId};
 use crate::resources::MouseState;
@@ -10,37 +11,58 @@ use bevy::ecs::world;
 use bevy::input::touch::Touch;
 use bevy::prelude::*;
 
-use super::LiquislimeImports;
+const LOG: bool = false;
 
 #[derive(Debug, Clone)]
 pub struct GameImports;
 
 impl LiquislimeImports for GameImports {
     fn level_width(&self) -> i32 {
+        if LOG {
+            println!("Entered level_width")
+        }
         level_width()
     }
 
     fn level_height(&self) -> i32 {
+        if LOG {
+            println!("Entered level_height")
+        }
         level_height()
     }
 
     fn get_current_unit(&self) -> ApiUnit {
+        if LOG {
+            println!("Entered get_current_unit")
+        }
         ApiUnit(get_current_unit())
     }
 
     fn get_current_instance(&self) -> crate::api::ApiInstance {
+        if LOG {
+            println!("Entered get_current_instance")
+        }
         get_current_instance()
     }
 
     fn get_own_faction(&self) -> ApiFaction {
+        if LOG {
+            println!("Entered get_own_faction")
+        }
         get_own_faction()
     }
 
     fn get_own_position(&self) -> ApiTilePosition {
+        if LOG {
+            println!("Entered get_own_position")
+        }
         get_own_position()
     }
 
     fn get_slime_amount(&self, faction: ApiFaction, position: ApiTilePosition) -> ApiSlimeAmount {
+        if LOG {
+            println!("Entered get_slime_amount")
+        }
         get_slime_amount(faction, position)
     }
 
@@ -50,14 +72,23 @@ impl LiquislimeImports for GameImports {
         position: ApiTilePosition,
         amount: ApiSlimeAmount,
     ) {
+        if LOG {
+            println!("Entered set_slime_amount")
+        }
         set_slime_amount(faction, position, amount)
     }
 
     fn get_mouse_position(&self) -> Option<ApiPosition> {
+        if LOG {
+            println!("Entered is_mouse_pressed")
+        }
         get_mouse_position()
     }
 
     fn is_mouse_pressed(&self) -> bool {
+        if LOG {
+            println!("Entered is_mouse_pressed")
+        }
         is_mouse_pressed()
     }
 

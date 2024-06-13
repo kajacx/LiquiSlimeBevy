@@ -85,6 +85,12 @@ impl FromWasmAbi for SlimeAmount {
     }
 }
 
+impl From<rmpv::Value> for SlimeAmount {
+    fn from(value: rmpv::Value) -> Self {
+        Self(value.as_i64().expect("TODO: user error"))
+    }
+}
+
 impl Debug for SlimeAmount {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "SlimeAmount({})", self.as_float())
