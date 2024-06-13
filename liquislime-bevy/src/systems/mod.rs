@@ -4,7 +4,7 @@ use crate::assets::AssetsGamePlugin;
 use crate::helpers::StagesPlugin;
 
 // mod compile_input;
-// pub mod gui;
+pub mod gui;
 mod input_process;
 mod input_read;
 mod rendering;
@@ -20,7 +20,7 @@ impl PluginGroup for AllGamePlugins {
             .add(AssetsGamePlugin)
             .add(StagesPlugin)
             .add(setup::GameSetupPlugin)
-            // .add(gui::GuiPlugin)
+            .add(gui::GuiPlugin)
             .add(input_read::InputReadPlugin)
             .add(input_process::InputProcessPlugin)
             .add(update_logic::UpdateLogicPlugin)

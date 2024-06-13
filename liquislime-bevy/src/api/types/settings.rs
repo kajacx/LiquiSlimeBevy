@@ -1,22 +1,51 @@
-use super::ApiSlimeAmount;
-use crate::helpers::ResultLogger;
+use super::{ApiSlimeAmount, DynValue};
+use crate::{helpers::ResultLogger, systems::gui::SettingsUiDisplay};
 use ref_cast::RefCast;
 use std::collections::HashMap;
 
 #[derive(ref_cast::RefCast)]
 #[repr(transparent)]
 #[derive(Debug, Clone)]
-pub struct SettingsValue(pub rmpv::Value);
+pub struct SettingsValue(pub DynValue);
 
 #[derive(ref_cast::RefCast)]
 #[repr(transparent)]
 #[derive(Debug, Clone)]
-pub struct SettingsTempValue(pub rmpv::Value);
+pub struct SettingsTempValue(pub DynValue);
 
 #[derive(ref_cast::RefCast)]
 #[repr(transparent)]
 #[derive(Debug, Clone)]
 pub struct SettingsDescription(pub rmpv::Value);
+
+impl SettingsUiDisplay for SettingsDescription {
+    fn display_ui_element(&self, ui: &mut bevy_egui::egui::Ui, value: &mut SettingsTempValue) {
+        ui.text_edit_singleline(value.0.as_string_mut().expect("TODO: user error"));
+    }
+
+    fn save_settings(&self, tmp_value: &SettingsTempValue, value: &mut SettingsValue) {
+        value.0 = ApiSlimeAmount::from_float(
+            value
+                .0
+                .as_str()
+                .expect("TODO: user error")
+                .parse()
+                .expect("FIXME: user error"),
+        )
+        .into();
+    }
+
+    fn reset_settings(&self, value: &SettingsValue, tmp_value: &mut SettingsTempValue) {
+        tmp_value.0 = DynValue::from(format!(
+            "{}",
+            value
+                .0
+                .as_slime_amount()
+                .expect("TODO: user error")
+                .as_float()
+        ));
+    }
+}
 
 // impl SettingsDescription {
 //     pub fn default_value(&self) -> SettingsValue {

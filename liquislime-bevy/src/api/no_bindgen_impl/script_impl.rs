@@ -34,7 +34,7 @@ impl ScriptImpl {
     pub fn from_bytes(bytes: &[u8], imports: impl LiquislimeImports) -> Result<Self> {
         let data = ScriptData::from_bytes(bytes, imports)?;
 
-        let script = Self(SCRIPTS.borrow_mut().insert(data));
+        let script = Self(SCRIPTS.try_borrow_mut().unwrap().insert(data));
 
         script.with_store("ScriptImpl::from_bytes", |context, script| {
             script.exports.init(context)
@@ -77,7 +77,7 @@ impl ScriptImpl {
         let mut wasm_context = WasmAccess {
             store: store.as_context_mut(),
         };
-        let script = &SCRIPTS.borrow()[self.0];
+        let script = &SCRIPTS.try_borrow().unwrap()[self.0];
         callback(&mut wasm_context, script)
     }
 
@@ -86,11 +86,11 @@ impl ScriptImpl {
     }
 
     pub(super) fn with_exports<T>(&self, callback: impl FnOnce(&Exports) -> T) -> T {
-        callback(&SCRIPTS.borrow()[self.0].exports)
+        callback(&SCRIPTS.try_borrow().unwrap()[self.0].exports)
     }
 
     pub(super) fn with_memory<T>(&self, callback: impl FnOnce(&Memory) -> T) -> T {
-        callback(&SCRIPTS.borrow()[self.0].memory)
+        callback(&SCRIPTS.try_borrow().unwrap()[self.0].memory)
     }
 }
 

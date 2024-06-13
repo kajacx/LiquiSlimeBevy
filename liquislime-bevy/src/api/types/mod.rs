@@ -1,3 +1,4 @@
+mod dyn_value;
 mod faction;
 mod instance;
 mod position;
@@ -7,6 +8,7 @@ mod tile_position;
 mod time_interval;
 mod unit;
 
+pub use dyn_value::*;
 pub use faction::*;
 pub use instance::*;
 pub use position::*;

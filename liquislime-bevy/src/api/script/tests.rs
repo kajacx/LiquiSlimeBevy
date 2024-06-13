@@ -123,10 +123,15 @@ impl LiquislimeImportsStub for LastAmountImports {
 fn test_settings() {
     let imports = LastAmountImports::default();
 
+    // TODO: Bad design
+    let script = Script::from_bytes("Spawner".into(), SPAWNER_BYTES, imports.clone()).unwrap();
     let spawner_script = LoadedScript::from_bytes(SPAWNER_BYTES, imports.clone()).unwrap();
 
     let mut instance = spawner_script
-        .new_instance(SettingsValue(rmpv::Value::from(100i64)))
+        .new_instance(
+            script,
+            SettingsValue(ApiSlimeAmount::from_integer(100).into()),
+        )
         .unwrap();
 
     instance.update(ApiTimeInterval::from_seconds(1.0)).unwrap();
@@ -136,9 +141,10 @@ fn test_settings() {
         ApiSlimeAmount::from_integer(100)
     );
 
-    instance
-        .change_settings(SettingsValue(rmpv::Value::from(200i64)))
-        .unwrap();
+    instance.with_settings(|_, settings, _| {
+        *settings = SettingsValue(ApiSlimeAmount::from_integer(200).into());
+    });
+    instance.change_settings().unwrap();
 
     instance.update(ApiTimeInterval::from_seconds(1.0)).unwrap();
 

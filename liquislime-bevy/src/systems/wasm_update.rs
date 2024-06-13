@@ -42,7 +42,7 @@ fn update_wasm_scripts(world: &mut World) {
         requests.0.retain(|request| {
             let resolved = request.try_initialize().expect("TODO: user error");
             let keep = if let Some(instance) = resolved {
-                instances.0.push(Arc::new(instance));
+                instances.0.push(instance);
                 false
             } else {
                 all_ready = false;
@@ -57,7 +57,7 @@ fn update_wasm_scripts(world: &mut World) {
 
         for (id, instances) in world.query::<(&UnitId, &ScriptInstances)>().iter(world) {
             for instance in &instances.0 {
-                units_and_ids.push((*id, instance.clone()));
+                units_and_ids.push((*id, *instance));
             }
         }
 

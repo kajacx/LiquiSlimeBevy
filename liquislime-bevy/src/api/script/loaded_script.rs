@@ -1,4 +1,4 @@
-use super::{LiquislimeImports, Script, ScriptInstance, INSTANCES};
+use super::{LiquislimeImports, Script, ScriptInstance};
 use crate::{
     api::{ScriptImpl, SettingsDescription, SettingsValue},
     assets::ScriptAsset,
@@ -28,14 +28,13 @@ impl LoadedScript {
         })))
     }
 
-    pub fn new_instance(&self, settings: SettingsValue) -> Result<ScriptInstance> {
-        let id = INSTANCES.try_lock().unwrap().insert(()) as u32;
-        self.new_instance_with_id(id, settings)
-    }
-
-    pub fn new_instance_with_id(&self, id: u32, settings: SettingsValue) -> Result<ScriptInstance> {
-        self.0.script_impl.new_instance(id, &settings)?;
-        Ok(ScriptInstance::new(self.clone(), id, settings))
+    pub fn new_instance(&self, script: Script, settings: SettingsValue) -> Result<ScriptInstance> {
+        let instance = ScriptInstance::new(script, self.clone(), settings);
+        // TODO: remove instance on failure
+        instance.with_settings(|_, settings, _| {
+            self.0.script_impl.new_instance(instance.id(), settings)
+        })?;
+        Ok(instance)
     }
 
     pub fn settings_description(&self) -> &SettingsDescription {

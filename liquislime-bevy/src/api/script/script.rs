@@ -78,6 +78,10 @@ impl Script {
             ScriptState::AssetLoading(_) => Err(ScriptNotLoadedError),
         }
     }
+
+    pub fn name(&self) -> &str {
+        &self.0.name
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

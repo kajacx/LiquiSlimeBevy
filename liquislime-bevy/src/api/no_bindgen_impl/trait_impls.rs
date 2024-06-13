@@ -5,7 +5,7 @@ use super::{
 use crate::{
     api::{
         ApiFaction, ApiInstance, ApiPosition, ApiSlimeAmount, ApiTilePosition, ApiTimeInterval,
-        ApiUnit, SettingsDescription, SettingsValue,
+        ApiUnit, DynValue, SettingsDescription, SettingsValue,
     },
     components::UnitId,
 };
@@ -160,8 +160,24 @@ impl FromWasmAbiSimple for ApiTimeInterval {
     }
 }
 
-impl ToWasmAbi for SettingsValue {
+impl ToWasmAbi for DynValue {
     type Abi = <rmpv::Value as ToWasmAbi>::Abi;
+
+    fn to_wasm_abi(&self, context: &mut WasmAccess) -> Result<Self::Abi> {
+        self.serialize().to_wasm_abi(context)
+    }
+}
+
+impl FromWasmAbi for DynValue {
+    type Abi = <rmpv::Value as ToWasmAbi>::Abi;
+
+    fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {
+        Self::deserialize(rmpv::Value::from_wasm_abi(context, abi)?)
+    }
+}
+
+impl ToWasmAbi for SettingsValue {
+    type Abi = <DynValue as ToWasmAbi>::Abi;
 
     fn to_wasm_abi(&self, context: &mut WasmAccess) -> Result<Self::Abi> {
         self.0.to_wasm_abi(context)
@@ -169,10 +185,10 @@ impl ToWasmAbi for SettingsValue {
 }
 
 impl FromWasmAbi for SettingsValue {
-    type Abi = <rmpv::Value as FromWasmAbi>::Abi;
+    type Abi = <DynValue as FromWasmAbi>::Abi;
 
     fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {
-        Ok(Self(rmpv::Value::from_wasm_abi(context, abi)?))
+        Ok(Self(DynValue::from_wasm_abi(context, abi)?))
     }
 }
 

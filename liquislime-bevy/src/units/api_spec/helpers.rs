@@ -28,5 +28,5 @@ pub fn get_slime_grid(world: &mut World) -> impl DerefMut<Target = SlimeGrids> +
 //         .get_resource::<Input<MouseButton>>()
 //         .expect("Mouse input resource should exist");
 
-//     reader(input.borrow())
+//     reader(input.try_borrow().unwrap())
 // }

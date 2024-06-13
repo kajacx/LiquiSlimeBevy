@@ -1,19 +1,25 @@
 use super::{LoadedScript, Script};
-use crate::api::{ApiTimeInterval, ScriptImpl, SettingsTempValue, SettingsValue};
+use crate::api::{
+    ApiTimeInterval, ScriptImpl, SettingsDescription, SettingsTempValue, SettingsValue,
+};
 use anyhow::bail;
+use atomic_refcell::AtomicRefCell;
 use slab::Slab;
-use try_lock::TryLock;
 use wasm_bridge::Result;
 
-pub(super) static INSTANCES: TryLock<Slab<()>> = TryLock::new(Slab::new());
+static INSTANCES: AtomicRefCell<Slab<ScriptInstanceInner>> = AtomicRefCell::new(Slab::new());
+
+#[derive(Debug, Clone, Copy)]
+pub struct ScriptInstance(usize);
 
 #[derive(Debug)]
-pub struct ScriptInstance {
+struct ScriptInstanceInner {
     id: u32,
-    script: LoadedScript,
+    script: Script,
+    loaded_script: LoadedScript,
     settings: SettingsValue,
-    pub temp_settings: SettingsTempValue,
-    instance_state: TryLock<InstanceState>,
+    temp_settings: SettingsTempValue,
+    instance_state: InstanceState,
 }
 
 #[derive(Debug)]
@@ -23,25 +29,71 @@ enum InstanceState {
 }
 
 impl ScriptInstance {
-    pub fn new(script: LoadedScript, id: u32, settings: SettingsValue) -> Self {
-        Self {
-            id,
+    pub fn new(script: Script, loaded_script: LoadedScript, settings: SettingsValue) -> Self {
+        let mut lock = INSTANCES.try_borrow_mut().unwrap();
+
+        let id = lock.vacant_key();
+
+        let inner = ScriptInstanceInner {
+            id: id as u32,
             script,
+            loaded_script,
             settings,
-            temp_settings: SettingsTempValue(rmpv::Value::Nil), // TODO:
-            instance_state: TryLock::new(InstanceState::NotInitialized),
-        }
+            temp_settings: SettingsTempValue(crate::api::DynValue::Null), // TODO:
+            instance_state: InstanceState::NotInitialized,
+        };
+
+        let index = lock.insert(inner);
+
+        assert_eq!(id, index, "Index must match id!");
+
+        Self(index)
     }
 
-    pub fn change_settings(&mut self, settings: SettingsValue) -> Result<()> {
-        self.script
-            .script_impl()
-            .change_settings(self.id, &settings)?;
-        self.settings = settings;
-        Ok(())
+    pub fn change_settings(self) -> Result<()> {
+        self.with_inner(|inner| {
+            inner
+                .loaded_script
+                .script_impl()
+                .change_settings(inner.id, &inner.settings)
+        })
     }
 
-    pub fn update(&self, time_elapsed: ApiTimeInterval) -> Result<()> {
-        self.script.script_impl().update(self.id, time_elapsed)
+    pub fn update(self, time_elapsed: ApiTimeInterval) -> Result<()> {
+        self.with_inner(|inner| {
+            inner
+                .loaded_script
+                .script_impl()
+                .update(inner.id, time_elapsed)
+        })
+    }
+
+    pub fn id(self) -> u32 {
+        self.0 as u32
+    }
+
+    pub fn with_name<T>(self, callback: impl FnOnce(&str) -> T) -> T {
+        self.with_inner(move |inner| callback(inner.script.name()))
+    }
+
+    pub fn with_settings<T>(
+        self,
+        callback: impl FnOnce(&SettingsDescription, &mut SettingsValue, &mut SettingsTempValue) -> T,
+    ) -> T {
+        self.with_inner_mut(|inner| {
+            callback(
+                inner.loaded_script.settings_description(),
+                &mut inner.settings,
+                &mut inner.temp_settings,
+            )
+        })
+    }
+
+    fn with_inner<T>(self, callback: impl FnOnce(&ScriptInstanceInner) -> T) -> T {
+        callback(&INSTANCES.try_borrow().unwrap()[self.0])
+    }
+
+    fn with_inner_mut<T>(self, callback: impl FnOnce(&mut ScriptInstanceInner) -> T) -> T {
+        callback(&mut INSTANCES.try_borrow_mut().unwrap()[self.0])
     }
 }

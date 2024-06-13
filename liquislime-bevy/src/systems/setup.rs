@@ -123,8 +123,14 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         &[
-            (&spawner_script, SettingsValue(rmpv::Value::from(100_i64))),
-            (&clicker_script, SettingsValue(rmpv::Value::from(1000_i64))),
+            (
+                &spawner_script,
+                SettingsValue(ApiSlimeAmount::from_integer(100).into()),
+            ),
+            (
+                &clicker_script,
+                SettingsValue(ApiSlimeAmount::from_integer(1000).into()),
+            ),
         ],
     );
 
@@ -133,7 +139,10 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         crate::api::ApiTilePosition::new(7, 1),
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
-        &[(&spawner_script, SettingsValue(rmpv::Value::from(120_i64)))],
+        &[(
+            &spawner_script,
+            SettingsValue(ApiSlimeAmount::from_integer(120).into()),
+        )],
     );
 }
 

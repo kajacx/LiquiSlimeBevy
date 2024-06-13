@@ -1,21 +1,17 @@
+use crate::components::{FactionComponent, ScriptInstances, SelectorCursor, SlimeGrids};
+use crate::resources::{GameWindowSpace, SelectedUnit};
+use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
+use crate::{
+    components::UnitId,
+    components::{Building, SlimeGrid, Tile, TilePositionComponent},
+    resources,
+};
 use bevy::math::vec3;
 use bevy::prelude::*;
 use bevy::winit::WinitWindows;
 use bevy_egui::egui::Ui;
 use bevy_egui::{egui, EguiContexts, EguiPlugin};
 use winit::window::Icon;
-
-use crate::assets::ScriptModule;
-use crate::components::{
-    FactionComponent, ScriptHolder, ScriptsComponent, SelectorCursor, SlimeGrids,
-};
-use crate::resources::{GameWindowSpace, SelectedUnit};
-use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
-use crate::{
-    components::{Building, SlimeGrid, Tile, TilePositionComponent},
-    resources,
-    components::UnitId,
-};
 
 pub struct GuiPlugin;
 
@@ -30,7 +26,7 @@ fn display_gui(
     mut contexts: EguiContexts,
     mut game_window_space: ResMut<GameWindowSpace>,
     selected_unit: Res<SelectedUnit>,
-    units: Query<(&UnitId, &ScriptsComponent)>,
+    mut units: Query<(&UnitId, &mut ScriptInstances)>,
 ) {
     game_window_space.right = egui::SidePanel::right("right_panel")
         .resizable(true)
@@ -43,8 +39,8 @@ fn display_gui(
                 ui.label(format!("Selected unit: {}", selected_unit_id));
                 ui.separator();
 
-                let scripts = units
-                    .iter()
+                let mut scripts = units
+                    .iter_mut()
                     .find_map(|(unit_id, scripts)| {
                         if *unit_id == selected_unit_id {
                             Some(scripts)
@@ -54,7 +50,7 @@ fn display_gui(
                     })
                     .expect("find unit by id");
 
-                for script in scripts.0.iter() {
+                for script in scripts.0.iter_mut() {
                     display_script_settings(ui, script);
                 }
             } else {
@@ -66,27 +62,26 @@ fn display_gui(
         .width();
 }
 
-fn display_script_settings(ui: &mut Ui, script: &ScriptHolder) {
-    ui.label(script.name);
+fn display_script_settings(ui: &mut Ui, instance: &mut ScriptInstance) {
+    instance.with_name(|name| {
+        ui.label(name);
+    });
 
     let mut settings_saved = false;
-    script.with_settings(|settings| {
-        if let Some((description, value, tmp_value)) = settings {
-            description.display_ui_element(ui, tmp_value);
-            if ui.button("Reset").clicked() {
-                description.reset_settings(value, tmp_value);
-            }
-            if ui.button("Save").clicked() {
-                description.save_settings(tmp_value, value);
-                settings_saved = true;
-            }
-        } else {
-            ui.label("Script is loading...");
+    instance.with_settings(|description, value, tmp_value| {
+        description.display_ui_element(ui, tmp_value);
+
+        if ui.button("Reset").clicked() {
+            description.reset_settings(value, tmp_value);
+        }
+        if ui.button("Save").clicked() {
+            description.save_settings(tmp_value, value);
+            settings_saved = true;
         }
     });
 
     if (settings_saved) {
-        script.change_settings();
+        instance.change_settings().expect("TODO: user error");
     }
 
     ui.separator();
