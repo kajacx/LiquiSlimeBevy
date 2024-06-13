@@ -4,7 +4,7 @@ use crate::assets::AssetsGamePlugin;
 use crate::helpers::StagesPlugin;
 
 // mod compile_input;
-pub mod gui;
+mod gui;
 mod input_process;
 mod input_read;
 mod rendering;

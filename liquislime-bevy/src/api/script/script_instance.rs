@@ -1,7 +1,7 @@
 use super::{LoadedScript, Script};
-use crate::{
-    api::{ApiTimeInterval, ScriptImpl, SettingsDescription, SettingsTempValue, SettingsValue},
-    systems::gui::SettingsUiDisplay,
+use crate::api::{
+    ApiTimeInterval, ScriptImpl, SettingsDescription, SettingsTempValue, SettingsUiDisplay,
+    SettingsValue,
 };
 use anyhow::bail;
 use atomic_refcell::AtomicRefCell;
@@ -35,7 +35,7 @@ impl ScriptInstance {
 
         let id = lock.vacant_key();
 
-        let mut temp_settings = SettingsTempValue(crate::api::DynValue::Null);
+        let mut temp_settings = SettingsTempValue(().into());
 
         loaded_script
             .settings_description()

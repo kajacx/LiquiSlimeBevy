@@ -86,11 +86,3 @@ fn display_script_settings(ui: &mut Ui, instance: &mut ScriptInstance) {
 
     ui.separator();
 }
-
-pub trait SettingsUiDisplay {
-    fn display_ui_element(&self, ui: &mut Ui, value: &mut SettingsTempValue);
-
-    fn save_settings(&self, temp_value: &SettingsTempValue, value: &mut SettingsValue);
-
-    fn reset_settings(&self, value: &SettingsValue, temp_value: &mut SettingsTempValue);
-}

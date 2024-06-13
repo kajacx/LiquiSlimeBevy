@@ -5,7 +5,7 @@ use super::{
 use crate::{
     api::{
         ApiFaction, ApiInstance, ApiPosition, ApiSlimeAmount, ApiTilePosition, ApiTimeInterval,
-        ApiUnit, DynValue, SettingsDescription, SettingsValue,
+        ApiUnit, DynValue, SettingsDescription, SettingsUiDisplay, SettingsValue,
     },
     components::UnitId,
 };
@@ -192,18 +192,10 @@ impl FromWasmAbi for SettingsValue {
     }
 }
 
-impl ToWasmAbi for SettingsDescription {
-    type Abi = <rmpv::Value as ToWasmAbi>::Abi;
-
-    fn to_wasm_abi(&self, context: &mut WasmAccess) -> Result<Self::Abi> {
-        self.0.to_wasm_abi(context)
-    }
-}
-
 impl FromWasmAbi for SettingsDescription {
-    type Abi = <rmpv::Value as FromWasmAbi>::Abi;
+    type Abi = <DynValue as FromWasmAbi>::Abi;
 
     fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {
-        Ok(Self(rmpv::Value::from_wasm_abi(context, abi)?))
+        Ok(Self::deserialize(&DynValue::from_wasm_abi(context, abi)?))
     }
 }

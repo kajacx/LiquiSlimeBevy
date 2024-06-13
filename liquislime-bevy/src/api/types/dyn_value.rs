@@ -24,6 +24,13 @@ impl DynValue {
         }
     }
 
+    pub fn as_string_mut_anyway(&mut self, default: &str) -> &mut String {
+        if !matches!(self, Self::Text(_)) {
+            *self = Self::Text(String::from(default));
+        };
+        self.as_string_mut().unwrap()
+    }
+
     pub fn as_slime_amount(&self) -> Option<ApiSlimeAmount> {
         match self {
             Self::SlimeAmount(amount) => Some(*amount),
@@ -40,9 +47,20 @@ impl DynValue {
     }
 
     pub fn deserialize(value: rmpv::Value) -> Result<Self> {
-        Ok(Self::SlimeAmount(ApiSlimeAmount(
-            value.as_i64().expect("TODO: rework completely"),
-        )))
+        //FIXME:
+        Ok(if let Some(amount) = value.as_i64() {
+            ApiSlimeAmount(amount).into()
+        } else if let Some(text) = value.as_str() {
+            text.to_owned().into()
+        } else {
+            ().into()
+        })
+    }
+}
+
+impl From<()> for DynValue {
+    fn from(value: ()) -> Self {
+        Self::Null
     }
 }
 

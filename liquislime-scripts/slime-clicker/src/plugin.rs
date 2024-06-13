@@ -26,7 +26,7 @@ impl LiquislimeScript for ScriptInstance {
     }
 
     fn describe_settings() -> rmpv::Value {
-        "TODO: describe".into()
+        "SlimeAmount".into()
     }
 
     fn change_settings(&mut self, settings: Self::Settings) {
