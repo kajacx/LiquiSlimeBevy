@@ -4,9 +4,9 @@ use crate::api::{
     SettingsValue,
 };
 use anyhow::bail;
+use anyhow::Result;
 use atomic_refcell::AtomicRefCell;
 use slab::Slab;
-use wasm_bridge::Result;
 
 static INSTANCES: AtomicRefCell<Slab<ScriptInstanceInner>> = AtomicRefCell::new(Slab::new());
 

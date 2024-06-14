@@ -1,6 +1,5 @@
+use anyhow::Result;
 use std::fmt::Debug;
-
-use wasm_bridge::Result;
 
 wasm_bridge::component::bindgen!({
     path: "../protocol.wit",

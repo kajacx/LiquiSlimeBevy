@@ -6,7 +6,7 @@ use crate::{
 use bevy::{prelude::*, render::settings};
 use std::sync::Arc;
 use try_lock::TryLock;
-use wasm_bridge::Result;
+use anyhow::Result;
 
 #[derive(Debug, Clone)]
 pub struct LoadedScript(Arc<LoadedScriptInner>); // TODO: asset now can use this

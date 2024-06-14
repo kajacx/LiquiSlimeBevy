@@ -1,3 +1,5 @@
+use crate::api::DynValue;
+
 use super::{
     memory_manage::{read_bytes, write_bytes, FatPtr},
     script_impl, ScriptImpl, StoreData,
@@ -142,26 +144,5 @@ impl FromWasmAbi for String {
 
     fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {
         Ok(Self::from_utf8(Vec::<u8>::from_wasm_abi(context, abi)?)?)
-    }
-}
-
-impl ToWasmAbi for DynValue {
-    type Abi = <&'static [u8] as ToWasmAbi>::Abi;
-
-    fn to_wasm_abi(&self, context: &mut WasmAccess) -> Result<Self::Abi> {
-        let mut bytes = Vec::new();
-        rmpv::encode::write_value(&mut bytes, self)?;
-        println!("Encoded rmpv value: {:?}, {:?}", self, bytes);
-        bytes.as_slice().to_wasm_abi(context)
-    }
-}
-
-impl FromWasmAbi for DynValue {
-    type Abi = <Vec<u8> as FromWasmAbi>::Abi;
-
-    fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {
-        let bytes = Vec::<u8>::from_wasm_abi(context, abi)?;
-        let mut bytes = bytes.as_slice();
-        Ok(rmpv::decode::read_value(&mut bytes)?)
     }
 }

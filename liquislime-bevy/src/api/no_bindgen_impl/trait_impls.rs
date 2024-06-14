@@ -161,18 +161,21 @@ impl FromWasmAbiSimple for ApiTimeInterval {
 }
 
 impl ToWasmAbi for DynValue {
-    type Abi = <DynValue as ToWasmAbi>::Abi;
+    type Abi = <&'static [u8] as ToWasmAbi>::Abi;
 
     fn to_wasm_abi(&self, context: &mut WasmAccess) -> Result<Self::Abi> {
-        self.serialize().to_wasm_abi(context)
+        let mut bytes = vec![];
+        self.serialize(&mut bytes)?;
+        bytes.as_slice().to_wasm_abi(context)
     }
 }
 
 impl FromWasmAbi for DynValue {
-    type Abi = <DynValue as ToWasmAbi>::Abi;
+    type Abi = <Vec<u8> as FromWasmAbi>::Abi;
 
     fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {
-        Self::deserialize(DynValue::from_wasm_abi(context, abi)?)
+        let bytes = Vec::<u8>::from_wasm_abi(context, abi)?;
+        DynValue::deserialize(&mut std::io::Cursor::new(bytes))
     }
 }
 

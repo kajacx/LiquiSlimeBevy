@@ -1,6 +1,6 @@
 use super::{Script, ScriptInstance};
 use crate::api::SettingsValue;
-use wasm_bridge::Result;
+use anyhow::Result;
 
 #[derive(Debug)]
 pub struct ScriptRequest {

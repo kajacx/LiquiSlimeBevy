@@ -4,7 +4,6 @@ use crate::{
     read_to_string, Deserialize, Serialize,
 };
 use anyhow::{bail, Result};
-use std::io::{Cursor, Read};
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum DynValue {
@@ -53,7 +52,7 @@ impl FromWasmAbi for DynValue {
 
     fn from_wasm_abi(abi: Self::Abi) -> Result<Self> {
         let bytes = Vec::from_wasm_abi(abi)?;
-        let mut cursor = Cursor::new(bytes);
+        let mut cursor = std::io::Cursor::new(bytes);
         Self::deserialize(&mut cursor)
     }
 }
@@ -111,6 +110,12 @@ impl Deserialize for DynValue {
                 bail!("Invalid marker in DynValue::deserialize: {marker:?}")
             }
         })
+    }
+}
+
+impl Default for DynValue {
+    fn default() -> Self {
+        Self::Null
     }
 }
 

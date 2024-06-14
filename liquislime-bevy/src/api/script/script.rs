@@ -3,10 +3,10 @@ use crate::{
     api::{ScriptImpl, SettingsDescription, SettingsValue},
     assets::ScriptAsset,
 };
+use anyhow::Result;
 use bevy::{prelude::*, render::settings};
 use std::{error::Error, fmt::Display, sync::Arc};
 use try_lock::TryLock;
-use wasm_bridge::Result;
 
 #[derive(Debug, Clone)]
 pub struct Script(Arc<ScriptInner>);
