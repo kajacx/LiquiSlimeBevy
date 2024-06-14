@@ -4,9 +4,9 @@
 
 ./liquislime-scripts/build-scripts.sh
 
-cd liquislime-scripts
+cd liquislime-scripts/rust
 cargo clippy
-cd ..
+cd ../..
 
 cd liquislime-bevy
 cargo check

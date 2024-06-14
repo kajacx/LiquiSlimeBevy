@@ -1,5 +1,0 @@
-[workspace]
-
-resolver = "2"
-
-members = ["liquislime-settings", "script-template", "slime-spawner", "slime-clicker"]
