@@ -83,16 +83,14 @@ impl ScriptInstance {
         self.with_inner(move |inner| callback(inner.script.name()))
     }
 
-    pub fn with_settings<T>(
-        self,
-        callback: impl FnOnce(&SettingsDescription, &mut SettingsValue, &mut SettingsTempValue) -> T,
-    ) -> T {
+    pub fn with_settings<T>(self, callback: impl FnOnce(SettingsInfo) -> T) -> T {
         self.with_inner_mut(|inner| {
-            callback(
-                inner.loaded_script.settings_description(),
-                &mut inner.settings,
-                &mut inner.temp_settings,
-            )
+            callback(SettingsInfo {
+                settings_description: inner.loaded_script.settings_description(),
+                default_settings: inner.loaded_script.default_settings(),
+                current_settings: &mut inner.settings,
+                temp_settings: &mut inner.temp_settings,
+            })
         })
     }
 
@@ -103,4 +101,11 @@ impl ScriptInstance {
     fn with_inner_mut<T>(self, callback: impl FnOnce(&mut ScriptInstanceInner) -> T) -> T {
         callback(&mut INSTANCES.try_borrow_mut().unwrap()[self.0])
     }
+}
+
+pub struct SettingsInfo<'a> {
+    pub settings_description: &'a SettingsDescription,
+    pub default_settings: &'a SettingsValue,
+    pub current_settings: &'a mut SettingsValue,
+    pub temp_settings: &'a mut SettingsTempValue,
 }

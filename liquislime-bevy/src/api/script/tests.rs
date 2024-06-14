@@ -141,8 +141,8 @@ fn test_settings() {
         ApiSlimeAmount::from_integer(100)
     );
 
-    instance.with_settings(|_, settings, _| {
-        *settings = SettingsValue(ApiSlimeAmount::from_integer(200).into());
+    instance.with_settings(|settings| {
+        *settings.current_settings = SettingsValue(ApiSlimeAmount::from_integer(200).into());
     });
     instance.change_settings().unwrap();
 

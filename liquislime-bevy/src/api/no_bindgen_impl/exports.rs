@@ -10,6 +10,7 @@ use wasm_bridge::{Result, Store, StoreContextMut, TypedFunc};
 pub struct Exports {
     init_func: TypedFunc<(), ()>,
     describe_settings_func: TypedFunc<(), <SettingsDescription as FromWasmAbi>::Abi>,
+    default_settings_func: TypedFunc<(), <SettingsValue as FromWasmAbi>::Abi>,
     new_instance_func: TypedFunc<
         (
             <ApiInstance as ToWasmAbi>::Abi,
@@ -44,6 +45,7 @@ impl Exports {
         Ok(Self {
             init_func: instance.get_typed_func(&mut context, "init")?,
             describe_settings_func: instance.get_typed_func(&mut context, "describe_settings")?,
+            default_settings_func: instance.get_typed_func(&mut context, "default_settings")?,
             new_instance_func: instance.get_typed_func(&mut context, "new_instance")?,
             change_settings_func: instance.get_typed_func(&mut context, "change_settings")?,
             update_func: instance.get_typed_func(&mut context, "update")?,
@@ -58,8 +60,12 @@ impl Exports {
 
     pub fn describe_settings(&self, mut context: &mut WasmAccess) -> Result<SettingsDescription> {
         let settings_abi = self.describe_settings_func.call(&mut context.store, ())?;
-
         SettingsDescription::from_wasm_abi(context, settings_abi)
+    }
+
+    pub fn default_settings(&self, mut context: &mut WasmAccess) -> Result<SettingsValue> {
+        let settings_abi = self.default_settings_func.call(&mut context.store, ())?;
+        SettingsValue::from_wasm_abi(context, settings_abi)
     }
 
     pub fn new_instance(
@@ -69,14 +75,6 @@ impl Exports {
         settings: &SettingsValue,
     ) -> Result<()> {
         let settings_abi = settings.to_wasm_abi(context)?;
-
-        println!(
-            "SETTINGS ABI: {:?} {:?} {:?}",
-            settings,
-            settings_abi,
-            FatPtr::from_wasm_abi_simple(settings_abi)
-        );
-
         self.new_instance_func
             .call(&mut context.store, (id, settings_abi))
     }
@@ -88,7 +86,6 @@ impl Exports {
         settings: &SettingsValue,
     ) -> Result<()> {
         let settings_abi = settings.to_wasm_abi(context)?;
-
         self.change_settings_func
             .call(&mut context.store, (id, settings_abi))
     }

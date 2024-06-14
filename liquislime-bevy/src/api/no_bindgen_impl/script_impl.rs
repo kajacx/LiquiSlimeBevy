@@ -49,6 +49,12 @@ impl ScriptImpl {
         })
     }
 
+    pub fn default_settings(&self) -> Result<SettingsValue> {
+        self.with_store("ScriptImpl::default_settings", |context, script| {
+            script.exports.default_settings(context)
+        })
+    }
+
     pub fn new_instance(&self, id: u32, settings: &SettingsValue) -> Result<()> {
         self.with_store("ScriptImpl::new_instance", |context, script| {
             script.exports.new_instance(context, id, settings)

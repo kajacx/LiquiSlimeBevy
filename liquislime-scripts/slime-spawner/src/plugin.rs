@@ -16,7 +16,7 @@ impl SettingsTemplate for Settings {
     }
 
     fn default_value() -> SettingsValue {
-        SettingsValue("My first script".to_owned().into())
+        SettingsValue(SlimeAmount::from_integer(100).into())
     }
 
     fn parse(value: SettingsValue) -> Result<Self> {

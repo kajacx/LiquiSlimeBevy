@@ -67,20 +67,33 @@ fn display_script_settings(ui: &mut Ui, instance: &mut ScriptInstance) {
         ui.label(name);
     });
 
-    let mut settings_saved = false;
-    instance.with_settings(|description, value, temp_value| {
-        description.display_ui_element(ui, temp_value);
+    let mut changed_settings = false;
+    instance.with_settings(|settings| {
+        settings
+            .settings_description
+            .display_ui_element(ui, settings.temp_settings);
 
         if ui.button("Reset").clicked() {
-            description.reset_settings(value, temp_value);
+            *settings.current_settings = settings.default_settings.clone();
+            settings
+                .settings_description
+                .reset_settings(settings.current_settings, settings.temp_settings);
+            changed_settings = true;
+        }
+        if ui.button("Clear").clicked() {
+            settings
+                .settings_description
+                .reset_settings(settings.current_settings, settings.temp_settings);
         }
         if ui.button("Save").clicked() {
-            description.save_settings(temp_value, value);
-            settings_saved = true;
+            settings
+                .settings_description
+                .save_settings(settings.temp_settings, settings.current_settings);
+            changed_settings = true;
         }
     });
 
-    if (settings_saved) {
+    if (changed_settings) {
         instance.change_settings().expect("TODO: user error");
     }
 
