@@ -9,7 +9,7 @@ use crate::{
 use bevy::math::vec3;
 use bevy::prelude::*;
 use bevy::winit::WinitWindows;
-use bevy_egui::egui::Ui;
+use bevy_egui::egui::{Layout, Ui};
 use bevy_egui::{egui, EguiContexts, EguiPlugin};
 use winit::window::Icon;
 
@@ -73,24 +73,26 @@ fn display_script_settings(ui: &mut Ui, instance: &mut ScriptInstance) {
             .settings_description
             .display_ui_element(ui, settings.temp_settings);
 
-        if ui.button("Reset").clicked() {
-            *settings.current_settings = settings.default_settings.clone();
-            settings
-                .settings_description
-                .reset_settings(settings.current_settings, settings.temp_settings);
-            changed_settings = true;
-        }
-        if ui.button("Clear").clicked() {
-            settings
-                .settings_description
-                .reset_settings(settings.current_settings, settings.temp_settings);
-        }
-        if ui.button("Save").clicked() {
-            settings
-                .settings_description
-                .save_settings(settings.temp_settings, settings.current_settings);
-            changed_settings = true;
-        }
+        ui.with_layout(Layout::left_to_right(egui::Align::TOP), |ui| {
+            if ui.button("Reset").clicked() {
+                *settings.current_settings = settings.default_settings.clone();
+                settings
+                    .settings_description
+                    .reset_settings(settings.current_settings, settings.temp_settings);
+                changed_settings = true;
+            }
+            if ui.button("Clear").clicked() {
+                settings
+                    .settings_description
+                    .reset_settings(settings.current_settings, settings.temp_settings);
+            }
+            if ui.button("Save").clicked() {
+                settings
+                    .settings_description
+                    .save_settings(settings.temp_settings, settings.current_settings);
+                changed_settings = true;
+            }
+        });
     });
 
     if (changed_settings) {
