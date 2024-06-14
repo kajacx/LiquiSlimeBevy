@@ -1,15 +1,17 @@
+import { Option } from "./option";
+
 export abstract class DynValue {
-  static none():  DynValue  {
+  static none(): DynValue {
     return new NoneValue();
-  };
+  }
 
-  static number: (value: number) => DynValue = (value) => {
+  static number(value: number): DynValue {
     return new NumberValue(value);
-  };
+  }
 
-  abstract asNumber: () => number = () => {
-    return 0;
-  };
+  asNumber(): Option<number> {
+    return Option.None<number>();
+  }
 }
 
 class NoneValue extends DynValue {}
@@ -22,7 +24,7 @@ class NumberValue extends DynValue {
     this.value = value;
   }
 
-  asNumber: () => number = () => {
-    return this.value;
-  };
+  asNumber(): Option<number> {
+    return Option.Some(this.value);
+  }
 }
