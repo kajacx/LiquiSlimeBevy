@@ -5,13 +5,9 @@ authors = ["kajacx"]
 edition = "2021"
 
 [lib]
-crate-type = ["cdylib"]
-
-[package.metadata.component]
-package = "liquislime:liquislime-settings"
+proc-macro = true
 
 [dependencies]
-derive_more = { version = "0.99.17", default-features = false, features = ["add", "add_assign", "not", "from", "into"] }
-rmp = { version = "0.8.14" }
-try-lock = { version = "0.2.5" }
-anyhow = { version = "1.0.86" }
+proc-macro2 = { version = "1.0.85" }
+quote = { version = "1.0.36" }
+syn = { version = "2.0.66", features = ["extra-traits", "full"] }

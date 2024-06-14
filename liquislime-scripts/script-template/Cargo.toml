@@ -7,9 +7,6 @@ edition = "2021"
 [lib]
 crate-type = ["cdylib"]
 
-[package.metadata.component]
-package = "liquislime:script"
-
 [dependencies]
 derive_more = { version = "0.99.17", default-features = false, features = ["add", "add_assign", "not", "from", "into"] }
 rmp = { version = "0.8.14" }
