@@ -10,6 +10,8 @@ use std::collections::HashMap;
 #[no_mangle]
 pub fn init() {
     crate::log("Entering init");
+    std::panic::set_hook(Box::new(crate::hook_impl));
+    crate::log("Panic hook set");
     *crate::INSTANCES.try_lock().unwrap() = Some(HashMap::new());
     crate::log("Exiting init");
 }

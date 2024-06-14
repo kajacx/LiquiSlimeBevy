@@ -7,5 +7,4 @@ mod traits;
 pub use bindings::*;
 pub use fat_ptr::*;
 pub use helpers::*;
-pub use settings::*;
 pub use traits::*;

@@ -40,3 +40,9 @@ pub trait ScriptTemplate {
 fn log(msg: impl Display) {
     unsafe { api::log((&*format!("{msg}")).to_wasm_abi()) }
 }
+
+fn hook_impl(info: &std::panic::PanicInfo) {
+    log("!!!!! SCRIPT PANIC START !!!!!");
+    log(format!("{info}"));
+    log("!!!!! SCRIPT PANIC  END  !!!!!");
+}

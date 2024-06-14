@@ -98,7 +98,7 @@ impl Deserialize for DynValue {
                 let len = rmp::decode::read_u32(reader)? as usize;
                 read_to_string(reader, len)?.into()
             }
-            rmp::Marker::FixMap(2) => {
+            rmp::Marker::FixMap(1) => {
                 let tag = String::deserialize(reader)?;
                 if tag == "SlimeAmount" {
                     SlimeAmount::deserialize(reader)?.into()

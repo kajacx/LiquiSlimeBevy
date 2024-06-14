@@ -35,7 +35,7 @@ impl ScriptInstance {
 
         let id = lock.vacant_key();
 
-        let mut temp_settings = SettingsTempValue(().into());
+        let mut temp_settings = SettingsTempValue(Default::default());
 
         loaded_script
             .settings_description()
