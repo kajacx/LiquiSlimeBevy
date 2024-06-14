@@ -1,0 +1,13 @@
+{
+  "name": "assemblyscript-template",
+  "version": "0.1.0",
+  "description": "Template for a Liquislime script in AssemblyScript",
+  "main": "index.js",
+  "repository": "https://github.com/kajacx/LiquiSlimeBevy",
+  "author": "kajacx",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "assemblyscript": "^0.27.27"
+  }
+}
