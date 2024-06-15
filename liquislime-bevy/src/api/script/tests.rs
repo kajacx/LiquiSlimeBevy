@@ -102,7 +102,7 @@ impl<T: LiquislimeImportsStub> LiquislimeImports for T {
 }
 
 static SPAWNER_BYTES: &[u8] = include_bytes!(
-    "../../../../liquislime-scripts/target/wasm32-unknown-unknown/debug/slime_spawner.wasm"
+    "../../../../liquislime-scripts/rust/target/wasm32-unknown-unknown/debug/slime_spawner.wasm"
 );
 
 #[derive(Debug, Default, Clone)]

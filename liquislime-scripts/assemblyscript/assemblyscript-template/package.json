@@ -25,6 +25,6 @@
     "start": "npx serve ."
   },
   "dependencies": {
-    "as-proto": "^1.3.0"
+    "@wapc/as-msgpack": "git+https://github.com/wapc/as-msgpack.git"
   }
 }

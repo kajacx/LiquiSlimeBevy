@@ -17,7 +17,6 @@ for script in */; do
   crate_name=`grep 'name =' "$script/Cargo.toml" | sed -E 's/.*"(.*)".*/\1/'`
   cp ../script-template/Cargo.toml "$script/Cargo.toml"
   sed -E -i 's/name =.*/name = "'"$crate_name"'"/' "$script/Cargo.toml"
-  sed -E -i 's/package =.*/package = "liquislime:'"$script"'"/' "$script/Cargo.toml"
 
   rm -rf "$script/src/types" "$script/src/settings" "$script/src/api"
   cp -r ../script-template/src/types "$script/src"

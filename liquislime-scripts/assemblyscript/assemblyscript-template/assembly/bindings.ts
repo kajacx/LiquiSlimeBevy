@@ -1,15 +1,21 @@
+import { allocateBytes, encodeToMemory, freeBytes, writeBytes } from "./memory";
+import { SETTINGS_DEFINITION } from "./script";
 import { FactionId, FatPtr, InstanceId, PackedData, UnitId } from "./types";
+import { DynValue } from "./dyn_value";
+import { Encoder } from "@wapc/as-msgpack";
 
-export function init(): void {
-  console.log(liquislime_api.level_width().toString());
-}
+export function init(): void {}
 
 export function describe_settings(): FatPtr {
-  throw "TODO:";
+  return encodeToMemory((writer) =>
+    SETTINGS_DEFINITION.describeSettings(writer)
+  );
 }
 
 export function default_settings(): FatPtr {
-  throw "TODO:";
+  return encodeToMemory((writer) =>
+    SETTINGS_DEFINITION.defaultValue().encode(writer)
+  );
 }
 
 export function new_instance(instance: InstanceId, settings: FatPtr): void {}
@@ -42,7 +48,9 @@ declare namespace liquislime_api {
 }
 
 export function allocate_bytes(len: u32): FatPtr {
-  throw "TODO:";
+  return allocateBytes(len);
 }
 
-export function free_bytes(bytes: FatPtr): void {}
+export function free_bytes(bytes: FatPtr): void {
+  freeBytes(bytes);
+}

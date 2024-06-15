@@ -1,5 +1,7 @@
 import { Option } from "./option";
-import { SlimeAmount } from "./types";
+import { SlimeAmount, slimeAmountToAbi } from "./types";
+// import { Packer } from "msgpack-as";
+import { Writer } from "@wapc/as-msgpack";
 
 export abstract class DynValue {
   static none(): DynValue {
@@ -21,9 +23,15 @@ export abstract class DynValue {
   asSlimeAmount(): Option<SlimeAmount> {
     return Option.None<SlimeAmount>();
   }
+
+  abstract encode(writer: Writer): void;
 }
 
-class NoneValue extends DynValue {}
+class NoneValue extends DynValue {
+  encode(writer: Writer): void {
+    writer.writeNil();
+  }
+}
 
 class NumberValue extends DynValue {
   value: number;
@@ -35,6 +43,10 @@ class NumberValue extends DynValue {
 
   asNumber(): Option<number> {
     return Option.Some(this.value);
+  }
+
+  encode(writer: Writer): void {
+    writer.writeFloat64(this.value);
   }
 }
 
@@ -48,5 +60,11 @@ class SlimeAmountValue extends DynValue {
 
   asSlimeAmount(): Option<SlimeAmount> {
     return Option.Some(this.amount);
+  }
+
+  encode(writer: Writer): void {
+    writer.writeMapSize(1);
+    writer.writeString("SlimeAmount");
+    writer.writeInt64(slimeAmountToAbi(this.amount));
   }
 }
