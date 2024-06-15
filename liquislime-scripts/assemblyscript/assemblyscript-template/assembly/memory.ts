@@ -1,5 +1,5 @@
 import { Encoder, Sizer, Writer } from "@wapc/as-msgpack";
-import { createFatPtr, fatPtrAddr } from "./helpers";
+import { createFatPtr, fatPtrAddr, fatPtrLen } from "./helpers";
 import { FatPtr } from "./types";
 // import { memory, heap } from "bindings/memory";
 
@@ -54,6 +54,15 @@ export function writeArrayBuffer(bytes: ArrayBuffer): FatPtr {
     bytes.byteLength
   );
   return allocated;
+}
+
+export function readArrayBuffer(ptr: FatPtr): ArrayBuffer {
+  const addr = fatPtrAddr(ptr);
+  const len = fatPtrLen(ptr);
+  const buffer = new ArrayBuffer(len);
+  memory.copy(changetype<usize>(buffer), addr, len);
+  freeBytes(ptr);
+  return buffer;
 }
 
 export function encodeToMemory(callback: (writer: Writer) => void): FatPtr {

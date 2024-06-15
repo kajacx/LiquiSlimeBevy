@@ -18,3 +18,8 @@ export function fatPtrAddr(ptr: FatPtr): u32 {
   const unpacked = unpackU32s(ptr);
   return unpacked[0];
 }
+
+export function fatPtrLen(ptr: FatPtr): u32 {
+  const unpacked = unpackU32s(ptr);
+  return unpacked[1];
+}

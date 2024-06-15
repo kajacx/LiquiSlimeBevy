@@ -1,7 +1,6 @@
 import { Option } from "./option";
 import { SlimeAmount, slimeAmountToAbi } from "./types";
-// import { Packer } from "msgpack-as";
-import { Writer } from "@wapc/as-msgpack";
+import { DataReader, Encoder, Writer } from "@wapc/as-msgpack";
 
 export abstract class DynValue {
   static none(): DynValue {
@@ -66,5 +65,13 @@ class SlimeAmountValue extends DynValue {
     writer.writeMapSize(1);
     writer.writeString("SlimeAmount");
     writer.writeInt64(slimeAmountToAbi(this.amount));
+  }
+}
+
+export function decodeDynValue( data: DataReader): DynValue {
+  const peek = data.peekUint8():
+
+  if (reader.isNil(peek)) {
+    return DynValue.none();
   }
 }
