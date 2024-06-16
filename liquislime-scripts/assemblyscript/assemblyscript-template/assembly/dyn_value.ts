@@ -1,6 +1,6 @@
 import { Option } from "./option";
-import { SlimeAmount, slimeAmountToAbi } from "./types";
-import { DataReader, Encoder, Writer } from "@wapc/as-msgpack";
+import { SlimeAmount, slimeAmountFromAbi, slimeAmountToAbi } from "./types";
+import { DataReader, Encoder, Writer, EntryReader } from "@wapc/as-msgpack";
 
 export abstract class DynValue {
   static none(): DynValue {
@@ -68,10 +68,25 @@ class SlimeAmountValue extends DynValue {
   }
 }
 
-export function decodeDynValue( data: DataReader): DynValue {
-  const peek = data.peekUint8():
+export function decodeDynValue(data: DataReader): DynValue {
+  const entryReader = new EntryReader(data);
+  const entry = entryReader.nextEntry()!;
 
-  if (reader.isNil(peek)) {
-    return DynValue.none();
+  if (entry.isInt(false)) {
+    return DynValue.number(entry.readInt());
   }
+  if (entry.isUint(false)) {
+    return DynValue.number(entry.readUint());
+  }
+  if (entry.isFloat()) {
+    return DynValue.number(entry.readFloat());
+  }
+  if (entry.isMapLength() && entry.readMapLength() == 1) {
+    const tag = entry.tryReadString();
+    if (tag == "SlimeAmount") {
+      return DynValue.slimeAmount(slimeAmountFromAbi(entry.tryReadInt()));
+    }
+  }
+
+  throw new Error("Unknown entry: " + entry);
 }

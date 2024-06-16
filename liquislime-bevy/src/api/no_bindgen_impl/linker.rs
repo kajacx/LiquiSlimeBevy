@@ -115,5 +115,13 @@ pub fn create_linker(imports: impl LiquislimeImports) -> Result<Linker<StoreData
         },
     )?;
 
+    linker.func_wrap(
+        "env",
+        "abort",
+        |_: Caller<StoreData>, a: i32, b: i32, c: i32, d: i32| {
+            panic!("TODO: abort {a} {b} {c} {d}");
+        },
+    )?;
+
     Ok(linker)
 }

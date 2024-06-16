@@ -25,6 +25,6 @@
     "start": "npx serve ."
   },
   "dependencies": {
-    "@wapc/as-msgpack": "git+https://github.com/wapc/as-msgpack.git"
+    "@wapc/as-msgpack": "/Programming/TypeScript/as-msgpack"
   }
 }
