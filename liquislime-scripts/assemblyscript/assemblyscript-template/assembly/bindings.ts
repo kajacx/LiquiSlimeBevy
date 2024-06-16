@@ -24,7 +24,7 @@ export function change_settings(instance: InstanceId, settings: FatPtr): void {}
 
 export function update(instance: InstanceId, time_elapsed: i64): void {}
 
-export declare namespace liquislime_api {
+declare namespace liquislime_api {
   export function level_width(): i32;
   export function level_height(): i32;
 
@@ -49,6 +49,8 @@ export declare namespace liquislime_api {
 
   export function log(message: FatPtr): void;
 }
+
+export { liquislime_api };
 
 export function allocate_bytes(len: u32): FatPtr {
   return allocateBytes(len);
