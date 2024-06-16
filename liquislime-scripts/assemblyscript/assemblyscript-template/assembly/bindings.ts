@@ -1,7 +1,14 @@
 import { allocateBytes, encodeToMemory, freeBytes, writeBytes } from "./memory";
-import { SETTINGS_DEFINITION } from "./script";
-import { FactionId, FatPtr, InstanceId, PackedData, UnitId } from "./types";
-import { DynValue } from "./dyn_value";
+import { SETTINGS_DEFINITION, UserScript } from "./script";
+import {
+  FactionId,
+  FatPtr,
+  InstanceId,
+  PackedData,
+  UnitId,
+  timeIntervalFromAbi,
+} from "./types";
+import { DynValue, decodeDynValue, dynValueFromPtr } from "./dyn_value";
 import { Encoder } from "@wapc/as-msgpack";
 
 export function init(): void {}
@@ -18,11 +25,19 @@ export function default_settings(): FatPtr {
   );
 }
 
-export function new_instance(instance: InstanceId, settings: FatPtr): void {}
+const INSTANCES = new Map<InstanceId, UserScript>();
 
-export function change_settings(instance: InstanceId, settings: FatPtr): void {}
+export function new_instance(instance: InstanceId, settings: FatPtr): void {
+  INSTANCES.set(instance, new UserScript(dynValueFromPtr(settings)));
+}
 
-export function update(instance: InstanceId, time_elapsed: i64): void {}
+export function change_settings(instance: InstanceId, settings: FatPtr): void {
+  INSTANCES.get(instance).changeSettings(dynValueFromPtr(settings));
+}
+
+export function update(instance: InstanceId, timeElapsed: i64): void {
+  INSTANCES.get(instance).update(timeIntervalFromAbi(timeElapsed));
+}
 
 declare namespace liquislime_api {
   export function level_width(): i32;

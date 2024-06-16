@@ -1,5 +1,11 @@
+import { readArrayBuffer } from "./memory";
 import { Option } from "./option";
-import { SlimeAmount, slimeAmountFromAbi, slimeAmountToAbi } from "./types";
+import {
+  FatPtr,
+  SlimeAmount,
+  slimeAmountFromAbi,
+  slimeAmountToAbi,
+} from "./types";
 import { DataReader, Encoder, Writer, EntryReader } from "@wapc/as-msgpack";
 
 export abstract class DynValue {
@@ -66,6 +72,12 @@ class SlimeAmountValue extends DynValue {
     writer.writeString("SlimeAmount");
     writer.writeInt64(slimeAmountToAbi(this.amount));
   }
+}
+
+export function dynValueFromPtr(ptr: FatPtr): DynValue {
+  const bytes = readArrayBuffer(ptr);
+  const reader = new DataReader(bytes);
+  return decodeDynValue(reader);
 }
 
 export function decodeDynValue(data: DataReader): DynValue {
