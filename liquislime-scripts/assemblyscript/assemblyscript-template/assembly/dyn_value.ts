@@ -85,20 +85,21 @@ export function decodeDynValue(data: DataReader): DynValue {
   const entry = entryReader.nextEntry()!;
 
   if (entry.isInt(false)) {
-    return DynValue.number(entry.readInt());
+    return DynValue.number(entry.readInt() as f64);
   }
   if (entry.isUint(false)) {
-    return DynValue.number(entry.readUint());
+    return DynValue.number(entry.readUint() as f64);
   }
   if (entry.isFloat()) {
     return DynValue.number(entry.readFloat());
   }
   if (entry.isMapLength() && entry.readMapLength() == 1) {
-    const tag = entry.tryReadString();
+    const tag = entry.tryReadString().get();
     if (tag == "SlimeAmount") {
-      return DynValue.slimeAmount(slimeAmountFromAbi(entry.tryReadInt()));
+      return DynValue.slimeAmount(slimeAmountFromAbi(entry.tryReadInt().get()));
     }
   }
 
-  throw new Error("Unknown entry: " + entry);
+  // TODO: print entry
+  throw new Error("Unknown entry");
 }

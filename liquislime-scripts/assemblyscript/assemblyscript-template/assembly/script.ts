@@ -1,7 +1,12 @@
 import { ScriptTemplate } from "./template";
 import { DynValue } from "./dyn_value";
 import { SlimeAmountSettings } from "./settings";
-import { SlimeAmount, TimeInterval } from "./types";
+import {
+  SlimeAmount,
+  TimeInterval,
+  slimeAmountFromAbi,
+  slimeAmountToAbi,
+} from "./types";
 import { liquislime_api } from "./bindings";
 
 export const SETTINGS_DEFINITION = new SlimeAmountSettings(500);
@@ -33,11 +38,13 @@ export class UserScript implements ScriptTemplate {
     if (liquislime_api.is_mouse_pressed()) {
       const faction = liquislime_api.get_own_faction();
       const positionAbi = liquislime_api.get_own_position();
-      const amount = liquislime_api.get_slime_amount(faction, positionAbi);
+      const amount = slimeAmountFromAbi(
+        liquislime_api.get_slime_amount(faction, positionAbi)
+      );
       liquislime_api.set_slime_amount(
         faction,
         positionAbi,
-        amount + this.settings.amount * timeElapsed
+        slimeAmountToAbi(amount + this.settings.amount * timeElapsed)
       );
     }
   }
