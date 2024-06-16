@@ -24,12 +24,15 @@ export function change_settings(instance: InstanceId, settings: FatPtr): void {}
 
 export function update(instance: InstanceId, time_elapsed: i64): void {}
 
-declare namespace liquislime_api {
+export declare namespace liquislime_api {
   export function level_width(): i32;
   export function level_height(): i32;
 
   export function get_current_unit(): UnitId;
   export function get_current_instance(): InstanceId;
+
+  export function get_own_faction(): FactionId;
+  export function get_own_position(): PackedData;
 
   export function get_slime_amount(
     faction: FactionId,

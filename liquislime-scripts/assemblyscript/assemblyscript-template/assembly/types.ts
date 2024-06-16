@@ -20,14 +20,12 @@ export function slimeAmountFromAbi(abi: i64): SlimeAmount {
 
 const FRAGMENTS_IN_SECOND: i64 = 18_000;
 
-export class TimeInterval {
-  private fragments: i64;
+export type TimeInterval = f64;
 
-  private constructor(fragments: i64) {
-    this.fragments = fragments;
-  }
+export function timeIntervalToAbi(seconds: TimeInterval): i64 {
+  return Math.round(seconds * (FRAGMENTS_IN_SECOND as f64)) as i64;
+}
 
-  static fromSeconds(seconds: f64): TimeInterval {
-    return new TimeInterval(Math.round(seconds * (FRAGMENTS_IN_SECOND as f64)));
-  }
+export function timeIntervalFromAbi(abi: i64): TimeInterval {
+  return (abi as f64) / (FRAGMENTS_IN_SECOND as f64);
 }

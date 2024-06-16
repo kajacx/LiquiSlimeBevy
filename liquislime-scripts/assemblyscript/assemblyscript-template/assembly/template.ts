@@ -1,6 +1,7 @@
+import { DynValue } from "./dyn_value";
 import { TimeInterval } from "./types";
 
-export interface ScriptTemplate<T> {
-  changeSettings(settings: T): void;
+export interface ScriptTemplate {
+  changeSettings(settings: DynValue): void;
   update(timeElapsed: TimeInterval): void;
 }
