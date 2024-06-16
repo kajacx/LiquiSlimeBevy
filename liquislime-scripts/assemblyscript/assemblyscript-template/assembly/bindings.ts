@@ -46,26 +46,41 @@ declare namespace liquislime_api {
   export function get_current_unit(): UnitId;
   export function get_current_instance(): InstanceId;
 
-  export function get_own_faction(): FactionId;
-  export function get_own_position(): PackedData;
+  // export function get_own_faction(): FactionId;
+  // export function get_own_position(): PackedData;
 
-  export function get_slime_amount(
-    faction: FactionId,
-    position: PackedData
-  ): i64;
-  export function set_slime_amount(
-    faction: FactionId,
-    position: PackedData,
-    amount: i64
-  ): void;
+  // export function get_slime_amount(
+  //   faction: FactionId,
+  //   position: PackedData
+  // ): i64;
+  // export function set_slime_amount(
+  //   faction: FactionId,
+  //   position: PackedData,
+  //   amount: i64
+  // ): void;
 
   export function get_mouse_position(): PackedData;
-  export function is_mouse_pressed(): bool;
+  // export function is_mouse_pressed(): bool;
 
   export function log(message: FatPtr): void;
 }
 
-export { liquislime_api };
+@external("liquislime_api", "get_own_faction")
+declare function getOwnFaction(): FactionId;
+
+@external("liquislime_api", "get_own_position")
+declare function getOwnPosition(): PackedData;
+
+@external("liquislime_api", "get_slime_amount")
+declare function getSlimeAmount(faction: FactionId, position: PackedData): i64;
+
+@external("liquislime_api", "set_slime_amount")
+declare function setSlimeAmount(faction: FactionId, position: PackedData, amount: i64): void;
+
+@external("liquislime_api", "is_mouse_pressed")
+declare function isMousePressed(): bool;
+
+export { liquislime_api, getOwnFaction, getOwnPosition, getSlimeAmount, setSlimeAmount, isMousePressed };
 
 export function allocate_bytes(len: u32): FatPtr {
   return allocateBytes(len);
