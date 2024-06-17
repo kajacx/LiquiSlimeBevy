@@ -1,3 +1,4 @@
+import { liquislime_api } from "./bindings";
 import { readArrayBuffer } from "./memory";
 import { Option } from "./option";
 import {
@@ -94,12 +95,17 @@ export function decodeDynValue(data: DataReader): DynValue {
     return DynValue.number(entry.readFloat());
   }
   if (entry.isMapLength() && entry.readMapLength() == 1) {
-    const tag = entry.tryReadString().get();
+    const tag = entryReader.nextEntry()!.tryReadString().get("Get map tag");
+    throw new Error("what is the tag?" + tag);
     if (tag == "SlimeAmount") {
-      return DynValue.slimeAmount(slimeAmountFromAbi(entry.tryReadInt().get()));
+      return DynValue.slimeAmount(
+        slimeAmountFromAbi(
+          entryReader.nextEntry()!.tryReadInt().get("Get slime amount")
+        )
+      );
     }
   }
 
   // TODO: print entry
-  throw new Error("Unknown entry");
+  throw new Error("Unknown entry: " + entry.toString());
 }

@@ -106,18 +106,18 @@ impl ScriptImpl {
     ) -> Result<String> {
         self.with_memory(move |memory| {
             let mut bytes = vec![];
-            let mut byte = [0u8];
+            let mut byte = [0u8, 0u8];
             loop {
                 memory.read(&context, address, &mut byte)?;
-                println!("READ: {}", byte[0]);
-                if byte[0] == 0 {
+                println!("READ: {} {}", byte[0], byte[1]);
+                if byte[0] == 0 && byte[1] == 0 {
                     break;
                 } else {
-                    bytes.push(byte[0]);
-                    address = address + 1;
+                    bytes.push(u16::from_le_bytes(byte));
+                    address = address + 2;
                 }
             }
-            Ok(String::from_utf8_lossy(&bytes).into_owned())
+            Ok(String::from_utf16_lossy(&bytes))
         })
     }
 }

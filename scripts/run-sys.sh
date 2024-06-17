@@ -4,6 +4,7 @@ set -e
 # Run from parent folder
 
 cd liquislime-scripts/assemblyscript/assemblyscript-template
+yarn install
 yarn asbuild
 cd ../../..
 
