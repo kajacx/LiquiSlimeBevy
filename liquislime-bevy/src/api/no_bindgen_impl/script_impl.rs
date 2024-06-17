@@ -9,7 +9,7 @@ use std::{
     cell::RefCell,
     ops::{Deref, DerefMut},
 };
-use wasm_bridge::{AsContextMut, Memory, Module, Result, Store, StoreContextMut};
+use wasm_bridge::{AsContext, AsContextMut, Memory, Module, Result, Store, StoreContextMut};
 
 static SCRIPTS: AtomicRefCell<Slab<ScriptData>> = AtomicRefCell::new(Slab::new());
 
@@ -97,6 +97,28 @@ impl ScriptImpl {
 
     pub(super) fn with_memory<T>(&self, callback: impl FnOnce(&Memory) -> T) -> T {
         callback(&SCRIPTS.try_borrow().unwrap()[self.0].memory)
+    }
+
+    pub(super) fn read_zero_terminated_string(
+        &self,
+        context: impl AsContext<Data = StoreData>,
+        mut address: usize,
+    ) -> Result<String> {
+        self.with_memory(move |memory| {
+            let mut bytes = vec![];
+            let mut byte = [0u8];
+            loop {
+                memory.read(&context, address, &mut byte)?;
+                println!("READ: {}", byte[0]);
+                if byte[0] == 0 {
+                    break;
+                } else {
+                    bytes.push(byte[0]);
+                    address = address + 1;
+                }
+            }
+            Ok(String::from_utf8_lossy(&bytes).into_owned())
+        })
     }
 }
 

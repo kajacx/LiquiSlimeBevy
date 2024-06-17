@@ -118,8 +118,20 @@ pub fn create_linker(imports: impl LiquislimeImports) -> Result<Linker<StoreData
     linker.func_wrap(
         "env",
         "abort",
-        |_: Caller<StoreData>, a: i32, b: i32, c: i32, d: i32| {
-            panic!("TODO: abort {a} {b} {c} {d}");
+        |caller: Caller<StoreData>, msg_ptr: i32, file_ptr: i32, line: i32, column: i32| {
+            let msg = caller
+                .data()
+                .current_script
+                .read_zero_terminated_string(&caller, msg_ptr as usize)
+                .expect("TODO: user error");
+            let file = caller
+                .data()
+                .current_script
+                .read_zero_terminated_string(&caller, file_ptr as usize)
+                .expect("TODO: user error");
+            // TODO: print on web
+            println!("Script abort: {msg}");
+            println!("In {file}:{line}:{column}");
         },
     )?;
 
