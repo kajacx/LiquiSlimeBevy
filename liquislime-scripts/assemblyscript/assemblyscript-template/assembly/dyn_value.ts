@@ -31,11 +31,17 @@ export abstract class DynValue {
   }
 
   abstract encode(writer: Writer): void;
+
+  abstract toString(): string;
 }
 
 class NoneValue extends DynValue {
   encode(writer: Writer): void {
     writer.writeNil();
+  }
+
+  toString(): string {
+    return "None";
   }
 }
 
@@ -53,6 +59,10 @@ class NumberValue extends DynValue {
 
   encode(writer: Writer): void {
     writer.writeFloat64(this.value);
+  }
+
+  toString(): string {
+    return "Number: " + this.value.toString();
   }
 }
 
@@ -73,12 +83,27 @@ class SlimeAmountValue extends DynValue {
     writer.writeString("SlimeAmount");
     writer.writeInt64(slimeAmountToAbi(this.amount));
   }
+
+  toString(): string {
+    return (
+      "SlimeAmount: " +
+      this.amount.toString() +
+      ", raw: " +
+      slimeAmountToAbi(this.amount).toString()
+    );
+  }
 }
 
 export function dynValueFromPtr(ptr: FatPtr): DynValue {
   const bytes = readArrayBuffer(ptr);
+  // throw new Error("WTF? " + debugPrintBytes(bytes, 2));
   const reader = new DataReader(bytes);
-  return decodeDynValue(reader);
+  const value = decodeDynValue(reader);
+
+  // throw new Error(
+  //   "WHUT?" + debugPrintBytes(bytes, 2) + " IS " + value.toString()
+  // );
+  return value;
 }
 
 export function decodeDynValue(data: DataReader): DynValue {
@@ -96,16 +121,40 @@ export function decodeDynValue(data: DataReader): DynValue {
   }
   if (entry.isMapLength() && entry.readMapLength() == 1) {
     const tag = entryReader.nextEntry()!.tryReadString().get("Get map tag");
-    throw new Error("what is the tag?" + tag);
+    // throw new Error("what is the tag?" + tag);
     if (tag == "SlimeAmount") {
-      return DynValue.slimeAmount(
-        slimeAmountFromAbi(
-          entryReader.nextEntry()!.tryReadInt().get("Get slime amount")
-        )
-      );
+      const entry = entryReader.nextEntry()!;
+      const abi = entry.tryReadInt().get("Get slime amount");
+      const result = DynValue.slimeAmount(slimeAmountFromAbi(abi));
+      // throw new Error(
+      //   "ENTRY: " +
+      //     entry.toString() +
+      //     ", GOT DYN VALUE: " +
+      //     result.toString() +
+      //     ", RAW SLIME ABI: " +
+      //     abi.toString()
+      // );
+      return result;
     }
+
+    throw new Error("Unknown map tag: " + tag);
   }
 
   // TODO: print entry
   throw new Error("Unknown entry: " + entry.toString());
+}
+
+function debugPrintBytes(bytes: ArrayBuffer, radix: i32 = 10): string {
+  let result = "ArrayBuffer[";
+  let first = true;
+  for (let i = 0; i < bytes.byteLength; i++) {
+    if (first) {
+      first = false;
+    } else {
+      result += ", ";
+    }
+    let byte = load<u8>(changetype<usize>(bytes) + i);
+    result += byte.toString(radix);
+  }
+  return result + "]";
 }

@@ -35,6 +35,7 @@ export class UserScript implements ScriptTemplate {
 
   constructor(settings: DynValue) {
     this.settings = Settings.fromDynValue(settings);
+    // throw new Error("Setitngs ARE: " + settings.toString());
   }
 
   changeSettings(settings: DynValue): void {
@@ -47,6 +48,13 @@ export class UserScript implements ScriptTemplate {
       // const faction = liquislime_api.get_own_faction();
       const faction = getOwnFaction();
       const position = packU32s(5, 7);
+
+      // throw new Error(
+      //   "settings: " +
+      //     this.settings.amount.toString() +
+      //     " elapsed: " +
+      //     timeElapsed.toString()
+      // );
 
       const amount = slimeAmountFromAbi(getSlimeAmount(faction, position));
       setSlimeAmount(

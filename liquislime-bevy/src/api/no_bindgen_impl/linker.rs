@@ -63,12 +63,16 @@ pub fn create_linker(imports: impl LiquislimeImports) -> Result<Linker<StoreData
         move |_: Caller<StoreData>,
               faction: <ApiFaction as FromWasmAbi>::Abi,
               position: <ApiTilePosition as FromWasmAbi>::Abi| {
-            imports_clone
-                .get_slime_amount(
-                    ApiFaction::from_wasm_abi_simple(faction),
-                    ApiTilePosition::from_wasm_abi_simple(position),
-                )
-                .to_wasm_abi_simple()
+            println!(
+                "GETTING SLIME AMOUNT AT {:?}",
+                ApiTilePosition::from_wasm_abi_simple(position)
+            );
+            let result = imports_clone.get_slime_amount(
+                ApiFaction::from_wasm_abi_simple(faction),
+                ApiTilePosition::from_wasm_abi_simple(position),
+            );
+            println!("IT IS: {result:?}");
+            result.to_wasm_abi_simple()
         },
     )?;
 
@@ -80,6 +84,11 @@ pub fn create_linker(imports: impl LiquislimeImports) -> Result<Linker<StoreData
               faction: <ApiFaction as FromWasmAbi>::Abi,
               position: <ApiTilePosition as FromWasmAbi>::Abi,
               amount: <ApiSlimeAmount as FromWasmAbi>::Abi| {
+            println!(
+                "SETTINGS SLIME AMOUNT AT {:?} TO {:?}",
+                ApiTilePosition::from_wasm_abi_simple(position),
+                ApiSlimeAmount::from_wasm_abi_simple(amount)
+            );
             imports_clone.set_slime_amount(
                 ApiFaction::from_wasm_abi_simple(faction),
                 ApiTilePosition::from_wasm_abi_simple(position),
@@ -99,7 +108,10 @@ pub fn create_linker(imports: impl LiquislimeImports) -> Result<Linker<StoreData
     linker.func_wrap(
         "liquislime_api",
         "is_mouse_pressed",
-        move |_: Caller<StoreData>| imports_clone.is_mouse_pressed().to_wasm_abi_simple(),
+        move |_: Caller<StoreData>| {
+            println!("SCRIPT IS ASKING IF MOUSE IS PRESSED");
+            imports_clone.is_mouse_pressed().to_wasm_abi_simple()
+        },
     )?;
 
     let imports_clone = imports.clone();
