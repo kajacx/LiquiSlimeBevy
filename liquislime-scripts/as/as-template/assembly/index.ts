@@ -1,4 +1,4 @@
-import { TimeInterval } from "./types";
+import { TimeInterval } from "./api/types";
 
 import {
   allocate_bytes,
@@ -9,7 +9,7 @@ import {
   init,
   new_instance,
   update,
-} from "./bindings";
+} from "./internal/bindings";
 
 export {
   allocate_bytes,

@@ -1,14 +1,14 @@
 import { DynValue } from "./dyn_value";
+import { log } from "./imports";
 import { SlimeAmount } from "./types";
 import { Writer } from "@wapc/as-msgpack";
 
-interface Settings<T> {
+interface Settings {
   describeSettings(packer: Writer): void;
   defaultValue(): DynValue;
-  parse(value: DynValue): T;
 }
 
-export class NoneSettings implements Settings<null> {
+export class NoneSettings implements Settings {
   describeSettings(writer: Writer): void {
     // writer.string("None"); // TODO: check
     writer.writeString("None");
@@ -18,28 +18,32 @@ export class NoneSettings implements Settings<null> {
     return DynValue.none();
   }
 
-  parse(value: DynValue): null {
+  parse(_value: DynValue): null {
     return null;
   }
 }
 
-export class SlimeAmountSettings implements Settings<SlimeAmount> {
-  default_amount: SlimeAmount;
+export class FloatSettings implements Settings {
+  default_value: f64;
 
-  constructor(default_amount: SlimeAmount) {
-    this.default_amount = default_amount;
+  constructor(default_value: f64) {
+    this.default_value = default_value;
   }
 
   describeSettings(writer: Writer): void {
-    writer.writeString("SlimeAmount");
+    writer.writeString("f64");
   }
 
   defaultValue(): DynValue {
-    return DynValue.slimeAmount(this.default_amount);
+    return DynValue.float(this.default_value);
   }
 
   parse(value: DynValue): SlimeAmount {
-    // TODO: log error
-    return value.asSlimeAmount().getOr(0);
+    if (value.isFloat()) {
+      return value.getFloat();
+    } else {
+      log(`Warning: value '${value.toString()}' is not a float`);
+      return 0;
+    }
   }
 }

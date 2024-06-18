@@ -1,24 +1,17 @@
 import { ScriptTemplate } from "./template";
-import { DynValue } from "./dyn_value";
-import { SlimeAmountSettings } from "./settings";
+import { DynValue } from "./api/dyn_value";
+import { SlimeAmount, TimeInterval } from "./api/types";
+import { FloatSettings } from "./api/settings";
 import {
-  SlimeAmount,
-  TimeInterval,
-  slimeAmountFromAbi,
-  slimeAmountToAbi,
-} from "./types";
-import {
+  addSlimeAmount,
   getOwnFaction,
-  getSlimeAmount,
   isMousePressed,
-  liquislime_api,
-  setSlimeAmount,
-} from "./bindings";
-import { packU32s } from "./helpers";
+  getMousePosition,
+} from "./api/imports";
 
-export const SETTINGS_DEFINITION = new SlimeAmountSettings(500);
+export const SETTINGS_DEFINITION = new FloatSettings(500);
 
-export class Settings {
+class Settings {
   amount: SlimeAmount;
 
   constructor(amount: SlimeAmount) {
@@ -43,34 +36,14 @@ export class UserScript implements ScriptTemplate {
   }
 
   update(timeElapsed: TimeInterval): void {
-    // if (liquislime_api.is_mouse_pressed()) {
-    if (isMousePressed()) {
-      // const faction = liquislime_api.get_own_faction();
+    const position = getMousePosition();
+    if (isMousePressed() && position != null) {
       const faction = getOwnFaction();
-      const position = packU32s(5, 7);
-
-      // throw new Error(
-      //   "settings: " +
-      //     this.settings.amount.toString() +
-      //     " elapsed: " +
-      //     timeElapsed.toString()
-      // );
-
-      const amount = slimeAmountFromAbi(getSlimeAmount(faction, position));
-      setSlimeAmount(
+      addSlimeAmount(
         faction,
-        position,
-        slimeAmountToAbi(amount + this.settings.amount * timeElapsed)
+        position.toTilePosition(),
+        this.settings.amount * timeElapsed
       );
-
-      // const amount = slimeAmountFromAbi(
-      //   liquislime_api.get_slime_amount(faction, positionAbi)
-      // );
-      // liquislime_api.set_slime_amount(
-      //   faction,
-      //   positionAbi,
-      //   slimeAmountToAbi(amount + this.settings.amount * timeElapsed)
-      // );
     }
   }
 }

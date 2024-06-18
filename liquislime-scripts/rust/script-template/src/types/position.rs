@@ -98,7 +98,7 @@ impl FromWasmAbi for Option<Position> {
 
     fn from_wasm_abi(abi: Self::Abi) -> Result<Self> {
         let unpacked = unpack_f32s(abi);
-        Ok(if unpacked.0.is_nan() {
+        Ok(if unpacked.0.is_nan() && unpacked.1.is_nan() {
             None
         } else {
             Some(Position {

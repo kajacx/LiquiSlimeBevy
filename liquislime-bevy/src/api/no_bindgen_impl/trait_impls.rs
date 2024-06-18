@@ -96,7 +96,7 @@ impl FromWasmAbiSimple for Option<ApiPosition> {
 
     fn from_wasm_abi_simple(abi: Self::Abi) -> Self {
         let unpacked = unpack_f32s(abi);
-        if unpacked.0.is_nan() {
+        if unpacked.0.is_nan() && unpacked.1.is_nan() {
             None
         } else {
             Some(ApiPosition {
