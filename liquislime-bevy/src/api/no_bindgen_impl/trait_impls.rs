@@ -4,8 +4,8 @@ use super::{
 };
 use crate::{
     api::{
-        ApiFaction, ApiInstance, ApiPosition, ApiSlimeAmount, ApiTilePosition, ApiTimeInterval,
-        ApiUnit, DynValue, SettingsDescription, SettingsUiDisplay, SettingsValue,
+        ApiFaction, ApiInstance, ApiPosition, ApiTilePosition, ApiTimeInterval, ApiUnit, DynValue,
+        SettingsDescription, SettingsUiDisplay, SettingsValue,
     },
     components::UnitId,
 };
@@ -104,22 +104,6 @@ impl FromWasmAbiSimple for Option<ApiPosition> {
                 y: unpacked.1,
             })
         }
-    }
-}
-
-impl ToWasmAbiSimple for ApiSlimeAmount {
-    type Abi = i64;
-
-    fn to_wasm_abi_simple(&self) -> Self::Abi {
-        self.0
-    }
-}
-
-impl FromWasmAbiSimple for ApiSlimeAmount {
-    type Abi = i64;
-
-    fn from_wasm_abi_simple(abi: Self::Abi) -> Self {
-        Self(abi)
     }
 }
 

@@ -1,33 +1,27 @@
 use crate::api::ToWasmAbi;
-use anyhow::Result;
-use plugin::UserScript;
-use settings::{SettingsDescription, SettingsValue};
 use std::{collections::HashMap, fmt::Display};
 use try_lock::TryLock;
+use user_script::UserScript;
 
 #[allow(unused)]
 mod types;
 #[allow(unused)]
 use types::*;
 
-mod plugin;
+mod user_script;
 
 mod settings;
+#[allow(unused)]
+use settings::*;
 
 mod api;
 
 static INSTANCES: TryLock<Option<HashMap<Instance, UserScript>>> = TryLock::new(None);
 
-pub trait SettingsTemplate: Sized {
-    fn describe_settings() -> SettingsDescription;
-
-    fn default_value() -> SettingsValue;
-
-    fn parse(value: SettingsValue) -> Result<Self>;
-}
-
 pub trait ScriptTemplate {
-    type Settings: SettingsTemplate;
+    type Settings: From<DynValue>;
+
+    fn describe_settings() -> SettingsDescription;
 
     fn new_instance(settings: Self::Settings) -> Self;
 

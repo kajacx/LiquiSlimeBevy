@@ -1,4 +1,4 @@
-use super::{Faction, Level, Position, SlimeAmount};
+use super::{Faction, Level, Position};
 use crate::api::{pack_u32s, unpack_u32s, FromWasmAbi, ToWasmAbi};
 use anyhow::Result;
 use derive_more::{Add, AddAssign, Sub, SubAssign};
@@ -36,22 +36,22 @@ impl TilePosition {
         self.x >= 0 && self.y >= 0 && self.x < Level::width() && self.y < Level::height()
     }
 
-    pub fn get_own_slime_amount(self) -> SlimeAmount {
+    pub fn get_own_slime_amount(self) -> f64 {
         self.get_slime_amount(Faction::get_own_faction())
     }
 
-    pub fn get_slime_amount(self, faction: Faction) -> SlimeAmount {
-        SlimeAmount::from_wasm_abi(unsafe {
+    pub fn get_slime_amount(self, faction: Faction) -> f64 {
+        f64::from_wasm_abi(unsafe {
             crate::api::get_slime_amount(faction.to_wasm_abi(), self.to_wasm_abi())
         })
         .unwrap()
     }
 
-    pub fn set_own_slime_amount(self, amount: SlimeAmount) {
+    pub fn set_own_slime_amount(self, amount: f64) {
         self.set_slime_amount(Faction::get_own_faction(), amount)
     }
 
-    pub fn set_slime_amount(self, faction: Faction, amount: SlimeAmount) {
+    pub fn set_slime_amount(self, faction: Faction, amount: f64) {
         unsafe {
             crate::api::set_slime_amount(
                 faction.to_wasm_abi(),
@@ -61,20 +61,20 @@ impl TilePosition {
         }
     }
 
-    pub fn set_own_slime_amount_at_least(self, amount: SlimeAmount) {
+    pub fn set_own_slime_amount_at_least(self, amount: f64) {
         self.set_slime_amount_at_least(Faction::get_own_faction(), amount)
     }
 
-    pub fn set_slime_amount_at_least(self, faction: Faction, amount: SlimeAmount) {
-        let amount = SlimeAmount::max(self.get_slime_amount(faction), amount);
+    pub fn set_slime_amount_at_least(self, faction: Faction, amount: f64) {
+        let amount = f64::max(self.get_slime_amount(faction), amount);
         self.set_slime_amount(faction, amount)
     }
 
-    pub fn add_own_slime_amount(self, amount: SlimeAmount) {
+    pub fn add_own_slime_amount(self, amount: f64) {
         self.add_slime_amount(Faction::get_own_faction(), amount)
     }
 
-    pub fn add_slime_amount(self, faction: Faction, amount: SlimeAmount) {
+    pub fn add_slime_amount(self, faction: Faction, amount: f64) {
         let amount = self.get_slime_amount(faction) + amount;
         self.set_slime_amount(faction, amount);
     }

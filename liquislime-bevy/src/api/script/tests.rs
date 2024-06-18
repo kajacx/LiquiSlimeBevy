@@ -4,7 +4,7 @@ use super::{LiquislimeImports, LoadedScript, Script};
 use crate::{
     api::{
         ApiFaction, ApiInstance, ApiPosition, ApiSlimeAmount, ApiTilePosition, ApiTimeInterval,
-        ApiUnit, SettingsValue,
+        ApiUnit, DynValue, SettingsValue,
     },
     components::UnitId,
 };
@@ -128,28 +128,19 @@ fn test_settings() {
     let spawner_script = LoadedScript::from_bytes(SPAWNER_BYTES, imports.clone()).unwrap();
 
     let mut instance = spawner_script
-        .new_instance(
-            script,
-            SettingsValue(ApiSlimeAmount::from_integer(100).into()),
-        )
+        .new_instance(script, SettingsValue(DynValue::Float64(100.0)))
         .unwrap();
 
     instance.update(ApiTimeInterval::from_seconds(1.0)).unwrap();
 
-    assert_eq!(
-        *imports.0.try_lock().unwrap(),
-        ApiSlimeAmount::from_integer(100)
-    );
+    assert_eq!(*imports.0.try_lock().unwrap(), 100.0);
 
     instance.with_settings(|settings| {
-        *settings.current_settings = SettingsValue(ApiSlimeAmount::from_integer(200).into());
+        *settings.current_settings = SettingsValue(DynValue::Float64(200.0));
     });
     instance.change_settings().unwrap();
 
     instance.update(ApiTimeInterval::from_seconds(1.0)).unwrap();
 
-    assert_eq!(
-        *imports.0.try_lock().unwrap(),
-        ApiSlimeAmount::from_integer(200)
-    );
+    assert_eq!(*imports.0.try_lock().unwrap(), 200.0);
 }

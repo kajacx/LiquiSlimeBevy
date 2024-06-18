@@ -9,6 +9,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 derive_more = { version = "0.99.17", default-features = false, features = ["add", "add_assign", "not", "from", "into"] }
+enum_derive = { version = "0.1.7" }
 rmp = { version = "0.8.14" }
 try-lock = { version = "0.2.5" }
 anyhow = { version = "1.0.86" }

@@ -83,16 +83,11 @@ pub fn create_linker(imports: impl LiquislimeImports) -> Result<Linker<StoreData
         move |_: Caller<StoreData>,
               faction: <ApiFaction as FromWasmAbi>::Abi,
               position: <ApiTilePosition as FromWasmAbi>::Abi,
-              amount: <ApiSlimeAmount as FromWasmAbi>::Abi| {
-            println!(
-                "SETTINGS SLIME AMOUNT AT {:?} TO {:?}",
-                ApiTilePosition::from_wasm_abi_simple(position),
-                ApiSlimeAmount::from_wasm_abi_simple(amount)
-            );
+              amount: ApiSlimeAmount| {
             imports_clone.set_slime_amount(
                 ApiFaction::from_wasm_abi_simple(faction),
                 ApiTilePosition::from_wasm_abi_simple(position),
-                ApiSlimeAmount::from_wasm_abi_simple(amount),
+                amount,
             );
         },
     )?;

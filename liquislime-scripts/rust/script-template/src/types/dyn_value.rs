@@ -1,4 +1,3 @@
-use super::SlimeAmount;
 use crate::{
     api::{FromWasmAbi, ToWasmAbi},
     read_to_string, Deserialize, Serialize,
@@ -8,12 +7,39 @@ use anyhow::{bail, Result};
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub enum DynValue {
     Null,
-    Number(f64),
+    Float64(f64),
     Text(String),
-    SlimeAmount(SlimeAmount),
+    Object(Vec<(String, DynValue)>),
 }
 
 impl DynValue {
+    pub fn null() -> Self {
+        Self::Null
+    }
+
+    pub fn float64(value: f64) -> Self {
+        Self::Float64(value)
+    }
+
+    pub fn str(text: &str) -> Self {
+        Self::string(text.to_owned())
+    }
+
+    pub fn string(text: String) -> Self {
+        Self::Text(text)
+    }
+
+    pub fn object(pairs: impl IntoIterator<Item = (String, DynValue)>) -> Self {
+        Self::Object(pairs.into_iter().collect())
+    }
+
+    pub fn as_f64(&self) -> Option<f64> {
+        match self {
+            Self::Float64(value) => Some(*value),
+            _ => None,
+        }
+    }
+
     pub fn as_str(&self) -> Option<&str> {
         match self {
             Self::Text(text) => Some(text),
@@ -21,16 +47,20 @@ impl DynValue {
         }
     }
 
-    pub fn into_string(self) -> Result<String, Self> {
+    pub fn try_into_string(self) -> Result<String, Self> {
         match self {
             Self::Text(text) => Ok(text),
             _ => Err(self),
         }
     }
 
-    pub fn as_slime_amount(&self) -> Option<SlimeAmount> {
+    pub fn field(&self, field: &str) -> Option<&DynValue> {
         match self {
-            Self::SlimeAmount(amount) => Some(*amount),
+            Self::Object(values) => {
+                values
+                    .iter()
+                    .find_map(|(key, value)| if key == field { Some(value) } else { None })
+            }
             _ => None,
         }
     }
@@ -63,16 +93,18 @@ impl Serialize for DynValue {
             Self::Null => {
                 rmp::encode::write_nil(writer)?;
             }
-            Self::Number(number) => {
+            Self::Float64(number) => {
                 rmp::encode::write_f64(writer, *number)?;
             }
             Self::Text(text) => {
                 rmp::encode::write_str(writer, text)?;
             }
-            Self::SlimeAmount(amount) => {
-                rmp::encode::write_map_len(writer, 1)?;
-                rmp::encode::write_str(writer, "SlimeAmount")?;
-                amount.serialize(writer)?;
+            Self::Object(values) => {
+                rmp::encode::write_map_len(writer, values.len() as u32)?;
+                for (key, value) in values {
+                    rmp::encode::write_str(writer, key)?;
+                    value.serialize(writer)?;
+                }
             }
         }
         Ok(())
@@ -84,7 +116,7 @@ impl Deserialize for DynValue {
         let marker = rmp::decode::read_marker(reader).expect("TODO: user error");
         Ok(match marker {
             rmp::Marker::Null => Self::Null,
-            rmp::Marker::F64 => Self::Number(rmp::decode::read_f64(reader)?),
+            rmp::Marker::F64 => Self::Float64(rmp::decode::read_f64(reader)?),
             rmp::Marker::FixStr(len) => read_to_string(reader, len as usize)?.into(),
             rmp::Marker::Str8 => {
                 let len = rmp::decode::read_u8(reader)? as usize;
@@ -97,14 +129,6 @@ impl Deserialize for DynValue {
             rmp::Marker::Str32 => {
                 let len = rmp::decode::read_u32(reader)? as usize;
                 read_to_string(reader, len)?.into()
-            }
-            rmp::Marker::FixMap(1) => {
-                let tag = String::deserialize(reader)?;
-                if tag == "SlimeAmount" {
-                    SlimeAmount::deserialize(reader)?.into()
-                } else {
-                    bail!("Invalid tag in DynValue::deserialize: {tag}")
-                }
             }
             _ => {
                 bail!("Invalid marker in DynValue::deserialize: {marker:?}")
@@ -119,8 +143,26 @@ impl Default for DynValue {
     }
 }
 
+impl From<f64> for DynValue {
+    fn from(value: f64) -> Self {
+        Self::Float64(value)
+    }
+}
+
 impl From<String> for DynValue {
     fn from(value: String) -> Self {
         Self::Text(value)
+    }
+}
+
+impl From<DynValue> for f64 {
+    fn from(value: DynValue) -> Self {
+        return value.as_f64().expect("TODO: user error");
+    }
+}
+
+impl From<DynValue> for String {
+    fn from(value: DynValue) -> Self {
+        return value.try_into_string().expect("TODO: user error");
     }
 }

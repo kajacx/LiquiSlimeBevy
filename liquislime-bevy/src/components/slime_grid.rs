@@ -1,14 +1,14 @@
 use bevy::prelude::*;
 
-use crate::api::{ApiSlimeAmount, ApiTilePosition};
+use crate::api::{ApiTilePosition, SlimeAmount};
 
 #[derive(Debug)]
 pub struct SlimeGrid {
     width: usize,
     height: usize,
 
-    slime_amounts: Vec<ApiSlimeAmount>,   // row major (y * height + x)
-    slime_additions: Vec<ApiSlimeAmount>, // used for spreading the slime
+    slime_amounts: Vec<SlimeAmount>,   // row major (y * height + x)
+    slime_additions: Vec<SlimeAmount>, // used for spreading the slime
 }
 
 #[allow(unused)]
@@ -18,16 +18,16 @@ impl SlimeGrid {
             width,
             height,
 
-            slime_amounts: vec![ApiSlimeAmount::new(); width * height],
-            slime_additions: vec![ApiSlimeAmount::new(); width * height],
+            slime_amounts: vec![SlimeAmount::new(); width * height],
+            slime_additions: vec![SlimeAmount::new(); width * height],
         }
     }
 
-    pub fn get_amount(&self, position: ApiTilePosition) -> ApiSlimeAmount {
+    pub fn get_amount(&self, position: ApiTilePosition) -> SlimeAmount {
         self.slime_amounts[self.get_index(position)]
     }
 
-    pub fn try_get_amount(&self, position: ApiTilePosition) -> Option<ApiSlimeAmount> {
+    pub fn try_get_amount(&self, position: ApiTilePosition) -> Option<SlimeAmount> {
         if self.in_range(position) {
             Some(self.get_amount(position))
         } else {
@@ -35,7 +35,7 @@ impl SlimeGrid {
         }
     }
 
-    pub fn set_amount(&mut self, position: ApiTilePosition, amount: ApiSlimeAmount) {
+    pub fn set_amount(&mut self, position: ApiTilePosition, amount: SlimeAmount) {
         let index = self.get_index(position);
         self.slime_amounts[index] = amount.non_negative();
     }
@@ -43,7 +43,7 @@ impl SlimeGrid {
     pub fn try_set_amount(
         &mut self,
         position: ApiTilePosition,
-        amount: ApiSlimeAmount,
+        amount: SlimeAmount,
     ) -> Result<(), ()> {
         if self.in_range(position) {
             self.set_amount(position, amount);
@@ -53,7 +53,7 @@ impl SlimeGrid {
         }
     }
 
-    pub fn add_amount(&mut self, position: ApiTilePosition, amount: ApiSlimeAmount) {
+    pub fn add_amount(&mut self, position: ApiTilePosition, amount: SlimeAmount) {
         let index = self.get_index(position);
         let amount = self.slime_amounts[index] + amount;
         self.slime_amounts[index] = amount.non_negative();
@@ -62,7 +62,7 @@ impl SlimeGrid {
     pub fn try_add_amount(
         &mut self,
         position: ApiTilePosition,
-        amount: ApiSlimeAmount,
+        amount: SlimeAmount,
     ) -> Result<(), ()> {
         if self.in_range(position) {
             self.add_amount(position, amount);
@@ -114,7 +114,7 @@ impl SlimeGrid {
     pub fn spread_slime(&mut self) {
         for index in 0..self.slime_additions.len() {
             self.slime_amounts[index] += self.slime_additions[index];
-            self.slime_additions[index] = ApiSlimeAmount::from_integer(0);
+            self.slime_additions[index] = SlimeAmount::from_integer(0);
         }
     }
 }

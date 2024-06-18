@@ -1,9 +1,9 @@
 mod definitions;
+mod float64;
 mod none;
-mod slime_amount;
 mod text;
 
 pub use definitions::*;
+pub use float64::*;
 pub use none::*;
-pub use slime_amount::*;
 pub use text::*;

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    api::{ApiFaction, ApiPosition, ApiSlimeAmount, ApiTilePosition},
+    api::{ApiFaction, ApiPosition, ApiTilePosition, SlimeAmount},
     WORLD_HEIGHT, WORLD_WIDTH,
 };
 
@@ -20,7 +20,7 @@ impl SlimeGrids {
         }
     }
 
-    pub fn get_amount(&self, faction: ApiFaction, position: ApiTilePosition) -> ApiSlimeAmount {
+    pub fn get_amount(&self, faction: ApiFaction, position: ApiTilePosition) -> SlimeAmount {
         self.grids[faction.index()].get_amount(position)
     }
 
@@ -28,11 +28,16 @@ impl SlimeGrids {
         &self,
         faction: ApiFaction,
         position: ApiTilePosition,
-    ) -> Option<ApiSlimeAmount> {
+    ) -> Option<SlimeAmount> {
         self.grids[faction.index()].try_get_amount(position)
     }
 
-    pub fn set_amount(&mut self, faction: ApiFaction, position: ApiTilePosition, amount: ApiSlimeAmount) {
+    pub fn set_amount(
+        &mut self,
+        faction: ApiFaction,
+        position: ApiTilePosition,
+        amount: SlimeAmount,
+    ) {
         self.grids[faction.index()].set_amount(position, amount);
     }
 
@@ -40,7 +45,7 @@ impl SlimeGrids {
         &mut self,
         faction: ApiFaction,
         position: ApiTilePosition,
-        amount: ApiSlimeAmount,
+        amount: SlimeAmount,
     ) -> Result<(), ()> {
         self.grids[faction.index()].try_set_amount(position, amount)
     }

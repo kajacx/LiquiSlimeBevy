@@ -1,9 +1,7 @@
 use super::{allocate_bytes_impl, free_bytes_impl, FatPtr, FromWasmAbi, ToWasmAbi};
 use crate::{
-    plugin::UserScript,
-    settings::{SettingsDescription, SettingsValue},
-    Faction, Instance, Position, ScriptTemplate, SettingsTemplate, SlimeAmount, TilePosition,
-    TimeInterval, Unit,
+    settings::SettingsDescription, user_script::UserScript, DynValue, Faction, Instance, Position,
+    ScriptTemplate, TilePosition, TimeInterval, Unit,
 };
 use std::collections::HashMap;
 
@@ -19,8 +17,7 @@ pub fn init() {
 #[no_mangle]
 pub fn describe_settings() -> <SettingsDescription as ToWasmAbi>::Abi {
     crate::log("Entering describe_settings");
-    let result =
-        <<UserScript as ScriptTemplate>::Settings as SettingsTemplate>::describe_settings();
+    let result = <UserScript as ScriptTemplate>::describe_settings();
     crate::log("Converting describe_settings");
     let abi = result.to_wasm_abi();
     crate::log("Exiting describe_settings");
@@ -28,36 +25,25 @@ pub fn describe_settings() -> <SettingsDescription as ToWasmAbi>::Abi {
 }
 
 #[no_mangle]
-pub fn default_settings() -> <SettingsValue as ToWasmAbi>::Abi {
-    crate::log("Entering default_settings");
-    let result = <<UserScript as ScriptTemplate>::Settings as SettingsTemplate>::default_value();
-    crate::log("Converting default_settings");
-    let abi = result.to_wasm_abi();
-    crate::log("Exiting default_settings");
-    abi
-}
-
-#[no_mangle]
 pub fn new_instance(
     instance_id: <Instance as FromWasmAbi>::Abi,
-    settings: <SettingsValue as FromWasmAbi>::Abi,
+    settings: <DynValue as FromWasmAbi>::Abi,
 ) {
     crate::log("Entering new_instance");
 
-    let settings_value = SettingsValue::from_wasm_abi(settings);
+    let dyn_value = DynValue::from_wasm_abi(settings);
 
-    crate::log("Unwrapping settings value");
+    crate::log("Unwrapping settings dyn value");
 
-    let settings_value = settings_value.expect("TODO: user error");
+    let dyn_value = dyn_value.expect("TODO: user error");
 
     crate::log("Parsing settings value");
 
-    let settings =
-        <<UserScript as ScriptTemplate>::Settings as SettingsTemplate>::parse(settings_value);
+    let settings: <UserScript as ScriptTemplate>::Settings = dyn_value.into();
 
-    crate::log("Unwrapping parsed settings");
+    // crate::log("Unwrapping parsed settings");
 
-    let settings = settings.expect("TODO: User error");
+    // let settings = settings.expect("TODO: User error");
 
     crate::log("Creating instance");
 
@@ -78,24 +64,23 @@ pub fn new_instance(
 #[no_mangle]
 pub fn change_settings(
     instance_id: <Instance as FromWasmAbi>::Abi,
-    settings: <SettingsValue as FromWasmAbi>::Abi,
+    settings: <DynValue as FromWasmAbi>::Abi,
 ) {
     crate::log("Entering change_settings");
 
-    let settings_value = SettingsValue::from_wasm_abi(settings);
+    let dyn_value = DynValue::from_wasm_abi(settings);
 
-    crate::log("Unwrapping settings value");
+    crate::log("Unwrapping settings dyn value");
 
-    let settings_value = settings_value.expect("TODO: user error");
+    let dyn_value = dyn_value.expect("TODO: user error");
 
     crate::log("Parsing settings value");
 
-    let settings =
-        <<UserScript as ScriptTemplate>::Settings as SettingsTemplate>::parse(settings_value);
+    let settings: <UserScript as ScriptTemplate>::Settings = dyn_value.into();
 
-    crate::log("Unwrapping parsed settings");
+    // crate::log("Unwrapping parsed settings");
 
-    let settings = settings.expect("TODO: User error");
+    // let settings = settings.expect("TODO: User error");
 
     crate::log("Calling user's change_settings");
 
@@ -140,11 +125,11 @@ extern "C" {
     pub fn get_slime_amount(
         faction: <Faction as ToWasmAbi>::Abi,
         position: <TilePosition as ToWasmAbi>::Abi,
-    ) -> <SlimeAmount as FromWasmAbi>::Abi;
+    ) -> f64;
     pub fn set_slime_amount(
         faction: <Faction as ToWasmAbi>::Abi,
         position: <TilePosition as ToWasmAbi>::Abi,
-        amount: <SlimeAmount as ToWasmAbi>::Abi,
+        amount: f64,
     );
 
     pub fn get_mouse_position() -> <Option<Position> as FromWasmAbi>::Abi;

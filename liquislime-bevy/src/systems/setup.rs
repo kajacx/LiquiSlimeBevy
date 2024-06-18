@@ -71,12 +71,12 @@ fn spawn_tiles(mut commands: Commands) {
 
 fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
     let spawner_script = Script::from_handle(
-        "Slime spawner".to_owned(),
+        "Slime spawner".to_string(),
         asset_server.load("scripts/slime_spawner.wasm"),
     );
 
     let clicker_script = Script::from_handle(
-        "Mouse clicker".to_owned(),
+        "Mouse clicker".to_string(),
         asset_server.load("scripts/slime_clicker.wasm"),
     );
 
@@ -123,14 +123,8 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         &[
-            (
-                &spawner_script,
-                SettingsValue(ApiSlimeAmount::from_integer(100).into()),
-            ),
-            (
-                &clicker_script,
-                SettingsValue(ApiSlimeAmount::from_integer(2000).into()),
-            ),
+            (&spawner_script, SettingsValue(DynValue::Float64(100.0))),
+            (&clicker_script, SettingsValue(DynValue::Float64(2000.0))),
         ],
     );
 
@@ -139,10 +133,7 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         crate::api::ApiTilePosition::new(7, 1),
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
-        &[(
-            &spawner_script,
-            SettingsValue(ApiSlimeAmount::from_integer(120).into()),
-        )],
+        &[(&spawner_script, SettingsValue(DynValue::Float64(120.0)))],
     );
 }
 

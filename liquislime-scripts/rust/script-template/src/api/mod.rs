@@ -1,7 +1,6 @@
 mod bindings;
 mod fat_ptr;
 mod helpers;
-mod settings;
 mod traits;
 
 pub use bindings::*;

@@ -1,5 +1,5 @@
 use super::LiquislimeImports;
-use crate::api::{ApiFaction, ApiPosition, ApiSlimeAmount, ApiTilePosition, ApiUnit};
+use crate::api::{ApiFaction, ApiPosition, ApiSlimeAmount, ApiTilePosition, ApiUnit, SlimeAmount};
 use crate::components::{FactionComponent, UnitId};
 use crate::resources::MouseState;
 use crate::units::api_spec::get_slime_grid;
@@ -144,17 +144,20 @@ fn get_own_faction() -> ApiFaction {
 fn get_slime_amount(faction: ApiFaction, position: ApiTilePosition) -> ApiSlimeAmount {
     let mut world = get_world();
     let slime_grid = get_slime_grid(&mut world);
-    slime_grid.try_get_amount(faction, position).log_err_or(
-        &format!("Getting slime amount out of bounds: {position:?}."),
-        ApiSlimeAmount::from_integer(0),
-    )
+    slime_grid
+        .try_get_amount(faction, position)
+        .log_err_or(
+            &format!("Getting slime amount out of bounds: {position:?}."),
+            SlimeAmount::from_integer(0),
+        )
+        .as_float()
 }
 
 fn set_slime_amount(faction: ApiFaction, position: ApiTilePosition, amount: ApiSlimeAmount) {
     let mut world = get_world();
     let mut slime_grid = get_slime_grid(&mut world);
     slime_grid
-        .try_set_amount(faction, position, amount)
+        .try_set_amount(faction, position, SlimeAmount::from_float(amount))
         .log_err(&format!(
             "Setting slime amount out of bounds: {position:?}."
         ));
