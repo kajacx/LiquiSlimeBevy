@@ -8,3 +8,4 @@ echo "Building scripts"
 rm -f liquislime-bevy/assets/scripts/*.wasm
 
 ./liquislime-scripts/rust/build-rust-scripts.sh
+./liquislime-scripts/as/build-as-scripts.sh
