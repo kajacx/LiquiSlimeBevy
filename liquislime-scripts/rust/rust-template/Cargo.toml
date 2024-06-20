@@ -1,5 +1,5 @@
 [package]
-name = "script-template"
+name = "rust-template"
 version = "0.1.0"
 authors = ["kajacx"]
 edition = "2021"

@@ -111,12 +111,13 @@ impl Serialize for DynValue {
     }
 }
 
+#[allow(deprecated)]
 impl Deserialize for DynValue {
     fn deserialize(reader: &mut impl std::io::Read) -> Result<Self> {
         let marker = rmp::decode::read_marker(reader).expect("TODO: user error");
         Ok(match marker {
             rmp::Marker::Null => Self::Null,
-            rmp::Marker::F64 => Self::Float64(rmp::decode::read_f64(reader)?),
+            rmp::Marker::F64 => Self::Float64(rmp::decode::read_data_f64(reader)?),
             rmp::Marker::FixStr(len) => read_to_string(reader, len as usize)?.into(),
             rmp::Marker::Str8 => {
                 let len = rmp::decode::read_u8(reader)? as usize;
@@ -130,11 +131,32 @@ impl Deserialize for DynValue {
                 let len = rmp::decode::read_u32(reader)? as usize;
                 read_to_string(reader, len)?.into()
             }
+            rmp::Marker::FixMap(len) => read_map(reader, len as usize)?,
+            rmp::Marker::Map16 => {
+                let len = rmp::decode::read_u16(reader)? as usize;
+                read_map(reader, len as usize)?
+            }
+            rmp::Marker::Map32 => {
+                let len = rmp::decode::read_u32(reader)? as usize;
+                read_map(reader, len as usize)?
+            }
             _ => {
                 bail!("Invalid marker in DynValue::deserialize: {marker:?}")
             }
         })
     }
+}
+
+fn read_map(reader: &mut impl std::io::Read, len: usize) -> Result<DynValue> {
+    let mut values = Vec::with_capacity(len);
+
+    for _ in 0..len {
+        let name = String::deserialize(reader)?;
+        let value = DynValue::deserialize(reader)?;
+        values.push((name, value))
+    }
+
+    Ok(DynValue::Object(values))
 }
 
 impl Default for DynValue {

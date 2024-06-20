@@ -13,7 +13,7 @@ impl SdObject {
                 DynValue::object(
                     self.0
                         .iter()
-                        .cloned()
+                        .cloned() // TODO: cloned
                         .map(|(key, value)| (key, value.describe())),
                 ),
             ),

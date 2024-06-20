@@ -129,18 +129,18 @@ impl FromWasmAbiSimple for ApiTilePosition {
 }
 
 impl ToWasmAbiSimple for ApiTimeInterval {
-    type Abi = i64;
+    type Abi = f64;
 
     fn to_wasm_abi_simple(&self) -> Self::Abi {
-        self.0
+        self.to_seconds()
     }
 }
 
 impl FromWasmAbiSimple for ApiTimeInterval {
-    type Abi = i64;
+    type Abi = f64;
 
     fn from_wasm_abi_simple(abi: Self::Abi) -> Self {
-        Self(abi)
+        Self::from_seconds(abi)
     }
 }
 
@@ -159,8 +159,23 @@ impl FromWasmAbi for DynValue {
 
     fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {
         let bytes = Vec::<u8>::from_wasm_abi(context, abi)?;
+        debug_print_bytes(&bytes);
         DynValue::deserialize(&mut std::io::Cursor::new(bytes))
     }
+}
+
+pub fn debug_print_bytes(bytes: &[u8]) {
+    print!("[");
+    let mut first = true;
+    for byte in bytes {
+        if first {
+            first = false;
+        } else {
+            print!(", ");
+        }
+        print!("{byte:#03} {byte:#010b}");
+    }
+    println!("]");
 }
 
 impl ToWasmAbi for SettingsValue {
@@ -183,6 +198,6 @@ impl FromWasmAbi for SettingsDescription {
     type Abi = <DynValue as FromWasmAbi>::Abi;
 
     fn from_wasm_abi(context: &mut WasmAccess, abi: Self::Abi) -> Result<Self> {
-        Ok(Self::deserialize(&DynValue::from_wasm_abi(context, abi)?))
+        Ok(Self::deserialize(&DynValue::from_wasm_abi(context, abi)?)?)
     }
 }

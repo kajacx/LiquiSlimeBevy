@@ -1,11 +1,30 @@
 use super::{SettingsTempValue, SettingsUiDisplay, SettingsValue};
-use crate::helpers::ResultLogger;
+use crate::{api::DynValue, helpers::ResultLogger};
+use anyhow::{Context, Result};
 use bevy_egui::egui::Ui;
 
 #[derive(Debug, Clone)]
-pub struct SdText;
+pub struct SdString {
+    default_value: String,
+}
 
-impl SettingsUiDisplay for SdText {
+impl SdString {
+    pub fn deserialize(value: &DynValue) -> Result<Self> {
+        Ok(Self {
+            default_value: value
+                .field("default_value")?
+                .as_str()
+                .context("default value on SdText is not of type string")?
+                .to_string(),
+        })
+    }
+
+    pub fn default_value(&self) -> DynValue {
+        DynValue::String(self.default_value.clone())
+    }
+}
+
+impl SettingsUiDisplay for SdString {
     fn display_ui_element(&self, ui: &mut Ui, value: &mut SettingsTempValue) {
         ui.text_edit_singleline(value.0.as_string_mut_anyway(""));
     }
@@ -30,9 +49,5 @@ impl SettingsUiDisplay for SdText {
         let temp_text = temp_value.0.as_string_mut_anyway("");
         temp_text.clear();
         temp_text.push_str(text);
-    }
-
-    fn deserialize(_value: &crate::api::DynValue) -> Self {
-        Self
     }
 }

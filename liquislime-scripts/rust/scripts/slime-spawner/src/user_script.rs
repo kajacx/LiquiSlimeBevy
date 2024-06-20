@@ -11,7 +11,7 @@ pub struct Settings {
 impl From<DynValue> for Settings {
     fn from(value: DynValue) -> Self {
         Self {
-            amount: value.into(),
+            amount: value.field("amount").unwrap().as_f64().unwrap(),
         }
     }
 }

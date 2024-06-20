@@ -24,6 +24,27 @@ pub fn unpack_f32s(packed: u64) -> (f32, f32) {
     )
 }
 
+pub fn debug_print_fat_ptr(ptr: super::FatPtr) {
+    let bytes = super::read_bytes(ptr);
+    let mut text = "[".to_string();
+
+    let mut first = true;
+    for byte in &bytes {
+        if first {
+            first = false;
+        } else {
+            text.push(',');
+            text.push(' ');
+        }
+        text.push_str(&format!("{byte:#03} {byte:#010b}"));
+    }
+    text.push(']');
+
+    crate::log(text);
+
+    std::mem::forget(bytes);
+}
+
 #[cfg(test)]
 mod tests {
     pub use super::*;

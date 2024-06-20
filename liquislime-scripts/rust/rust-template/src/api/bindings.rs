@@ -31,19 +31,7 @@ pub fn new_instance(
 ) {
     crate::log("Entering new_instance");
 
-    let dyn_value = DynValue::from_wasm_abi(settings);
-
-    crate::log("Unwrapping settings dyn value");
-
-    let dyn_value = dyn_value.expect("TODO: user error");
-
-    crate::log("Parsing settings value");
-
-    let settings: <UserScript as ScriptTemplate>::Settings = dyn_value.into();
-
-    // crate::log("Unwrapping parsed settings");
-
-    // let settings = settings.expect("TODO: User error");
+    let settings = get_settings(settings);
 
     crate::log("Creating instance");
 
@@ -68,19 +56,7 @@ pub fn change_settings(
 ) {
     crate::log("Entering change_settings");
 
-    let dyn_value = DynValue::from_wasm_abi(settings);
-
-    crate::log("Unwrapping settings dyn value");
-
-    let dyn_value = dyn_value.expect("TODO: user error");
-
-    crate::log("Parsing settings value");
-
-    let settings: <UserScript as ScriptTemplate>::Settings = dyn_value.into();
-
-    // crate::log("Unwrapping parsed settings");
-
-    // let settings = settings.expect("TODO: User error");
+    let settings = get_settings(settings);
 
     crate::log("Calling user's change_settings");
 
@@ -94,6 +70,22 @@ pub fn change_settings(
         .change_settings(settings);
 
     crate::log("Exiting change_settings");
+}
+
+fn get_settings(
+    settings: <DynValue as FromWasmAbi>::Abi,
+) -> <UserScript as ScriptTemplate>::Settings {
+    super::debug_print_fat_ptr(FatPtr::from_wasm_abi(settings).unwrap());
+
+    let dyn_value = DynValue::from_wasm_abi(settings);
+
+    crate::log("Unwrapping settings dyn value");
+
+    let dyn_value = dyn_value.expect("TODO: user error");
+
+    crate::log(format!("Parsing settings value: {dyn_value:?}"));
+
+    dyn_value.into()
 }
 
 #[no_mangle]

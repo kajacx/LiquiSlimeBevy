@@ -2,4 +2,4 @@
 
 resolver = "2"
 
-members = ["liquislime-settings", "script-template", "scripts/slime-spawner", "scripts/slime-clicker"]
+members = ["rust-template", "scripts/slime-spawner", "scripts/slime-clicker"]

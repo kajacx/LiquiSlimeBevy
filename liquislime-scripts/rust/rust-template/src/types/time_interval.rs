@@ -70,18 +70,18 @@ impl Div<i64> for TimeInterval {
 }
 
 impl ToWasmAbi for TimeInterval {
-    type Abi = i64;
+    type Abi = f64;
 
     fn to_wasm_abi(&self) -> Self::Abi {
-        self.0
+        self.to_seconds()
     }
 }
 
 impl FromWasmAbi for TimeInterval {
-    type Abi = i64;
+    type Abi = f64;
 
     fn from_wasm_abi(abi: Self::Abi) -> Result<Self> {
-        Ok(Self(abi))
+        Ok(Self::from_seconds(abi))
     }
 }
 

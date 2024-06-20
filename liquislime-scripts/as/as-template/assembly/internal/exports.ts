@@ -7,13 +7,7 @@ export function init(): void {}
 
 export function describeSettings(): FatPtr {
   return encodeToMemory((writer) =>
-    SETTINGS_DEFINITION.describeSettings(writer)
-  );
-}
-
-export function defaultSettings(): FatPtr {
-  return encodeToMemory((writer) =>
-    SETTINGS_DEFINITION.defaultValue().encode(writer)
+    SETTINGS_DEFINITION.describeSettings().encode(writer)
   );
 }
 

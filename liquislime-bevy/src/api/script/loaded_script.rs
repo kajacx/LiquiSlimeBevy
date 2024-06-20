@@ -22,7 +22,7 @@ impl LoadedScript {
     pub fn from_bytes(bytes: &[u8], imports: impl LiquislimeImports) -> Result<Self> {
         let script_impl = ScriptImpl::from_bytes(bytes, imports)?;
         let settings_description = script_impl.describe_settings()?;
-        let default_settings = script_impl.default_settings()?;
+        let default_settings = SettingsValue(settings_description.default_value());
 
         Ok(Self(Arc::new(LoadedScriptInner {
             settings_description,

@@ -3,7 +3,6 @@ import { TimeInterval } from "./api/types";
 import {
   allocate_bytes,
   change_settings,
-  default_settings,
   describe_settings,
   free_bytes,
   init,
@@ -14,7 +13,6 @@ import {
 export {
   allocate_bytes,
   change_settings,
-  default_settings,
   describe_settings,
   free_bytes,
   init,

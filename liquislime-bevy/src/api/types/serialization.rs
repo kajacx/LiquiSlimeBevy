@@ -24,6 +24,8 @@ impl Deserialize for String {
 
 pub fn read_to_string(reader: &mut impl std::io::Read, len: usize) -> Result<String> {
     let mut value = String::new();
+    println!("Reading string len: {len}");
     reader.take(len as u64).read_to_string(&mut value)?;
+    println!("Read string: {value}");
     Ok(value)
 }

@@ -18,10 +18,6 @@ pub use string::*;
 
 #[derive(Debug, Clone, From)]
 pub enum SettingsDescription {
-    // None(#[from] SdNone),
-    // Float64(#[from] SdFloat64),
-    // String(#[from] SdString),
-    // Object(#[from] SdObject),
     None(SdNone),
     Float64(SdFloat64),
     String(SdString),

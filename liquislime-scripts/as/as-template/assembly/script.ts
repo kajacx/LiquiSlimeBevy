@@ -1,25 +1,41 @@
 import { ScriptTemplate } from "./template";
 import { DynValue } from "./api/dyn_value";
 import { SlimeAmount, TimeInterval } from "./api/types";
-import { FloatSettings } from "./api/settings";
+import {
+  SettingsDescription,
+  ObjectSettings,
+  StringSettings,
+  Float64Settings,
+} from "./api/settings";
 import {
   addSlimeAmount,
   getOwnFaction,
   isMousePressed,
   getMousePosition,
+  log,
 } from "./api/imports";
+import { levelHeight, levelWidth } from "./internal/bindings";
 
-export const SETTINGS_DEFINITION = new FloatSettings(500);
+export const SETTINGS_DEFINITION = new ObjectSettings(
+  new Map<string, SettingsDescription>()
+    .set("name", new StringSettings("AS template"))
+    .set("amount", new Float64Settings(500))
+);
 
 class Settings {
-  amount: SlimeAmount;
+  name: string;
+  amount: f64;
 
-  constructor(amount: SlimeAmount) {
+  constructor(name: string, amount: SlimeAmount) {
+    this.name = name;
     this.amount = amount;
   }
 
   static fromDynValue(value: DynValue): Settings {
-    return new Settings(SETTINGS_DEFINITION.parse(value));
+    return new Settings(
+      value.getObjectValue("name")!.getString()!,
+      value.getObjectValue("amount")!.getFloat()
+    );
   }
 }
 
@@ -28,7 +44,6 @@ export class UserScript implements ScriptTemplate {
 
   constructor(settings: DynValue) {
     this.settings = Settings.fromDynValue(settings);
-    // throw new Error("Setitngs ARE: " + settings.toString());
   }
 
   changeSettings(settings: DynValue): void {
@@ -36,14 +51,17 @@ export class UserScript implements ScriptTemplate {
   }
 
   update(timeElapsed: TimeInterval): void {
+    log(`Running "${this.settings.name}" script`);
     const position = getMousePosition();
     if (isMousePressed() && position != null) {
       const faction = getOwnFaction();
-      addSlimeAmount(
-        faction,
-        position.toTilePosition(),
-        this.settings.amount * timeElapsed
-      );
+      const tile = position.toTilePosition();
+      const amount = this.settings.amount * timeElapsed;
+
+      addSlimeAmount(faction, tile.withX(0), amount);
+      addSlimeAmount(faction, tile.withY(0), amount);
+      addSlimeAmount(faction, tile.withX(levelWidth() - 1), amount);
+      addSlimeAmount(faction, tile.withY(levelHeight() - 1), amount);
     }
   }
 }

@@ -30,6 +30,7 @@ fn update_wasm_scripts(world: &mut World) {
         // TODO: load asset server lazily
         let asset_server = world.resource::<Assets<ScriptAsset>>();
         if script.0.try_load(asset_server) == ScriptStatus::NotLoaded {
+            println!("Script {} not ready", script.0.name());
             all_ready = false;
         }
     }

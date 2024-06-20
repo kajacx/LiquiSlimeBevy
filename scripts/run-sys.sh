@@ -2,8 +2,6 @@
 set -e
 
 # Run from parent folder
-cp ./liquislime-scripts/as/as-template/build/debug.wasm ./liquislime-bevy/assets/scripts/slime_clicker.wasm
-
 echo "Running bevy game in debug mode"
 cd liquislime-bevy && cargo run
 

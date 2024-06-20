@@ -45,5 +45,8 @@ export function writeString(text: string): FatPtr {
   // const bytes = ENCODER.encode(text);
   // // const bytes = new Uint8Array(Buffer.from(text, "utf-8"));
   // return writeBytes(bytes.buffer);
-  throw "TODO: string to bytes";
+  //throw "TODO: string to bytes";
+
+  // return writeBytes(String.UTF8.encode(text).buffer);
+  return writeBytes(String.UTF8.encode(text));
 }

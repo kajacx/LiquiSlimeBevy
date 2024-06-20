@@ -1,49 +1,68 @@
 import { DynValue } from "./dyn_value";
-import { log } from "./imports";
-import { SlimeAmount } from "./types";
-import { Writer } from "@wapc/as-msgpack";
 
-interface Settings {
-  describeSettings(packer: Writer): void;
-  defaultValue(): DynValue;
+export interface SettingsDescription {
+  describeSettings(): DynValue;
 }
 
-export class NoneSettings implements Settings {
-  describeSettings(writer: Writer): void {
-    // writer.string("None"); // TODO: check
-    writer.writeString("None");
-  }
-
-  defaultValue(): DynValue {
-    return DynValue.none();
-  }
-
-  parse(_value: DynValue): null {
-    return null;
+export class NoneSettings implements SettingsDescription {
+  describeSettings(): DynValue {
+    return DynValue.object(
+      new Map<string, DynValue>().set("type", DynValue.string("None"))
+    );
   }
 }
 
-export class FloatSettings implements Settings {
-  default_value: f64;
+export class Float64Settings implements SettingsDescription {
+  defaultValue: f64;
 
-  constructor(default_value: f64) {
-    this.default_value = default_value;
+  constructor(defaultValue: f64) {
+    this.defaultValue = defaultValue;
   }
 
-  describeSettings(writer: Writer): void {
-    writer.writeString("f64");
+  describeSettings(): DynValue {
+    return DynValue.object(
+      new Map<string, DynValue>()
+        .set("type", DynValue.string("Float64"))
+        .set("default_value", DynValue.float(this.defaultValue))
+    );
+  }
+}
+
+export class StringSettings implements SettingsDescription {
+  defaultValue: string;
+
+  constructor(defaultValue: string) {
+    this.defaultValue = defaultValue;
   }
 
-  defaultValue(): DynValue {
-    return DynValue.float(this.default_value);
+  describeSettings(): DynValue {
+    return DynValue.object(
+      new Map<string, DynValue>()
+        .set("type", DynValue.string("String"))
+        .set("default_value", DynValue.string(this.defaultValue))
+    );
+  }
+}
+
+export class ObjectSettings implements SettingsDescription {
+  values: Map<string, SettingsDescription>;
+
+  constructor(values: Map<string, SettingsDescription>) {
+    this.values = values;
   }
 
-  parse(value: DynValue): SlimeAmount {
-    if (value.isFloat()) {
-      return value.getFloat();
-    } else {
-      log(`Warning: value '${value.toString()}' is not a float`);
-      return 0;
+  describeSettings(): DynValue {
+    const values = new Map<string, DynValue>();
+    const keys = this.values.keys();
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      values.set(key, this.values.get(key).describeSettings());
     }
+
+    return DynValue.object(
+      new Map<string, DynValue>()
+        .set("type", DynValue.string("Object"))
+        .set("values", DynValue.object(values))
+    );
   }
 }

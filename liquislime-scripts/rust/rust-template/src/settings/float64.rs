@@ -9,7 +9,10 @@ impl SdFloat64 {
     pub fn describe(&self) -> DynValue {
         DynValue::object([
             ("type".to_string(), DynValue::str("Float64")),
-            ("default".to_string(), DynValue::float64(self.default_value)),
+            (
+                "default_value".to_string(),
+                DynValue::float64(self.default_value),
+            ),
         ])
     }
 }

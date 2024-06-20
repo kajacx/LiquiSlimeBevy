@@ -19,3 +19,5 @@ mv p.json package.json
 yarn install
 
 yarn asbuild
+
+cp ./build/debug.wasm ../../../liquislime-bevy/assets/scripts/as_template.wasm

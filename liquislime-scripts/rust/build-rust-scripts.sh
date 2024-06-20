@@ -11,15 +11,15 @@ for script in */; do
   echo "Preparing script $script"
 
   crate_name=`grep 'name =' "$script/Cargo.toml" | sed -E 's/.*"(.*)".*/\1/'`
-  cp ../script-template/Cargo.toml "$script/Cargo.toml"
+  cp ../rust-template/Cargo.toml "$script/Cargo.toml"
   sed -E -i 's/name =.*/name = "'"$crate_name"'"/' "$script/Cargo.toml"
 
   rm -rf "$script/src/types" "$script/src/settings" "$script/src/api"
-  cp -r ../script-template/src/types "$script/src"
-  cp -r ../script-template/src/settings "$script/src"
-  cp -r ../script-template/src/api "$script/src"
-  cp ../script-template/src/lib.rs "$script/src/lib.rs"
-  cp ../script-template/.gitignore_ "$script/.gitignore"
+  cp -r ../rust-template/src/types "$script/src"
+  cp -r ../rust-template/src/settings "$script/src"
+  cp -r ../rust-template/src/api "$script/src"
+  cp ../rust-template/src/lib.rs "$script/src/lib.rs"
+  cp ../rust-template/.gitignore_ "$script/.gitignore"
 done
 
 # Build scripts
@@ -35,9 +35,9 @@ done
 cd ..
 
 # Build template
-echo "Building scritp tempalte"
+echo "Building scritp template"
 
-cd script-template
+cd rust-template
 cargo build --target=wasm32-unknown-unknown
 cd ..
 

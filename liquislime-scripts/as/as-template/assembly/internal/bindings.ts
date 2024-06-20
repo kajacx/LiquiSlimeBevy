@@ -10,10 +10,6 @@ export function describe_settings(): FatPtr {
   return exportsImpl.describeSettings();
 }
 
-export function default_settings(): FatPtr {
-  return exportsImpl.defaultSettings();
-}
-
 export function new_instance(instance: InstanceId, settings: FatPtr): void {
   exportsImpl.newInstance(instance, settings);
 }

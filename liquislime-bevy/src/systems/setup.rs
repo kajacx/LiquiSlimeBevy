@@ -70,18 +70,27 @@ fn spawn_tiles(mut commands: Commands) {
 }
 
 fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let rust_template = Script::from_handle(
+        "Rust template".to_string(),
+        asset_server.load("scripts/rust_template.wasm"),
+    );
     let spawner_script = Script::from_handle(
         "Slime spawner".to_string(),
         asset_server.load("scripts/slime_spawner.wasm"),
     );
-
     let clicker_script = Script::from_handle(
         "Mouse clicker".to_string(),
         asset_server.load("scripts/slime_clicker.wasm"),
     );
+    let as_template = Script::from_handle(
+        "AS template".to_string(),
+        asset_server.load("scripts/as_template.wasm"),
+    );
 
+    commands.spawn(ScriptComponent(rust_template.clone()));
     commands.spawn(ScriptComponent(spawner_script.clone()));
     commands.spawn(ScriptComponent(clicker_script.clone()));
+    commands.spawn(ScriptComponent(as_template.clone()));
 
     let mut create_unit = move |faction: ApiFaction,
                                 position: ApiTilePosition,
@@ -123,8 +132,27 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         "tiles_grayscale/tile_0057.png",
         UnitId(1),
         &[
-            (&spawner_script, SettingsValue(DynValue::Float64(100.0))),
-            (&clicker_script, SettingsValue(DynValue::Float64(2000.0))),
+            (
+                &spawner_script,
+                SettingsValue(DynValue::Object(vec![(
+                    "amount".to_string(),
+                    DynValue::Float64(100.0),
+                )])),
+            ),
+            (
+                &clicker_script,
+                SettingsValue(DynValue::Object(vec![(
+                    "amount".to_string(),
+                    DynValue::Float64(2000.0),
+                )])),
+            ),
+            (
+                &rust_template,
+                SettingsValue(DynValue::Object(vec![(
+                    "name".to_string(),
+                    "Rust template script".to_string().into(),
+                )])),
+            ),
         ],
     );
 
@@ -133,7 +161,25 @@ fn spawn_sources(mut commands: Commands, asset_server: Res<AssetServer>) {
         crate::api::ApiTilePosition::new(7, 1),
         "tiles_grayscale/tile_0055.png",
         UnitId(2),
-        &[(&spawner_script, SettingsValue(DynValue::Float64(120.0)))],
+        &[
+            (
+                &spawner_script,
+                SettingsValue(DynValue::Object(vec![(
+                    "amount".to_string(),
+                    DynValue::Float64(120.0),
+                )])),
+            ),
+            (
+                &as_template,
+                SettingsValue(DynValue::Object(vec![
+                    (
+                        "name".to_string(),
+                        DynValue::String("AS script template".to_string()),
+                    ),
+                    ("amount".to_string(), DynValue::Float64(800.0)),
+                ])),
+            ),
+        ],
     );
 }
 

@@ -15,6 +15,14 @@ export abstract class DynValue {
     return new FloatValue(value);
   }
 
+  static string(value: string): DynValue {
+    return new StringValue(value);
+  }
+
+  static object(values: Map<string, DynValue>): DynValue {
+    return new ObjectValue(values);
+  }
+
   isNone(): bool {
     return false;
   }
@@ -33,6 +41,26 @@ export abstract class DynValue {
 
   getFloat(): f64 {
     throw new Error(`DynValue '${this.toString()}' is not a float`);
+  }
+
+  isString(): bool {
+    return false;
+  }
+
+  getString(): string | null {
+    return null;
+  }
+
+  isObject(): bool {
+    return false;
+  }
+
+  getObjectValues(): Map<string, DynValue> | null {
+    return null;
+  }
+
+  getObjectValue(_key: string): DynValue | null {
+    return null;
   }
 
   abstract encode(writer: Writer): void;
@@ -87,7 +115,7 @@ class FloatValue extends DynValue {
     return true;
   }
 
-  asFloat(): number {
+  getFloat(): number {
     return this.value;
   }
 
@@ -100,15 +128,93 @@ class FloatValue extends DynValue {
   }
 }
 
+class StringValue extends DynValue {
+  value: string;
+
+  constructor(value: string) {
+    super();
+    this.value = value;
+  }
+
+  isString(): bool {
+    return true;
+  }
+
+  getString(): string | null {
+    return this.value;
+  }
+
+  encode(writer: Writer): void {
+    writer.writeString(this.value);
+  }
+
+  toString(): string {
+    return 'String: "' + this.value.toString() + '"';
+  }
+}
+
+class ObjectValue extends DynValue {
+  // TODO: preserve order
+  values: Map<string, DynValue>;
+
+  constructor(values: Map<string, DynValue>) {
+    super();
+    this.values = values;
+  }
+
+  isObject(): bool {
+    return true;
+  }
+
+  getObjectValues(): Map<string, DynValue> | null {
+    return this.values;
+  }
+
+  getObjectValue(key: string): DynValue | null {
+    if (this.values.has(key)) {
+      return this.values.get(key);
+    } else {
+      return null;
+    }
+  }
+
+  encode(writer: Writer): void {
+    writer.writeMapSize(this.values.size);
+    const keys = this.values.keys();
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      writer.writeString(key);
+      this.values.get(key).encode(writer);
+    }
+  }
+
+  toString(): string {
+    let text = "Object: {";
+    let first = true;
+    const keys = this.values.keys();
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      if (first) {
+        first = false;
+      } else {
+        text += ",";
+      }
+      text += ` "${key}": `;
+      text += this.values.get(key).toString();
+    }
+    return text + " }";
+  }
+}
+
 export function dynValueFromPtr(ptr: FatPtr): DynValue {
   const bytes = readArrayBuffer(ptr);
   const reader = new DataReader(bytes);
-  const value = decodeDynValue(reader);
+  const entryReader = new EntryReader(reader);
+  const value = decodeDynValue(entryReader);
   return value;
 }
 
-export function decodeDynValue(data: DataReader): DynValue {
-  const entryReader = new EntryReader(data);
+export function decodeDynValue(entryReader: EntryReader): DynValue {
   const entry = entryReader.nextEntry()!;
 
   if (entry.isInt(false)) {
@@ -119,6 +225,19 @@ export function decodeDynValue(data: DataReader): DynValue {
   }
   if (entry.isFloat()) {
     return DynValue.float(entry.readFloat());
+  }
+  if (entry.isString()) {
+    return DynValue.string(entry.readString());
+  }
+  if (entry.isMapLength()) {
+    const values = new Map<string, DynValue>();
+    const len = entry.readMapLength();
+    for (let i = 0 as usize; i < len; i++) {
+      const name = entryReader.nextEntry()!.readString();
+      const value = decodeDynValue(entryReader);
+      values.set(name, value);
+    }
+    return DynValue.object(values);
   }
 
   throw new Error("Unknown entry: " + entry.toString());

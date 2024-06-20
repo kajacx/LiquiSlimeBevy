@@ -1,8 +1,8 @@
 export type FatPtr = u64;
 
 export type FactionId = u32;
-export type UnitId = i32;
-export type InstanceId = i32;
+export type UnitId = u32;
+export type InstanceId = u32;
 
 export type SlimeAmount = f64;
 export type TimeInterval = f64;
@@ -16,6 +16,14 @@ export class TilePosition {
   constructor(x: i32, y: i32) {
     this.x = x;
     this.y = y;
+  }
+
+  withX(x: i32): TilePosition {
+    return new TilePosition(x, this.y);
+  }
+
+  withY(y: i32): TilePosition {
+    return new TilePosition(this.x, y);
   }
 }
 

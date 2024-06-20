@@ -10,7 +10,7 @@ impl SdString {
         DynValue::object([
             ("type".to_string(), DynValue::str("String")),
             (
-                "default".to_string(),
+                "default_value".to_string(),
                 DynValue::string(self.default_value.clone()),
             ),
         ])
