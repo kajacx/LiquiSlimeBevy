@@ -67,6 +67,29 @@ impl DynValue {
         }
     }
 
+    pub fn field_mut_anyway<'a>(&'a mut self, field: &str) -> &'a mut DynValue {
+        // SAFETY: How to tell the Rust compiler that this is OK?
+        let self_: &mut Self = unsafe { &mut *(self as *mut _) };
+        if let Ok(value) = self_.field_mut(field) {
+            return value;
+            // TODO: log error
+        }
+
+        if !matches!(self, Self::Object(_)) {
+            *self = Self::Object(Vec::with_capacity(1));
+        }
+
+        let has_key = self.fields().unwrap().any(|(name, _)| name == field);
+        if !has_key {
+            match self {
+                Self::Object(fields) => fields.push((field.to_string(), DynValue::Null)),
+                _ => unreachable!(),
+            }
+        }
+
+        return self.field_mut(field).unwrap();
+    }
+
     pub fn fields(&self) -> Option<impl Iterator<Item = (&str, &DynValue)> + '_> {
         match self {
             Self::Object(values) => Some(values.iter().map(|(key, value)| (key.as_str(), value))),

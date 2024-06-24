@@ -87,6 +87,10 @@ fn display_script_settings(ui: &mut Ui, instance: &mut ScriptInstance) {
                     .reset_settings(settings.current_settings, settings.temp_settings);
             }
             if ui.button("Save").clicked() {
+                println!(
+                    "Saving settings from {:?} to {:?}",
+                    settings.temp_settings, settings.current_settings
+                );
                 settings
                     .settings_description
                     .save_settings(settings.temp_settings, settings.current_settings);

@@ -24,9 +24,13 @@ impl ScriptTemplate for UserScript {
     type Settings = Settings;
 
     fn describe_settings() -> SettingsDescription {
-        SdString {
-            default_value: "Hello script".to_string(),
-        }
+        SdObject(vec![(
+            "name".to_string(),
+            SdString {
+                default_value: "Hello script".to_string(),
+            }
+            .into(),
+        )])
         .into()
     }
 

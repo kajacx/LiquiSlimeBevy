@@ -40,35 +40,26 @@ impl SettingsUiDisplay for SdObject {
             ui.label(key);
             obj_value.display_ui_element(
                 ui,
-                SettingsTempValue::ref_cast_mut(
-                    value.0.field_mut(key).expect("TODO: log and fix value"),
-                ),
+                SettingsTempValue::ref_cast_mut(value.0.field_mut_anyway(key)),
             )
         }
-        ui.text_edit_singleline(value.0.as_string_mut_anyway("0"));
     }
 
     fn save_settings(&self, temp_value: &SettingsTempValue, value: &mut SettingsValue) {
-        let temp_text = temp_value.0.as_str().log_err_or(
-            "SdSlimeAmount temp value is not text, this shouldn't happen",
-            "",
-        );
-
-        if let Ok(amount) = temp_text.parse::<f64>() {
-            value.0 = DynValue::Float64(amount);
-        } else {
-            // TODO: report error
+        for (key, obj_value) in &self.0 {
+            obj_value.save_settings(
+                SettingsTempValue::ref_cast(temp_value.0.field(&key).expect("TODO: user error")),
+                SettingsValue::ref_cast_mut(value.0.field_mut(&key).expect("TODO: user error")),
+            )
         }
     }
 
     fn reset_settings(&self, value: &SettingsValue, temp_value: &mut SettingsTempValue) {
-        let amount = value.0.as_f64().log_err_or(
-            "SdSlimeAmount value is not SlimeAmount, this shouldn't happen",
-            ApiSlimeAmount::default(),
-        );
-
-        let temp_text = temp_value.0.as_string_mut_anyway("");
-        temp_text.clear();
-        write!(temp_text, "{}", amount);
+        for (key, obj_value) in &self.0 {
+            obj_value.reset_settings(
+                SettingsValue::ref_cast(value.0.field(&key).expect("TODO: user error")),
+                SettingsTempValue::ref_cast_mut(temp_value.0.field_mut_anyway(&key)),
+            )
+        }
     }
 }

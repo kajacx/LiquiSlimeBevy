@@ -20,9 +20,13 @@ impl ScriptTemplate for UserScript {
     type Settings = Settings;
 
     fn describe_settings() -> SettingsDescription {
-        SdFloat64 {
-            default_value: 100.0,
-        }
+        SdObject(vec![(
+            "amount".to_string(),
+            SdFloat64 {
+                default_value: 100.0,
+            }
+            .into(),
+        )])
         .into()
     }
 
