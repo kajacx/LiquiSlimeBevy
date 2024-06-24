@@ -1,9 +1,9 @@
-use wasm_bridge::{Memory, Result, StoreContextMut};
-
 use super::{
     helpers::{pack_u32s, unpack_u32s},
     FromWasmAbi, FromWasmAbiSimple, ScriptImpl, StoreData, ToWasmAbi, ToWasmAbiSimple, WasmAccess,
 };
+use anyhow::Result;
+use wasmi::{Memory, StoreContextMut};
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq)]
 pub struct FatPtr {
@@ -39,7 +39,8 @@ pub fn write_bytes(context: &mut WasmAccess, bytes: &[u8]) -> Result<FatPtr> {
 
     context
         .script()
-        .with_memory(|memory| memory.write(&mut context.store, fat_ptr.addr as usize, bytes))?;
+        .with_memory(|memory| memory.write(&mut context.store, fat_ptr.addr as usize, bytes))
+        .expect("TODO: memory write");
 
     Ok(fat_ptr)
 }
@@ -49,7 +50,8 @@ pub fn read_bytes(mut context: &mut WasmAccess, ptr: FatPtr) -> Result<Vec<u8>> 
 
     context
         .script()
-        .with_memory(|memory| memory.read(&mut context.store, ptr.addr as usize, &mut bytes))?;
+        .with_memory(|memory| memory.read(&mut context.store, ptr.addr as usize, &mut bytes))
+        .expect("TODO: memory read");
 
     context
         .script()

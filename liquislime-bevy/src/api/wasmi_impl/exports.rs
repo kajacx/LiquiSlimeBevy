@@ -3,9 +3,10 @@ use super::{
     ToWasmAbiSimple, WasmAccess,
 };
 use crate::api::{ApiInstance, ApiTimeInterval, SettingsDescription, SettingsValue};
+use anyhow::Result;
 use std::fmt::Debug;
 use try_lock::TryLock;
-use wasm_bridge::{Result, Store, StoreContextMut, TypedFunc};
+use wasmi::{Store, StoreContextMut, TypedFunc};
 
 pub struct Exports {
     init_func: TypedFunc<(), ()>,
@@ -37,10 +38,7 @@ pub struct Exports {
 
 impl Exports {
     #[allow(clippy::needless_borrows_for_generic_args)]
-    pub fn new(
-        mut context: &mut Store<StoreData>,
-        instance: &wasm_bridge::Instance,
-    ) -> Result<Self> {
+    pub fn new(mut context: &mut Store<StoreData>, instance: &wasmi::Instance) -> Result<Self> {
         Ok(Self {
             init_func: instance.get_typed_func(&mut context, "init")?,
             describe_settings_func: instance.get_typed_func(&mut context, "describe_settings")?,
@@ -53,7 +51,8 @@ impl Exports {
     }
 
     pub fn init(&self, context: &mut WasmAccess) -> Result<()> {
-        self.init_func.call(&mut context.store, ())
+        self.init_func.call(&mut context.store, ())?;
+        Ok(())
     }
 
     pub fn describe_settings(&self, mut context: &mut WasmAccess) -> Result<SettingsDescription> {
@@ -69,7 +68,8 @@ impl Exports {
     ) -> Result<()> {
         let settings_abi = settings.to_wasm_abi(context)?;
         self.new_instance_func
-            .call(&mut context.store, (id, settings_abi))
+            .call(&mut context.store, (id, settings_abi))?;
+        Ok(())
     }
 
     pub fn change_settings(
@@ -80,7 +80,8 @@ impl Exports {
     ) -> Result<()> {
         let settings_abi = settings.to_wasm_abi(context)?;
         self.change_settings_func
-            .call(&mut context.store, (id, settings_abi))
+            .call(&mut context.store, (id, settings_abi))?;
+        Ok(())
     }
 
     pub fn update(
@@ -90,18 +91,21 @@ impl Exports {
         time_elapsed: ApiTimeInterval,
     ) -> Result<()> {
         self.update_func
-            .call(&mut context.store, (id, time_elapsed.to_wasm_abi_simple()))
+            .call(&mut context.store, (id, time_elapsed.to_wasm_abi_simple()))?;
+        Ok(())
     }
 
     pub fn allocate_bytes(&self, mut context: &mut WasmAccess, len: u32) -> Result<FatPtr> {
-        self.allocate_bytes_func
+        Ok(self
+            .allocate_bytes_func
             .call(&mut context.store, len)
-            .map(FatPtr::from_wasm_abi_simple)
+            .map(FatPtr::from_wasm_abi_simple)?)
     }
 
     pub fn free_bytes(&self, context: &mut WasmAccess, bytes_ptr: FatPtr) -> Result<()> {
         self.free_bytes_func
-            .call(&mut context.store, bytes_ptr.to_wasm_abi_simple())
+            .call(&mut context.store, bytes_ptr.to_wasm_abi_simple())?;
+        Ok(())
     }
 }
 

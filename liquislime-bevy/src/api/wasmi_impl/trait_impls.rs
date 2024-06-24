@@ -9,7 +9,8 @@ use crate::{
     },
     components::UnitId,
 };
-use wasm_bridge::{Result, StoreContextMut};
+use anyhow::Result;
+use wasmi::StoreContextMut;
 
 impl ToWasmAbiSimple for ApiFaction {
     type Abi = u32;

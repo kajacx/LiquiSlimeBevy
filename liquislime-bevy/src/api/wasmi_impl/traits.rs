@@ -4,8 +4,8 @@ use super::{
     memory_manage::{read_bytes, write_bytes, FatPtr},
     script_impl, ScriptImpl, StoreData,
 };
-use anyhow::bail;
-use wasm_bridge::{AsContextMut, Result, StoreContextMut};
+use anyhow::{bail, Result};
+use wasmi::{AsContextMut, StoreContextMut};
 
 pub trait WasmAbi {}
 

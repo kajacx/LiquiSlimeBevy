@@ -1,6 +1,6 @@
 use once_cell::sync::Lazy;
 use std::future::Future;
-use wasm_bridge::Engine;
+use wasmi::Engine;
 
 static ENGINE: Lazy<Engine> = Lazy::new(Engine::default);
 

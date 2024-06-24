@@ -2,7 +2,7 @@ use super::{get_engine, ScriptImpl};
 use once_cell::sync::Lazy;
 use std::ops::{Deref, DerefMut};
 use try_lock::{Locked, TryLock};
-use wasm_bridge::Store;
+use wasmi::Store;
 
 static STORE: Lazy<TryLock<Store<StoreData>>> = Lazy::new(|| {
     TryLock::new(Store::new(

@@ -8,8 +8,5 @@ pub use script::*;
 mod settings;
 pub use settings::*;
 
-// mod wasm_bridge_impl;
-// pub use wasm_bridge_impl::*;
-
-mod no_bindgen_impl;
-pub use no_bindgen_impl::*;
+mod wasmi_impl;
+pub use wasmi_impl::*;

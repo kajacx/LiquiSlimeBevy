@@ -2,6 +2,7 @@ use super::{create_linker, get_engine, get_store, Exports, FromWasmAbi, StoreDat
 use crate::api::{
     script, ApiTimeInterval, LiquislimeImports, LoadedScript, SettingsDescription, SettingsValue,
 };
+use anyhow::Result;
 use atomic_refcell::AtomicRefCell;
 use bevy::ecs::schedule::Dag;
 use slab::Slab;
@@ -9,7 +10,7 @@ use std::{
     cell::RefCell,
     ops::{Deref, DerefMut},
 };
-use wasm_bridge::{AsContext, AsContextMut, Memory, Module, Result, Store, StoreContextMut};
+use wasmi::{AsContext, AsContextMut, Memory, Module, Store, StoreContextMut};
 
 static SCRIPTS: AtomicRefCell<Slab<ScriptData>> = AtomicRefCell::new(Slab::new());
 
@@ -102,7 +103,9 @@ impl ScriptImpl {
             let mut bytes = vec![];
             let mut byte = [0u8, 0u8];
             loop {
-                memory.read(&context, address, &mut byte)?;
+                memory
+                    .read(&context, address, &mut byte)
+                    .expect("TODO: read byte for ZTS");
                 println!("READ: {} {}", byte[0], byte[1]);
                 if byte[0] == 0 && byte[1] == 0 {
                     break;
@@ -118,15 +121,15 @@ impl ScriptImpl {
 
 impl ScriptData {
     fn from_bytes(bytes: &[u8], imports: impl LiquislimeImports) -> Result<Self> {
-        #[allow(deprecated)]
         let module = Module::new(get_engine(), bytes)?;
 
         let mut store = get_store("ScriptData::from_bytes");
 
         let linker = create_linker(imports)?;
 
-        #[allow(deprecated)]
-        let instance = linker.instantiate(&mut *store, &module)?;
+        let instance_pre = linker.instantiate(&mut *store, &module)?;
+
+        let instance = instance_pre.start(&mut *store)?;
 
         let exports = Exports::new(&mut store, &instance)?;
 

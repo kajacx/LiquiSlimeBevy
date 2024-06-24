@@ -2,13 +2,12 @@ use super::{
     engine::get_engine, FromWasmAbi, FromWasmAbiSimple, StoreData, ToWasmAbi, ToWasmAbiSimple,
 };
 use crate::{
-    api::{
-        no_bindgen_impl::WasmAccess, ApiFaction, ApiSlimeAmount, ApiTilePosition, LiquislimeImports,
-    },
+    api::{wasmi_impl::WasmAccess, ApiFaction, ApiSlimeAmount, ApiTilePosition, LiquislimeImports},
     units::global_storage::{get_current_instance, get_current_unit},
 };
+use anyhow::Result;
 use std::sync::Arc;
-use wasm_bridge::{AsContextMut, Caller, Linker, Result, TypedFunc};
+use wasmi::{AsContextMut, Caller, Linker, TypedFunc};
 
 pub fn create_linker(imports: impl LiquislimeImports) -> Result<Linker<StoreData>> {
     let imports = Arc::new(imports);
