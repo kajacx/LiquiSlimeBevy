@@ -1,0 +1,11 @@
+services:
+  rust-compile-test:
+    image: liquislime/compile-rust
+    container_name: compile-rust-test
+    ports:
+      - 8001:8000
+    volumes:
+      - compile-rust-target:/target
+    restart: unless-stopped
+volumes:
+  compile-rust-target:
