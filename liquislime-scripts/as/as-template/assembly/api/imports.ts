@@ -30,7 +30,7 @@ export function addSlimeAmount(
 
 export function setSlimeAmountAtLeast(
   faction: FactionId,
-  position: Position,
+  position: TilePosition,
   amount: SlimeAmount
 ): SlimeAmount {
   const newAmount = Math.max(getSlimeAmount(faction, position), amount);

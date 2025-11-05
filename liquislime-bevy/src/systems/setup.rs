@@ -1,5 +1,6 @@
 use crate::components::{
-    FactionComponent, ScriptComponent, ScriptInstances, ScriptRequests, SelectorCursor, SlimeGrids,
+    FactionComponent, HeroComponent, ScriptComponent, ScriptInstances, ScriptRequests,
+    SelectorCursor, SlimeGrids,
 };
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
@@ -28,6 +29,7 @@ impl Plugin for GameSetupPlugin {
         app.add_systems(Startup, spawn_sources);
         app.add_systems(Startup, set_window_icon);
         app.add_systems(Startup, setup_selector);
+        app.add_systems(Startup, setup_heroes);
     }
 }
 
@@ -222,4 +224,21 @@ fn setup_selector(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
 
     commands.spawn((sprite, SelectorCursor));
+}
+
+fn setup_heroes(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let sprite = SpriteBundle {
+        texture: asset_server.load("units/lucy.png"),
+        sprite: Sprite {
+            custom_size: Some(Vec2 {
+                x: 1.0f32,
+                y: 1.0f32,
+            }),
+            ..Default::default()
+        },
+        transform: Transform::from_translation(vec3(0.0, 0.0, 2.0)),
+        ..Default::default()
+    };
+
+    commands.spawn((sprite, HeroComponent));
 }

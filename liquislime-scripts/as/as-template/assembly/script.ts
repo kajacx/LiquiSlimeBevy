@@ -51,7 +51,7 @@ export class UserScript implements ScriptTemplate {
   }
 
   update(timeElapsed: TimeInterval): void {
-    log(`Running "${this.settings.name}" script`);
+    // log(`Running "${this.settings.name}" script`);
     const position = getMousePosition();
     if (isMousePressed() && position != null) {
       const faction = getOwnFaction();

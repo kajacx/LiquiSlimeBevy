@@ -1,5 +1,6 @@
 mod building;
 mod faction;
+mod hero;
 mod script_component;
 mod script_instances;
 mod script_requests;
@@ -12,6 +13,7 @@ mod unit_id;
 
 pub use building::*;
 pub use faction::*;
+pub use hero::*;
 pub use script_component::*;
 pub use script_instances::*;
 pub use script_requests::*;

@@ -43,9 +43,9 @@ impl ScriptTemplate for UserScript {
     }
 
     fn update(&mut self, time_elapsed: TimeInterval) {
-        log(format!(
-            "[{}] Time elapsed: {:?}",
-            self.settings.name, time_elapsed
-        ));
+        // log(format!(
+        //     "[{}] Time elapsed: {:?}",
+        //     self.settings.name, time_elapsed
+        // ));
     }
 }
