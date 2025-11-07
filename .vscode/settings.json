@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["liquislime"],
+  "cSpell.words": ["liquislime", "macroquad"],
   "files.exclude": {
     "**/.git": true,
     "**/target": false,
