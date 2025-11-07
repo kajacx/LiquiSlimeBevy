@@ -1,6 +1,6 @@
 use crate::components::{
-    FactionComponent, HeroComponent, ScriptComponent, ScriptInstances, ScriptRequests,
-    SelectorCursor, SlimeGrids,
+    FactionComponent, HeroComponent, MovementComponent, ScriptComponent, ScriptInstances,
+    ScriptRequests, SelectorCursor, SlimeGrids,
 };
 use crate::{api::*, WORLD_HEIGHT, WORLD_WIDTH};
 use crate::{
@@ -53,20 +53,23 @@ fn spawn_tiles(mut commands: Commands) {
 
     for x in 0..WORLD_WIDTH {
         for y in 0..WORLD_HEIGHT {
-            let position = ApiTilePosition {
+            let tile_position = ApiTilePosition {
                 x: x as i32,
                 y: y as i32,
             };
+
+            let position = tile_position.to_position_center();
+
             let sprite = SpriteBundle {
                 sprite: Sprite {
                     custom_size: Some(Vec2 { x: 1f32, y: 1f32 }),
                     ..Default::default()
                 },
-                transform: Transform::from_translation(position.to_position_center().to_vec3(0.0)),
+                transform: Transform::from_translation(position.to_vec3(0.0)),
                 ..Default::default()
             };
 
-            commands.spawn((TilePositionComponent::from(position), sprite, Tile));
+            commands.spawn((TilePositionComponent::from(tile_position), sprite, Tile));
         }
     }
 }
@@ -227,6 +230,8 @@ fn setup_selector(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 fn setup_heroes(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let position = ApiPosition { x: 2.0, y: 5.0 };
+
     let sprite = SpriteBundle {
         texture: asset_server.load("units/lucy.png"),
         sprite: Sprite {
@@ -236,9 +241,14 @@ fn setup_heroes(mut commands: Commands, asset_server: Res<AssetServer>) {
             }),
             ..Default::default()
         },
-        transform: Transform::from_translation(vec3(0.0, 0.0, 2.0)),
+        transform: Transform::from_translation(position.to_vec3(1.0)),
         ..Default::default()
     };
 
-    commands.spawn((sprite, HeroComponent));
+    let movement = MovementComponent {
+        movement_speed: 0.01f32,
+        moving_to: Some(ApiPosition { x: 8.0, y: 7.0 }),
+    };
+
+    commands.spawn((sprite, HeroComponent, movement));
 }
