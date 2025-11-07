@@ -3,7 +3,7 @@ services:
     image: liquislime/compile-rust
     container_name: compile-rust-test
     ports:
-      - 8001:8000
+      - 8100:8000
     volumes:
       - compile-rust-target:/target
     restart: unless-stopped
