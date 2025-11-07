@@ -5,3 +5,6 @@ edition = "2021"
 
 [dependencies]
 macroquad = "0.4"
+glam = "0.30"
+derive_more = { version = "2.0", features = ["full"] }
+readonly = "0.2"
