@@ -23,6 +23,21 @@ impl SlimeGrids {
         self.grids[faction.index()].try_get_amount(position)
     }
 
+    pub fn add_amount(&mut self, faction: Faction, position: TilePosition, amount: SlimeAmount) {
+        let current = self.get_amount(faction, position);
+        self.set_amount(faction, position, current + amount);
+    }
+
+    pub fn try_add_amount(
+        &mut self,
+        faction: Faction,
+        position: TilePosition,
+        amount: SlimeAmount,
+    ) -> Result<(), ()> {
+        let current = self.try_get_amount(faction, position).ok_or(())?;
+        self.try_set_amount(faction, position, current + amount)
+    }
+
     pub fn set_amount(&mut self, faction: Faction, position: TilePosition, amount: SlimeAmount) {
         self.grids[faction.index()].set_amount(position, amount);
     }

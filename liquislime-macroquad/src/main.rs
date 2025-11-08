@@ -1,5 +1,5 @@
 use ::glam::IVec2;
-use macroquad::prelude::*;
+use macroquad::{input, prelude::*};
 
 use crate::liquislime::{Faction, SlimeAmount};
 
@@ -10,7 +10,7 @@ async fn main() {
     let faction0 = Faction::new(0);
     let faction1 = Faction::new(1);
 
-    let mut state = liquislime::GameState::new(10, 10);
+    let mut state = liquislime::GameState::new(50, 50);
 
     state
         .grids
@@ -25,10 +25,34 @@ async fn main() {
             get_frame_time() as f64
         ));
 
+        if input::is_mouse_button_pressed(MouseButton::Left) {
+            #[allow(unused_must_use)]
+            state.grids.try_add_amount(
+                faction0,
+                liquislime::TilePosition::new(
+                    (input::mouse_position().0 as i32) / 10,
+                    (input::mouse_position().1 as i32) / 10,
+                ),
+                SlimeAmount::from_integer(1000000),
+            );
+        }
+
+        if input::is_mouse_button_down(MouseButton::Right) {
+            #[allow(unused_must_use)]
+            state.grids.try_add_amount(
+                faction1,
+                liquislime::TilePosition::new(
+                    (input::mouse_position().0 as i32) / 10,
+                    (input::mouse_position().1 as i32) / 10,
+                ),
+                SlimeAmount::from_integer(10000),
+            );
+        }
+
         clear_background(RED);
 
         draw_slime_grid(&state.grids.grids[0], 0.0, 0.0, 10.0);
-        draw_slime_grid(&state.grids.grids[1], 300.0, 300.0, 10.0);
+        draw_slime_grid(&state.grids.grids[1], 600.0, 0.0, 10.0);
 
         draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
         draw_rectangle(screen_width() / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);

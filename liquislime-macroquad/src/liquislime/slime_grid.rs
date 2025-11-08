@@ -103,12 +103,13 @@ impl SlimeGrid {
         }
     }
 
-    fn prepare_spread_between(&mut self, i1: usize, i2: usize, time_passed: TimeInterval) {
+    fn prepare_spread_between(&mut self, i1: usize, i2: usize, _time_passed: TimeInterval) {
         let current_amount = self.slime_amounts[i1];
         let neighbor_amount = self.slime_amounts[i2];
 
         // from current to neighbor
-        let moved_amount = (current_amount - neighbor_amount) * time_passed.to_seconds();
+        // let moved_amount = (current_amount - neighbor_amount) * time_passed.to_seconds() * 35;
+        let moved_amount = (current_amount - neighbor_amount) * 0.2; // 0.25 is the limit
 
         self.slime_additions[i1] -= moved_amount;
         self.slime_additions[i2] += moved_amount;
