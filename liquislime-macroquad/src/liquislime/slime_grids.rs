@@ -15,6 +15,14 @@ impl SlimeGrids {
         }
     }
 
+    pub fn width(&self) -> usize {
+        self.grids[0].width
+    }
+
+    pub fn height(&self) -> usize {
+        self.grids[0].height
+    }
+
     pub fn get_amount(&self, faction: Faction, position: TilePosition) -> SlimeAmount {
         self.grids[faction.index()].get_amount(position)
     }

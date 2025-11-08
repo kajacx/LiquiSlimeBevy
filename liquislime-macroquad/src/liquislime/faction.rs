@@ -1,12 +1,21 @@
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub struct Faction(pub u8);
+use macroquad::color::Color;
+
+#[derive(Debug, Clone, Copy)]
+pub struct Faction {
+    id: u8,
+    color: Color,
+}
 
 impl Faction {
-    pub fn new(id: u8) -> Self {
-        Self(id)
+    pub fn new(id: u8, color: Color) -> Self {
+        Self { id, color }
     }
 
     pub fn index(self) -> usize {
-        self.0 as _
+        self.id as _
+    }
+
+    pub fn color(self) -> Color {
+        self.color
     }
 }

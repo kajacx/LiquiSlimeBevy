@@ -32,8 +32,12 @@ impl SlimeAmount {
         self.0 / ONE_SLIME_AMOUNT
     }
 
-    pub fn as_float(self) -> f64 {
+    pub fn as_float_64(self) -> f64 {
         (self.0 as f64) / (ONE_SLIME_AMOUNT as f64)
+    }
+
+    pub fn as_float(self) -> f32 {
+        (self.0 as f32) / (ONE_SLIME_AMOUNT as f32)
     }
 }
 
