@@ -20,6 +20,11 @@ async fn main() {
         .grids
         .set_amount(faction1, IVec2::new(8, 5), SlimeAmount::from_integer(60000));
 
+    // let path = std::env::current_dir().unwrap();
+    // println!("The current directory is {}", path.display());
+
+    let texture = load_texture("src/assets/lucy.png").await.unwrap();
+
     loop {
         state.update(liquislime::TimeInterval::from_seconds(
             get_frame_time() as f64
@@ -53,7 +58,17 @@ async fn main() {
 
         draw_slime_grid(&state.grids.grids[0], 0.0, 0.0, 10.0, faction0.color());
         draw_slime_grid(&state.grids.grids[1], 0.0, 0.0, 10.0, faction1.color());
-        // draw_slime_grid_factions(&state.grids, 0.0, 0.0, 20.0, &[faction0, faction1]);
+
+        draw_texture_ex(
+            &texture,
+            0.0,
+            0.0,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(Vec2::new(100.0, 100.0)),
+                ..Default::default()
+            },
+        );
 
         // draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
         // draw_rectangle(screen_width() / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
@@ -84,43 +99,6 @@ fn draw_slime_grid(
                 tile_size,
                 tile_size,
                 slime_color,
-            );
-        }
-    }
-}
-
-// Write a function that will draw the different slime factions in different colors
-fn draw_slime_grid_factions(
-    grids: &liquislime::SlimeGrids,
-    offset_x: f32,
-    offset_y: f32,
-    tile_size: f32,
-    factions: &[Faction],
-) {
-    for y in 0..grids.height() {
-        for x in 0..grids.width() {
-            let position = liquislime::TilePosition::new(x as _, y as _);
-            let mut total_amount = 0.0;
-            let mut color = Color::from_rgba(0, 0, 0, 255); // Default to black if no slime is present
-            for faction in factions {
-                let amount = grids.get_amount(*faction, position);
-                total_amount += amount.as_float() as f32;
-                let amount_ratio = (amount.as_float() as f32 / 1000.0).clamp(0.0, 1.0);
-                color.r += faction.color().r * amount_ratio;
-                color.g += faction.color().g * amount_ratio;
-                color.b += faction.color().b * amount_ratio;
-            }
-            if total_amount > 0.0 {
-                color.r = (color.r / total_amount).min(1.0);
-                color.g = (color.g / total_amount).min(1.0);
-                color.b = (color.b / total_amount).min(1.0);
-            }
-            draw_rectangle(
-                offset_x + x as f32 * tile_size,
-                offset_y + y as f32 * tile_size,
-                tile_size,
-                tile_size,
-                color,
             );
         }
     }
