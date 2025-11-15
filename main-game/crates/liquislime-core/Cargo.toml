@@ -1,0 +1,11 @@
+[package]
+name = "liquislime-core"
+description = "Core implementation of LiquiSlime"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+derive_more = { version = "2.0", features = ["full"] }
+readonly = "0.2"

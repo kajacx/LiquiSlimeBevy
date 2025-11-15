@@ -1,0 +1,10 @@
+[package]
+name = "liquislime-wasmi"
+description = "A wasmi implementation for wasm in LiquiSlime"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+wasmi = "0.51"

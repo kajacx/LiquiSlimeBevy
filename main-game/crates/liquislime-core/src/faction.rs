@@ -1,4 +1,4 @@
-use macroquad::color::Color;
+use super::*;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Faction {

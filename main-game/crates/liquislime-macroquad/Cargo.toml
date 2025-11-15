@@ -1,0 +1,11 @@
+[package]
+name = "liquislime-macroquad"
+description = "A macroquad renderer for LiquiSlime"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+macroquad = "0.4"
+liquislime-core = { path = "../liquislime-core" }
