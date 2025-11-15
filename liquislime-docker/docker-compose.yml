@@ -1,0 +1,11 @@
+services:
+  liquislime-new-web:
+    image: nginx:latest
+    container_name: liquislime-new-web
+    ports:
+      - "8089:80"
+    volumes:
+      - ./web-files:/usr/share/nginx/html
+    restart: unless-stopped
+
+networks: {}
