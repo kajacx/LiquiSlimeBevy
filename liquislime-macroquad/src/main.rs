@@ -23,6 +23,7 @@ async fn main() {
     // let path = std::env::current_dir().unwrap();
     // println!("The current directory is {}", path.display());
 
+    let mut hero_pos = Vec2::new(0.0, 0.0);
     let texture = load_texture("src/assets/lucy.png").await.unwrap();
 
     loop {
@@ -52,6 +53,9 @@ async fn main() {
                 ),
                 SlimeAmount::from_integer(10000),
             );
+
+            let mouse_pos = input::mouse_position();
+            hero_pos = Vec2::new(mouse_pos.0, mouse_pos.1);
         }
 
         clear_background(LIGHTGRAY);
@@ -61,8 +65,8 @@ async fn main() {
 
         draw_texture_ex(
             &texture,
-            0.0,
-            0.0,
+            hero_pos.x - 50.0,
+            hero_pos.y - 50.0,
             WHITE,
             DrawTextureParams {
                 dest_size: Some(Vec2::new(100.0, 100.0)),
