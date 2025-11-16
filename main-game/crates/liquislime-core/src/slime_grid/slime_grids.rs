@@ -1,4 +1,5 @@
-use super::*;
+use super::SlimeGrid;
+use crate::data_types::*;
 
 #[readonly::make]
 #[derive(Debug)]
@@ -23,22 +24,26 @@ impl SlimeGrids {
         self.grids[0].height
     }
 
-    pub fn get_amount(&self, faction: Faction, position: TilePosition) -> SlimeAmount {
+    pub fn get_amount(&self, faction: FactionId, position: TilePosition) -> SlimeAmount {
         self.grids[faction.index()].get_amount(position)
     }
 
-    pub fn try_get_amount(&self, faction: Faction, position: TilePosition) -> Option<SlimeAmount> {
+    pub fn try_get_amount(
+        &self,
+        faction: FactionId,
+        position: TilePosition,
+    ) -> Option<SlimeAmount> {
         self.grids[faction.index()].try_get_amount(position)
     }
 
-    pub fn add_amount(&mut self, faction: Faction, position: TilePosition, amount: SlimeAmount) {
+    pub fn add_amount(&mut self, faction: FactionId, position: TilePosition, amount: SlimeAmount) {
         let current = self.get_amount(faction, position);
         self.set_amount(faction, position, current + amount);
     }
 
     pub fn try_add_amount(
         &mut self,
-        faction: Faction,
+        faction: FactionId,
         position: TilePosition,
         amount: SlimeAmount,
     ) -> Result<(), ()> {
@@ -46,13 +51,13 @@ impl SlimeGrids {
         self.try_set_amount(faction, position, current + amount)
     }
 
-    pub fn set_amount(&mut self, faction: Faction, position: TilePosition, amount: SlimeAmount) {
+    pub fn set_amount(&mut self, faction: FactionId, position: TilePosition, amount: SlimeAmount) {
         self.grids[faction.index()].set_amount(position, amount);
     }
 
     pub fn try_set_amount(
         &mut self,
-        faction: Faction,
+        faction: FactionId,
         position: TilePosition,
         amount: SlimeAmount,
     ) -> Result<(), ()> {
@@ -71,6 +76,9 @@ impl SlimeGrids {
         }
     }
 
+    /**
+     * Remove slime where both factions have slime present.
+     */
     pub fn annihilate_slime(&mut self) {
         let width = self.grids[0].width;
         let height = self.grids[0].height;

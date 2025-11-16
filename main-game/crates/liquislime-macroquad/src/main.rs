@@ -10,19 +10,16 @@ async fn main() {
     let mut state = GameState::new(50, 50);
 
     state.grids.set_amount(
-        faction0,
+        faction0.id(),
         TilePosition::new(2, 4),
         SlimeAmount::from_integer(50000),
     );
 
     state.grids.set_amount(
-        faction1,
+        faction1.id(),
         TilePosition::new(8, 5),
         SlimeAmount::from_integer(60000),
     );
-
-    // let path = std::env::current_dir().unwrap();
-    // println!("The current directory is {}", path.display());
 
     let mut hero_pos = Vec2::new(0.0, 0.0);
     // println!("{:?}", std::env::current_dir().unwrap());
@@ -36,19 +33,23 @@ async fn main() {
         if input::is_mouse_button_pressed(MouseButton::Left) {
             #[allow(unused_must_use)]
             state.grids.try_add_amount(
-                faction0,
+                faction0.id(),
                 TilePosition::new(
                     (input::mouse_position().0 as i32) / 10,
                     (input::mouse_position().1 as i32) / 10,
                 ),
                 SlimeAmount::from_integer(1000000),
             );
+
+            if input::mouse_position().0 > 500.0 {
+                panic!("Will this message show up in the console?");
+            }
         }
 
         if input::is_mouse_button_down(MouseButton::Right) {
             #[allow(unused_must_use)]
             state.grids.try_add_amount(
-                faction1,
+                faction1.id(),
                 TilePosition::new(
                     (input::mouse_position().0 as i32) / 10,
                     (input::mouse_position().1 as i32) / 10,

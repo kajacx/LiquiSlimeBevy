@@ -1,4 +1,4 @@
-use super::*;
+use crate::data_types::*;
 
 #[readonly::make]
 #[derive(Debug)]

@@ -4,19 +4,19 @@ set -e
 # Run from parent folder
 
 echo "Copying liquislime source"
-rm -rf macroquad-webbuild/Cargo.toml
-rm -rf macroquad-webbuild/crates
-cp -r main-game/Cargo.toml macroquad-webbuild/
-cp -r main-game/crates macroquad-webbuild/
+rm -rf build/macroquad-webbuild/Cargo.toml
+rm -rf build/macroquad-webbuild/crates
+cp -r main-game/Cargo.toml build/macroquad-webbuild/
+cp -r main-game/crates build/macroquad-webbuild/
 
 echo "Compiling game for wasm32 target"
-cd macroquad-webbuild
+cd build/macroquad-webbuild
 cargo build -p liquislime-macroquad --target wasm32-unknown-unknown
 
 echo "Copying DEBUG wasm file"
 # wasm-bindgen --out-dir ./liquislime-webserver/ --target web ./target/wasm32-unknown-unknown/debug/liquislime-bevy.wasm
-cp ./target/wasm32-unknown-unknown/debug/liquislime-macroquad.wasm ../liquislime-docker/web-files/liquislime-macroquad.wasm
-cd ..
+cp ./target/wasm32-unknown-unknown/debug/liquislime-macroquad.wasm ../../liquislime-docker/web-files/liquislime-macroquad.wasm
+cd ../..
 
 echo "Copying assets"
 rm -rf liquislime-docker/web-files/crates

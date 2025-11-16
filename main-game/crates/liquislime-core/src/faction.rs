@@ -11,6 +11,10 @@ impl Faction {
         Self { id, color }
     }
 
+    pub fn id(self) -> FactionId {
+        FactionId::new(self.id)
+    }
+
     pub fn index(self) -> usize {
         self.id as _
     }
