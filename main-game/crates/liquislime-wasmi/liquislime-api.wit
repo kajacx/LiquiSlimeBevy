@@ -1,0 +1,16 @@
+package liquislime:api;
+
+interface host-functions {
+    record position {
+        x: f32,
+        y: f32,
+    }
+
+    get-mouse-world-position: func() -> position;
+}
+
+world adaptor {
+    import host-functions;
+
+    export update: func(time-elapsed: f64);
+}

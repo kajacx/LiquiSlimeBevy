@@ -7,4 +7,5 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
-liquislime-adaptor-rust = { path = "../../../adaptor-libs/liquislime-adaptor-rust" }
+# liquislime-adaptor-rust = { path = "../../../adaptor-libs/liquislime-adaptor-rust" }
+wit-bindgen = { version = "0.60" }

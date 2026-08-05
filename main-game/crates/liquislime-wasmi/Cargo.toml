@@ -7,9 +7,6 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-wasmi = "1.1"
-wasmi_wasi = { version = "1.1" }
-
-waclay-wasi = { path = "../../../../waclay-wasi" }
-wasmi_runtime_layer = { version = "1.0" }
 liquislime-core = { path = "../liquislime-core" }
+wasmi-component = { path = "../../../../wasmi-component/crates/wasmi-component" }
+wasmi-component-wasi = { path = "../../../../wasmi-component/crates/wasmi-component-wasi" }
